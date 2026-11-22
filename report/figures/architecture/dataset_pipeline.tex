@@ -1,0 +1,33 @@
+% Figure: dataset preparation pipeline, both label lineages
+\begin{tikzpicture}[node distance=4mm and 5mm, every node/.append style={minimum height=8mm}]
+\node[data, minimum width=30mm] (raw) {MailEx release\\ \tiny 1,500 threads, 3,936 emails\\ \tiny 10 event types, 76 arguments};
+\node[rule, minimum width=30mm, right=of raw] (conv) {Conversion\\ \tiny \code{convert\_mailex.py}\\ \tiny unified JSONL, offsets};
+\node[rule, minimum width=30mm, right=of conv] (clean) {Conservative cleaning\\ \tiny disclaimers, quotes, signatures;\\ \tiny labelled tokens protected};
+\node[data, minimum width=30mm, right=of clean] (uni) {Unified records\\ \tiny train 3,117 / dev 414 / test 405\\ \tiny 0 raw-text fallbacks};
+
+% lineage A: SILVER
+\node[rule, minimum width=30mm, below=12mm of conv] (cand) {Candidate selection\\ \tiny 600 emails, thread-safe\\ \tiny 450 / 60 / 90};
+\node[nn, minimum width=30mm, right=of cand] (llm) {LLM + auto-SILVER\\ \tiny structured output,\\ \tiny 6 entity, 4 relation types};
+\node[rule, minimum width=30mm, right=of llm] (review) {Validation \& review\\ \tiny schema + semantic checks,\\ \tiny tiering, provenance};
+\node[data, minimum width=30mm, right=of review] (silver) {SILVER-v1 (6 classes)\\ \tiny 450 / 60 / 90 emails\\ \tiny 73\% major-error audit};
+\node[rule, minimum width=30mm, below=of silver] (v2) {SILVER-v2 repair\\ \tiny 3 classes, 449 train;\\ \tiny 33\% major-error audit};
+\node[data, minimum width=30mm, left=8mm of v2] (reldata) {Relation dataset\\ \tiny typed markers, TASK$\to$PERSON/\\ \tiny TEMPORAL, 1:1 negatives};
+
+% lineage B: MailEx-derived
+\node[rule, minimum width=30mm, anchor=north] (map) at ($(cand.south |- v2.south)+(0,-15mm)$) {Deterministic mapping v1.2.0\\ \tiny TASK, PERSON, TEMPORAL\\ \tiny from event arguments};
+\node[data, minimum width=30mm, right=of map] (mx) {MailEx-derived labels\\ \tiny 2,845 train / 389 dev emails\\ \tiny about 9\% major errors};
+\node[rule, minimum width=30mm, right=of mx] (bio) {BIO tokenisation\\ \tiny WordPiece, 512-token windows,\\ \tiny span reconstruction check};
+\node[warn, minimum width=30mm, right=of bio] (dedup) {Leakage audit\\ \tiny 39 dev emails copy train;\\ \tiny scored on 349 clean};
+
+\node[layer, fit=(cand)(silver)(v2)(reldata), inner ysep=8pt] (LA) {};
+\node[layerlabel, anchor=north east, yshift=-1pt] at (LA.south east) {Lineage A: SILVER annotations (Phase 1--3 models used by the app)};
+\node[layer, fit=(map)(dedup), inner ysep=8pt] (LB) {};
+\node[layerlabel, anchor=north east, yshift=-1pt] at (LB.south east) {Lineage B: MailEx-derived labels (Phase 2 entity experiments)};
+
+\draw[flow] (raw) -- (conv); \draw[flow] (conv) -- (clean); \draw[flow] (clean) -- (uni);
+\draw[flow] (uni.south) -- ++(0,-4mm) -| (cand.north);
+\draw[flow] (cand) -- (llm); \draw[flow] (llm) -- (review); \draw[flow] (review) -- (silver);
+\draw[flow] (silver) -- (v2); \draw[flow] (silver.south west) -- (reldata.north east);
+\draw[flow] (raw.south) |- node[note, pos=0.75, above]{original event arguments} (map.west);
+\draw[flow] (map) -- (mx); \draw[flow] (mx) -- (bio); \draw[flow] (bio) -- (dedup);
+\end{tikzpicture}

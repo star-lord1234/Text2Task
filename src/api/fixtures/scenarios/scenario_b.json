@@ -1,0 +1,91 @@
+{
+ "id": "B",
+ "title": "Scenario B \u2014 Deadline change",
+ "timezone": "America/Chicago",
+ "description": "A proposed deadline move does not change the due date until it is confirmed; one task, one history.",
+ "messages": [
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Bianca, send me the model report by Thursday.",
+   "created_at": "2026-11-11T09:30:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "send me the model report"
+     ],
+     "PERSON": [
+      "Bianca"
+     ],
+     "TEMPORAL": [
+      "Thursday"
+     ]
+    },
+    "links": [
+     [
+      "send me the model report",
+      "Bianca",
+      "ASSIGNED_TO"
+     ],
+     [
+      "send me the model report",
+      "Thursday",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "New task for Bianca, due Thu 12 Nov."
+   }
+  },
+  {
+   "sender": "bianca",
+   "recipients": [
+    "riya"
+   ],
+   "text": "Could we move the deadline to Friday?",
+   "created_at": "2026-11-11T09:40:00-06:00",
+   "scripted": {
+    "spans": {
+     "TEMPORAL": [
+      "Friday"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "PROPOSE_DUE_DATE_CHANGE"
+    ],
+    "note": "A proposal, not a change: Thursday stays active until Riya confirms."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Friday is fine.",
+   "created_at": "2026-11-11T09:45:00-06:00",
+   "scripted": {
+    "spans": {
+     "TEMPORAL": [
+      "Friday"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "CONFIRM_DUE_DATE_CHANGE"
+    ],
+    "note": "Confirms the pending proposal on the same task; history shows both steps."
+   }
+  }
+ ]
+}

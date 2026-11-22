@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Text2Task SILVER-v2 entity-only annotation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["entities", "notes"],
+  "properties": {
+    "entities": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["type", "text", "start", "end", "negated", "ambiguous"],
+        "properties": {
+          "type": {"enum": ["TASK", "PERSON", "TEMPORAL"]},
+          "text": {"type": "string", "minLength": 1},
+          "start": {"type": "integer", "minimum": 0},
+          "end": {"type": "integer", "minimum": 1},
+          "negated": {"type": "boolean"},
+          "ambiguous": {"type": "boolean"}
+        }
+      }
+    },
+    "notes": {"type": "array", "items": {"type": "string"}}
+  }
+}

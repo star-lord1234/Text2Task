@@ -1,0 +1,30 @@
+{
+  "schema_version": "phase5-v1",
+  "mode": "review",
+  "auto_apply": false,
+  "cue_set_version": "cues-v1",
+  "matching": {
+    "weights": {
+      "explicit_id": 100,
+      "reply_to": 40,
+      "lexical_full": 50,
+      "lexical_single": 40,
+      "lexical_weak": 20,
+      "anaphora_unique": 45,
+      "anaphora_multi": 20,
+      "owner_is_speaker": 10,
+      "recency_max": 5,
+      "embedding_max": 10
+    },
+    "thresholds": {
+      "high": 40,
+      "margin": 15,
+      "low": 20
+    },
+    "anaphora_window_messages": 3,
+    "closed_task_penalty": 20,
+    "same_thread_only": true,
+    "use_embeddings": false
+  },
+  "note": "Thresholds were set on the scripted scenarios in tests/fixtures/reconciliation_scenarios.json, not on any held-out or test data. There is no labelled reconciliation data."
+}

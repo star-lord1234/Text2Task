@@ -1,0 +1,202 @@
+{
+  "best_checkpoint": "models/text2task-distilbert/phase2/mailex_v1_lr5e-5/checkpoints/checkpoint-1440",
+  "best_metric": 0.5753660637381567,
+  "data_hashes": {
+    "train": "a5b93f08d31f18d44cd8ffb1f55a25e8e189a98536f2bc490a06711b3092e8f0",
+    "validation": "c7278164a85cc4da1785fa1510dd3453335949347f9ba4b7ea5c211be1b539c4"
+  },
+  "dataset_version": "entities-mailex-v1",
+  "device": "mps",
+  "duration_seconds": 1722.843154,
+  "finished_at": "2026-11-03T07:13:54.639005+00:00",
+  "hyperparameters": {
+    "batch_size": 4,
+    "class_weighting": "none",
+    "epochs": 10,
+    "grad_accum": 4,
+    "learning_rate": 5e-05,
+    "model_name": "distilbert/distilbert-base-uncased",
+    "seed": 20261101,
+    "select_metric": "lenient_f1",
+    "warmup_steps": 180,
+    "weight_decay": 0.01
+  },
+  "optimizer_steps": 1800,
+  "predicted_label_distribution": {
+    "B-PERSON": 152,
+    "B-TASK": 215,
+    "B-TEMPORAL": 126,
+    "I-PERSON": 63,
+    "I-TASK": 1663,
+    "I-TEMPORAL": 350,
+    "O": 28725
+  },
+  "provenance": {
+    "is_final_research_metric": false,
+    "note": "Validation labels are MailEx-derived and incomplete; see docs/phase1_labels.md.",
+    "quality_tier": "MAILEX_DERIVED"
+  },
+  "reference_label_distribution": {
+    "B-PERSON": 169,
+    "B-TASK": 234,
+    "B-TEMPORAL": 130,
+    "I-PERSON": 75,
+    "I-TASK": 2132,
+    "I-TEMPORAL": 300,
+    "O": 28254
+  },
+  "run_name": "mailex_v1_lr5e-5",
+  "scores": {
+    "iou_threshold": 0.5,
+    "overall": {
+      "lenient": {
+        "f1": 0.5753660637381567,
+        "matched": 334,
+        "precision": 0.5318471337579618,
+        "predicted": 628,
+        "recall": 0.626641651031895,
+        "support": 533
+      },
+      "overlap_any": {
+        "f1": 0.6339362618432386,
+        "matched": 368,
+        "precision": 0.5859872611464968,
+        "predicted": 628,
+        "recall": 0.6904315196998124,
+        "support": 533
+      },
+      "strict": {
+        "f1": 0.4203273040482343,
+        "matched": 244,
+        "precision": 0.3885350318471338,
+        "predicted": 628,
+        "recall": 0.45778611632270166,
+        "support": 533
+      },
+      "token": {
+        "f1": 0.575503654840435,
+        "matched": 1614,
+        "precision": 0.6282600233553912,
+        "predicted": 2569,
+        "recall": 0.530921052631579,
+        "support": 3040
+      }
+    },
+    "per_type": {
+      "PERSON": {
+        "lenient": {
+          "f1": 0.6121212121212122,
+          "matched": 101,
+          "precision": 0.6273291925465838,
+          "predicted": 161,
+          "recall": 0.5976331360946746,
+          "support": 169
+        },
+        "overlap_any": {
+          "f1": 0.6242424242424243,
+          "matched": 103,
+          "precision": 0.639751552795031,
+          "predicted": 161,
+          "recall": 0.6094674556213018,
+          "support": 169
+        },
+        "strict": {
+          "f1": 0.593939393939394,
+          "matched": 98,
+          "precision": 0.6086956521739131,
+          "predicted": 161,
+          "recall": 0.5798816568047337,
+          "support": 169
+        },
+        "token": {
+          "f1": 0.5925925925925924,
+          "matched": 136,
+          "precision": 0.6325581395348837,
+          "predicted": 215,
+          "recall": 0.5573770491803278,
+          "support": 244
+        }
+      },
+      "TASK": {
+        "lenient": {
+          "f1": 0.5075187969924811,
+          "matched": 135,
+          "precision": 0.45302013422818793,
+          "predicted": 298,
+          "recall": 0.5769230769230769,
+          "support": 234
+        },
+        "overlap_any": {
+          "f1": 0.6090225563909775,
+          "matched": 162,
+          "precision": 0.5436241610738255,
+          "predicted": 298,
+          "recall": 0.6923076923076923,
+          "support": 234
+        },
+        "strict": {
+          "f1": 0.28571428571428575,
+          "matched": 76,
+          "precision": 0.2550335570469799,
+          "predicted": 298,
+          "recall": 0.3247863247863248,
+          "support": 234
+        },
+        "token": {
+          "f1": 0.5532516493873704,
+          "matched": 1174,
+          "precision": 0.625133120340788,
+          "predicted": 1878,
+          "recall": 0.49619611158072696,
+          "support": 2366
+        }
+      },
+      "TEMPORAL": {
+        "lenient": {
+          "f1": 0.6555183946488294,
+          "matched": 98,
+          "precision": 0.5798816568047337,
+          "predicted": 169,
+          "recall": 0.7538461538461538,
+          "support": 130
+        },
+        "overlap_any": {
+          "f1": 0.6889632107023411,
+          "matched": 103,
+          "precision": 0.6094674556213018,
+          "predicted": 169,
+          "recall": 0.7923076923076923,
+          "support": 130
+        },
+        "strict": {
+          "f1": 0.46822742474916385,
+          "matched": 70,
+          "precision": 0.41420118343195267,
+          "predicted": 169,
+          "recall": 0.5384615384615384,
+          "support": 130
+        },
+        "token": {
+          "f1": 0.6710816777041941,
+          "matched": 304,
+          "precision": 0.6386554621848739,
+          "predicted": 476,
+          "recall": 0.7069767441860465,
+          "support": 430
+        }
+      }
+    }
+  },
+  "started_at": "2026-11-03T06:45:11.795851+00:00",
+  "status": "COMPLETED",
+  "train_metrics": {
+    "epoch": 10.0,
+    "total_flos": 1402430071990860.0,
+    "train_loss": 0.5258267884784275,
+    "train_runtime": 1722.3169,
+    "train_samples_per_second": 16.669,
+    "train_steps_per_second": 1.045
+  },
+  "train_rows": 2871,
+  "validation_rows": 391
+}

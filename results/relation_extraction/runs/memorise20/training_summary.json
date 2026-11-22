@@ -1,0 +1,176 @@
+{
+  "run": "memorise20",
+  "best_epoch": 9,
+  "best_val_macro_positive_f1": 1.0,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.9585907657941183,
+      "macro_positive_f1": 0.21666666666666667,
+      "micro_positive_f1": 0.2857142857142857,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.25,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.4
+      },
+      "none_fpr": 0.0
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.8529736200968424,
+      "macro_positive_f1": 0.5299145299145299,
+      "micro_positive_f1": 0.8,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.923076923076923,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.6666666666666666
+      },
+      "none_fpr": 0.0
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.643525501092275,
+      "macro_positive_f1": 0.5968253968253968,
+      "micro_positive_f1": 0.8695652173913043,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.9333333333333333,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.8571428571428571
+      },
+      "none_fpr": 0.08333333333333333
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.5427756806214651,
+      "macro_positive_f1": 0.5611111111111111,
+      "micro_positive_f1": 0.8333333333333334,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.9333333333333333,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.75
+      },
+      "none_fpr": 0.16666666666666666
+    },
+    {
+      "epoch": 5,
+      "train_loss": 0.45665188133716583,
+      "macro_positive_f1": 0.5611111111111111,
+      "micro_positive_f1": 0.8333333333333334,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.9333333333333333,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.75
+      },
+      "none_fpr": 0.16666666666666666
+    },
+    {
+      "epoch": 6,
+      "train_loss": 0.38675349950790405,
+      "macro_positive_f1": 0.6296296296296297,
+      "micro_positive_f1": 0.9166666666666666,
+      "per_label_f1": {
+        "ASSIGNED_TO": 1.0,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.888888888888889
+      },
+      "none_fpr": 0.08333333333333333
+    },
+    {
+      "epoch": 7,
+      "train_loss": 0.31417495012283325,
+      "macro_positive_f1": 0.6,
+      "micro_positive_f1": 0.8799999999999999,
+      "per_label_f1": {
+        "ASSIGNED_TO": 1.0,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.8
+      },
+      "none_fpr": 0.08333333333333333
+    },
+    {
+      "epoch": 8,
+      "train_loss": 0.27361758053302765,
+      "macro_positive_f1": 0.6296296296296297,
+      "micro_positive_f1": 0.9166666666666666,
+      "per_label_f1": {
+        "ASSIGNED_TO": 1.0,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.888888888888889
+      },
+      "none_fpr": 0.0
+    },
+    {
+      "epoch": 9,
+      "train_loss": 0.22410246233145395,
+      "macro_positive_f1": 1.0,
+      "micro_positive_f1": 1.0,
+      "per_label_f1": {
+        "ASSIGNED_TO": 1.0,
+        "DUE_ON": 1.0,
+        "SCHEDULED_ON": 1.0
+      },
+      "none_fpr": 0.0
+    },
+    {
+      "epoch": 10,
+      "train_loss": 0.17797966053088507,
+      "macro_positive_f1": 1.0,
+      "micro_positive_f1": 1.0,
+      "per_label_f1": {
+        "ASSIGNED_TO": 1.0,
+        "DUE_ON": 1.0,
+        "SCHEDULED_ON": 1.0
+      },
+      "none_fpr": 0.0
+    },
+    {
+      "epoch": 11,
+      "train_loss": 0.18114572515090308,
+      "macro_positive_f1": 1.0,
+      "micro_positive_f1": 1.0,
+      "per_label_f1": {
+        "ASSIGNED_TO": 1.0,
+        "DUE_ON": 1.0,
+        "SCHEDULED_ON": 1.0
+      },
+      "none_fpr": 0.0
+    },
+    {
+      "epoch": 12,
+      "train_loss": 0.14802479495604834,
+      "macro_positive_f1": 1.0,
+      "micro_positive_f1": 1.0,
+      "per_label_f1": {
+        "ASSIGNED_TO": 1.0,
+        "DUE_ON": 1.0,
+        "SCHEDULED_ON": 1.0
+      },
+      "none_fpr": 0.0
+    }
+  ],
+  "seconds": 47.1660430431366,
+  "config": {
+    "experiment_name": "text2task-relations-v1",
+    "evaluation_provenance": {
+      "annotation_tier": "SILVER",
+      "human_verified": false,
+      "is_final_research_metric": false,
+      "disclaimer": "SILVER/MailEx-derived validation metrics are provisional development signals, not human-grounded results."
+    },
+    "base_model": "distilbert/distilbert-base-uncased",
+    "data_dir": "data/model_ready/relations_v2_three_class",
+    "model_dir": "models/text2task-relations",
+    "results_dir": "results/relation_extraction",
+    "seed": 20261102,
+    "learning_rate": 5e-05,
+    "epochs": 12,
+    "train_batch_size": 8,
+    "grad_accum": 2,
+    "weight_decay": 0.01,
+    "warmup_ratio": 0.1,
+    "class_weight": "none",
+    "pooling": "markers",
+    "train_file": "train.jsonl",
+    "max_length": 512
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "emails": 60,
+  "experiment_mode": "gold_evaluation",
+  "human_reviewed_gold_emails": 0,
+  "metric_provenance": {
+    "annotation_tier": "GOLD",
+    "disclaimer": "Metrics use independently human-reviewed GOLD annotations.",
+    "is_final_research_metric": true,
+    "metric_prefix": "gold",
+    "mode": "gold_evaluation"
+  },
+  "model_available": false,
+  "reason": "evaluation_requires_fully_human_reviewed_gold",
+  "split": "validation",
+  "status": "BLOCKED",
+  "timestamp": "2026-10-31T23:02:11.807717Z"
+}

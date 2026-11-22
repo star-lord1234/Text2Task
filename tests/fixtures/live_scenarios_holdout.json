@@ -1,0 +1,950 @@
+{
+ "name": "live_scenarios_holdout",
+ "description": "Phase 7.5 holdout: written after the first comparison run and BEFORE the fixes it motivated; first executed only after those fixes. Never used to tune.",
+ "now": "2026-11-11T09:30:00-06:00 (a Wednesday)",
+ "cases": [
+  {
+   "id": "H1",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please rewrite the onboarding guide by Friday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "rewrite",
+       "onboarding guide"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-13"
+     }
+    ]
+   }
+  },
+  {
+   "id": "H2",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, can you translate the user manual by Monday?",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "translate",
+       "manual"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-16"
+     }
+    ]
+   }
+  },
+  {
+   "id": "H3",
+   "group": "independent",
+   "messages": [
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "I'll upload the screenshots tomorrow.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "upload",
+       "screenshots"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-12"
+     }
+    ]
+   }
+  },
+  {
+   "id": "H4",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Could someone proofread the contract?",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "proofread",
+       "contract"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "H5",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, I need you to renew the license by Friday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "renew",
+       "license"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-13"
+     }
+    ]
+   }
+  },
+  {
+   "id": "H6",
+   "group": "independent",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Let me test the payment flow by Thursday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "test",
+       "payment flow"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-12"
+     }
+    ]
+   }
+  },
+  {
+   "id": "H7",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please print the invitations and mail them by Friday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "print",
+       "invitations"
+      ],
+      "owner": "bianca"
+     },
+     {
+      "has": [
+       "mail"
+      ],
+      "owner": "bianca"
+     }
+    ]
+   }
+  },
+  {
+   "id": "H8",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree will refactor the parser next week.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "refactor",
+       "parser"
+      ],
+      "owner": "anushree"
+     }
+    ]
+   }
+  },
+  {
+   "id": "H9",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please export the customer list by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, merge the duplicates once Anushree finishes the export.",
+     "09:35"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "export",
+       "customer list"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-12"
+     },
+     {
+      "has": [
+       "merge",
+       "duplicates"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "merge",
+       "duplicates"
+      ],
+      [
+       "export",
+       "customer list"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "H10",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please configure the build server.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, run the tests after the build server is configured.",
+     "09:34"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "configure",
+       "build server"
+      ],
+      "owner": "bianca"
+     },
+     {
+      "has": [
+       "run",
+       "tests"
+      ],
+      "owner": "anushree"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "run",
+       "tests"
+      ],
+      [
+       "configure",
+       "build server"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "H11",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "After you review the draft, send it to the client.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "review",
+       "draft"
+      ]
+     },
+     {
+      "has": [
+       "send"
+      ]
+     }
+    ],
+    "edges": [
+     [
+      [
+       "send"
+      ],
+      [
+       "review",
+       "draft"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "H12",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Before we publish the article, someone must fact-check it.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "publish",
+       "article"
+      ]
+     },
+     {
+      "has": [
+       "fact"
+      ]
+     }
+    ],
+    "edges": [
+     [
+      [
+       "publish",
+       "article"
+      ],
+      [
+       "fact"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "H13",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please draft the agenda, then Anushree should circulate it.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "draft",
+       "agenda"
+      ],
+      "owner": "bianca"
+     },
+     {
+      "has": [
+       "circulate"
+      ],
+      "owner": "anushree"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "circulate"
+      ],
+      [
+       "draft",
+       "agenda"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "H14",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, set up the staging database.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, load the sample data.",
+     "09:32"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Loading the data is waiting on the staging database.",
+     "09:35"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "set up",
+       "staging database"
+      ],
+      "owner": "anushree"
+     },
+     {
+      "has": [
+       "load",
+       "sample data"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "load",
+       "sample data"
+      ],
+      [
+       "set up",
+       "staging database"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "H15",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please book the venue by Friday.",
+     "09:33"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "compile",
+       "sales figures"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-12"
+     },
+     {
+      "has": [
+       "book",
+       "venue"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-13"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "H16",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, water the plants when you can.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "water",
+       "plants"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "H17",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, send the summary after the standup.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "send",
+       "summary"
+      ],
+      "owner": "anushree"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "L1",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "The sales figures are ready.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "compile",
+       "sales figures"
+      ],
+      "owner": "anushree",
+      "status": "completed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "L2",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I compiled the sales figures.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "compile",
+       "sales figures"
+      ],
+      "owner": "anushree",
+      "status": "completed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "L3",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I'm working on the sales figures.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "compile",
+       "sales figures"
+      ],
+      "owner": "anushree",
+      "status": "in_progress"
+     }
+    ]
+   }
+  },
+  {
+   "id": "L4",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Forget the sales figures, we don't need them.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "compile",
+       "sales figures"
+      ],
+      "owner": "anushree",
+      "status": "cancelled"
+     }
+    ]
+   }
+  },
+  {
+   "id": "L5",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Great, thanks!",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "compile",
+       "sales figures"
+      ],
+      "owner": "anushree",
+      "status": "open"
+     }
+    ],
+    "max_creates": 1
+   }
+  },
+  {
+   "id": "L6",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I compiled the expense report.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "compile",
+       "sales figures"
+      ],
+      "owner": "anushree",
+      "status": "open"
+     }
+    ],
+    "max_creates": 1
+   }
+  },
+  {
+   "id": "L7",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Would Monday work instead of Thursday?",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "compile",
+       "sales figures"
+      ],
+      "owner": "anushree",
+      "status": "open"
+     }
+    ],
+    "last_ops": [
+     "PROPOSE_DUE_DATE_CHANGE"
+    ]
+   }
+  },
+  {
+   "id": "Y1",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Congratulations on the promotion!",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "Y2",
+   "group": "negative",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "The printer is out of paper again.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "Y3",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "We met the client on Tuesday and it went fine.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "Y4",
+   "group": "negative",
+   "messages": [
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "Is the report ready?",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "Y5",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Happy Friday, everyone.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "Y6",
+   "group": "negative",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I reviewed the contract last week.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  }
+ ]
+}

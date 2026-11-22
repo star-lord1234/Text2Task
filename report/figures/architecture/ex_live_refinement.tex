@@ -1,0 +1,11 @@
+% Small figure: one real live message, raw neural vs refined spans (captured 2026-11-17, hybrid preset)
+\begin{tikzpicture}[node distance=3mm and 4mm]
+\node[anchor=west, font=\sffamily\scriptsize\bfseries, text=navy] (lr) at (0,0) {Raw neural};
+\node[anchor=west, font=\small] (raw) at (24mm,0) {Bianca \colorbox{paleblue}{please prepare the}$_{\textsf{\tiny TASK}}$ quarterly \colorbox{paleblue}{report}$_{\textsf{\tiny TASK}}$ \colorbox{paleochre}{by Friday}$_{\textsf{\tiny TEMPORAL}}$.};
+\node[anchor=west, font=\sffamily\scriptsize\bfseries, text=navy] at (0,-9mm) {Refined};
+\node[anchor=west, font=\small] (ref) at (24mm,-9mm) {Bianca \colorbox{paleteal}{please prepare the quarterly report}$_{\textsf{\tiny TASK\,refined}}$ \colorbox{paleochre}{by Friday}$_{\textsf{\tiny TEMPORAL}}$.};
+\node[rule, anchor=north west, text width=46mm] (r1) at (24mm,-15mm) {\textbf{grammar\_recovery}: ``please prepare the'' + ``report'' $\to$ action phrase (verb \emph{prepare}, clause start)};
+\node[rule, right=4mm of r1, text width=40mm] (r2) {\textbf{owner}: no PERSON span; request cue + addressee ``Bianca'' $\to$ \code{named\_addressee}};
+\node[rule, below=3mm of r1, text width=46mm] (r3) {\textbf{date}: ``by Friday'', anchor Wed 11 Nov 2026 $\to$ RESOLVED 2026-11-13; deadline cue vs SCHEDULED\_ON label $\to$ review question};
+\node[ui, right=4mm of r3, text width=40mm] (card) {\textbf{Card for Bianca}: ``Prepare the quarterly report'', due Fri 13 Nov, source \emph{neural}};
+\end{tikzpicture}

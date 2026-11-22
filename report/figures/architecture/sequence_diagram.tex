@@ -1,0 +1,24 @@
+% Figure: request sequence for one live message and its review
+\begin{tikzpicture}[x=1mm, y=1mm]
+\foreach \x/\n/\lbl/\sty in {0/u/{Reviewer\\(browser)}/ui, 26/f/{Frontend\\React}/ui, 52/a/{FastAPI\\service}/rule, 78/m/{Entity +\\relation models}/nn, 104/r/{Refinement +\\Phase 4 rules}/rule, 130/c/{Reconciler +\\SQLite store}/rule} {
+  \node[\sty, minimum width=22mm, minimum height=8mm] (h\n) at (\x+11,0) {\lbl};
+  \draw[rulegrey, dashed] (\x+11,-5) -- (\x+11,-104);
+}
+\newcommand{\msg}[5]{\draw[->, #5] (#1,#3) -- node[above, font=\sffamily\tiny, fill=white, inner sep=1pt]{#4} (#2,#3);}
+\msg{11}{37}{-11}{types message}{charcoal}
+\msg{37}{63}{-17}{POST /api/messages}{charcoal}
+\msg{63}{89}{-23}{tokens}{charcoal}
+\msg{89}{63}{-29}{spans, BIO probabilities}{rulegrey, dashed}
+\msg{63}{89}{-35}{marked pairs}{charcoal}
+\msg{89}{63}{-41}{relation labels + scores}{rulegrey, dashed}
+\msg{63}{115}{-47}{raw spans, relations}{charcoal}
+\msg{115}{63}{-53}{refined spans, dates, owner, flags}{rulegrey, dashed}
+\msg{63}{141}{-59}{task candidates}{charcoal}
+\msg{141}{63}{-65}{proposals (pending), history}{rulegrey, dashed}
+\msg{63}{37}{-71}{201 analysis}{rulegrey, dashed}
+\msg{37}{11}{-77}{card under ``Needs you''}{rulegrey, dashed}
+\msg{11}{37}{-85}{Accept}{charcoal}
+\msg{37}{63}{-91}{POST /suggestions/\{id\}/accept}{charcoal}
+\msg{63}{141}{-97}{check reviewer, apply, append history}{charcoal}
+\draw[mutedred, ->] (63,-91) .. controls (70,-88) and (70,-84) .. node[right, font=\sffamily\tiny, text=mutedred]{403 if not the affected person} (63,-84);
+\end{tikzpicture}

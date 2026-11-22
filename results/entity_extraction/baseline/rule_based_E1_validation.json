@@ -1,0 +1,144 @@
+{
+  "baseline": "rule_based_E1",
+  "iou_threshold": 0.5,
+  "overall": {
+    "lenient": {
+      "f1": 0.4021739130434782,
+      "matched": 259,
+      "precision": 0.343046357615894,
+      "predicted": 755,
+      "recall": 0.48592870544090055,
+      "support": 533
+    },
+    "overlap_any": {
+      "f1": 0.46118012422360244,
+      "matched": 297,
+      "precision": 0.3933774834437086,
+      "predicted": 755,
+      "recall": 0.5572232645403377,
+      "support": 533
+    },
+    "strict": {
+      "f1": 0.25931677018633537,
+      "matched": 167,
+      "precision": 0.22119205298013245,
+      "predicted": 755,
+      "recall": 0.3133208255159475,
+      "support": 533
+    },
+    "token": {
+      "f1": 0.4333511777301927,
+      "matched": 1619,
+      "precision": 0.365297833935018,
+      "predicted": 4432,
+      "recall": 0.5325657894736842,
+      "support": 3040
+    }
+  },
+  "per_type": {
+    "PERSON": {
+      "lenient": {
+        "f1": 0.28859060402684567,
+        "matched": 43,
+        "precision": 0.3333333333333333,
+        "predicted": 129,
+        "recall": 0.25443786982248523,
+        "support": 169
+      },
+      "overlap_any": {
+        "f1": 0.28859060402684567,
+        "matched": 43,
+        "precision": 0.3333333333333333,
+        "predicted": 129,
+        "recall": 0.25443786982248523,
+        "support": 169
+      },
+      "strict": {
+        "f1": 0.28859060402684567,
+        "matched": 43,
+        "precision": 0.3333333333333333,
+        "predicted": 129,
+        "recall": 0.25443786982248523,
+        "support": 169
+      },
+      "token": {
+        "f1": 0.2796208530805687,
+        "matched": 59,
+        "precision": 0.33146067415730335,
+        "predicted": 178,
+        "recall": 0.24180327868852458,
+        "support": 244
+      }
+    },
+    "TASK": {
+      "lenient": {
+        "f1": 0.3992994746059545,
+        "matched": 114,
+        "precision": 0.33827893175074186,
+        "predicted": 337,
+        "recall": 0.48717948717948717,
+        "support": 234
+      },
+      "overlap_any": {
+        "f1": 0.49387040280210154,
+        "matched": 141,
+        "precision": 0.41839762611275966,
+        "predicted": 337,
+        "recall": 0.6025641025641025,
+        "support": 234
+      },
+      "strict": {
+        "f1": 0.17863397548161122,
+        "matched": 51,
+        "precision": 0.1513353115727003,
+        "predicted": 337,
+        "recall": 0.21794871794871795,
+        "support": 234
+      },
+      "token": {
+        "f1": 0.42967698519515485,
+        "matched": 1277,
+        "precision": 0.3569032979318055,
+        "predicted": 3578,
+        "recall": 0.5397295012679628,
+        "support": 2366
+      }
+    },
+    "TEMPORAL": {
+      "lenient": {
+        "f1": 0.486873508353222,
+        "matched": 102,
+        "precision": 0.35294117647058826,
+        "predicted": 289,
+        "recall": 0.7846153846153846,
+        "support": 130
+      },
+      "overlap_any": {
+        "f1": 0.5393794749403341,
+        "matched": 113,
+        "precision": 0.39100346020761245,
+        "predicted": 289,
+        "recall": 0.8692307692307693,
+        "support": 130
+      },
+      "strict": {
+        "f1": 0.3484486873508353,
+        "matched": 73,
+        "precision": 0.25259515570934254,
+        "predicted": 289,
+        "recall": 0.5615384615384615,
+        "support": 130
+      },
+      "token": {
+        "f1": 0.5117540687160941,
+        "matched": 283,
+        "precision": 0.41863905325443784,
+        "predicted": 676,
+        "recall": 0.6581395348837209,
+        "support": 430
+      }
+    }
+  },
+  "rows": 391,
+  "split": "validation"
+}

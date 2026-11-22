@@ -1,0 +1,83 @@
+\chapter{Data Preprocessing and Annotation}
+\label{ch:preprocessing}
+
+This chapter follows the data from raw MailEx threads to model-ready rows. \Cref{fig:datapipeline} gives the overall picture: a shared conversion and cleaning stage feeds two label lineages, the SILVER annotations used by the models in the application and the MailEx-derived labels used for the main entity experiments.
+
+\begin{figure}[t]
+\centering
+\diagram{dataset_pipeline}
+\caption[Dataset preparation pipeline]{Dataset preparation pipeline. Lineage A produced the six-class SILVER-v1 set, its three-class repair (SILVER-v2) and the relation dataset. Lineage B maps MailEx human arguments directly to three entity types and was used for the Phase 2 experiments. The leakage audit was added after the first results.}
+\label{fig:datapipeline}
+\end{figure}
+
+\section{Conversion and conservative cleaning}
+\code{scripts/convert\_mailex.py} converts every thread into one record per email with token offsets and the original event labels (\cref{lst:unified}). \code{src/preprocessing/clean\_emails.py} then removes material that is not part of the message: legal disclaimers, quoted and forwarded blocks, signatures and encoding artefacts. Cleaning is deliberately conservative. It operates on tokens rather than raw characters, it never removes a token that belongs to a MailEx trigger or argument, and every cleaned record is re-aligned to its original offsets. If alignment cannot be guaranteed, the cleaner falls back to the raw text. All 3,936 records were processed with reliable alignment and no fallbacks. The cleaner also hashes texts and detects exact and conservative near-duplicates.
+
+\section{Lineage A: SILVER annotation}
+\subsection{Candidate selection}
+Annotating all emails with the full six-type schema was too expensive, so \code{scripts/select\_candidates.py} chose 600 emails (450 train, 60 development, 90 test). Selection preserves whole threads and their split membership, prevents duplicate groups from straddling splits, and balances coverage signals: requests, commitments, multiple tasks, ownership, deadlines, scheduling, prerequisites, status and negation, ambiguity, and emails without any action.
+
+\subsection{Automatic and LLM annotation}
+Two annotation paths were implemented. A deterministic \emph{auto-SILVER} annotator (\code{src/annotation/auto\_silver.py}) derives entities and relations from MailEx arguments and simple rules. An LLM annotator (\code{src/annotation/llm\_annotator.py}) supports local (Ollama) and hosted providers with structured output, redaction and restoration of names, retries, checkpointing and routing of doubtful records to review. Every output is checked by structural and semantic validators (\code{validators.py}, \code{semantic\_quality.py}): spans must match the text at their offsets, relation endpoints must exist and have type-valid roles, and semantically implausible labels (for example a past-tense report labelled as a TASK) are flagged.
+
+A review workflow (\code{review\_workflow.py}) generates review documents, records edits and audit trails and assigns a quality tier. Finalisation (\code{finalize\_dataset.py}) assembles splits, checks provenance, audits duplicates and split integrity, and writes statistics. The result is SILVER-v1: 450/60/90 emails with six entity and four relation types (\cref{tab:labelsets}). No record reached the GOLD tier, because no human review took place.
+
+\subsection{SILVER-v2 repair}
+An inspection of 30 random SILVER-v1 records found major errors in 22 of them. A repair pass followed: a local LLM run with revised three-class prompts was attempted but stopped after more than four hours with only 44 valid outputs and 19 failures, so the final SILVER-v2 corpus (\code{scripts/build\_silver\_v2\_hybrid.py}) combines corrected audit records, the validated LLM outputs and conservative filtering of v1. A fresh 30-record inspection still found 10 major errors. SILVER-v2 is the training set of the entity checkpoint used by the application.
+
+\section{Lineage B: MailEx-derived labels}
+Because the SILVER labels remained noisy, a second lineage maps MailEx's human annotations directly to the three entity types with a versioned, deterministic configuration (\code{configs/mailex\_to\_text2task\_v1.json}, version 1.2.0). \Cref{tab:mapping} summarises the rules.
+
+\begin{table}[h]
+\centering
+\caption{MailEx-to-Text2Task mapping, version 1.2.0 (\code{src/annotation/mailex\_labels.py}).}
+\label{tab:mapping}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{17mm}LL@{}}
+\toprule
+Type & Source in MailEx & Filters \\
+\midrule
+TASK & \lab{Action Description} in \lab{Request\_Action*} events; plus, by default, \lab{Action Description} in \lab{Deliver\_Action*}/\lab{Amend\_Action*} events that start with a commitment form (\emph{will}, \emph{'ll}, \emph{shall}, \emph{going to}) & Excludes \emph{will be \textless state\textgreater}, \emph{will have}, \emph{will not}. A requests-only variant is the ablation. \\
+TEMPORAL & Any slot whose role ends in \lab{Date} or \lab{Time} & Dropped if longer than 8 tokens, or if it starts with a subordinator (\emph{once}, \emph{upon}, \emph{when}, \emph{prior to}\ldots) and has no calendar or clock word \\
+PERSON & Any \lab{Members} slot & 1--3 capitalised tokens; rejects pronouns, roles, company, place and kinship words, all-caps acronyms and single letters. Other occurrences of an accepted name in the same email are also tagged. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The filters were tuned on three successive random samples of 40 training emails, each drawn fresh so that a fix motivated by one sample was checked on another. The mapping statistics show how much the filters remove: in the training split 3,349 \lab{Members} candidates were rejected as not being names, 2,101 \lab{Deliver\_Action} descriptions were rejected as non-commitments, and 123 temporal arguments were dropped as event clauses and 61 as too long. Overlapping spans are resolved deterministically (the shortest span wins; ties prefer PERSON, then TEMPORAL, then TASK) and every drop is logged. In practice almost all overlap drops were duplicates of the same span annotated in several events.
+
+The resulting dataset has 2,845 training emails (2,871 model rows, 1,196 threads) and 389 development emails (391 rows, 149 threads), with 1,664/1,040/1,036 TASK/PERSON/TEMPORAL training spans and 234/169/130 development spans. The requests-only ablation has 1,255 and 175 TASK spans respectively. The quality gate set in the plan (80\% of sampled emails fully acceptable) was not met: 60\% to 75\% depending on the sample. The major-error rate, however, fell to roughly 5--12\%, far below SILVER-v2, and the errors that remain are mostly missing labels rather than wrong ones.
+
+\section{Tokenisation, span alignment and BIO tagging}
+\label{sec:bio}
+\code{src/model\_data/token\_classification.py} turns every record into model input for the uncased DistilBERT WordPiece tokeniser.
+\begin{enumerate}
+  \item The text is tokenised with offset mapping, so each sub-word piece knows its character range.
+  \item Each entity span is projected onto pieces: the first piece inside the span receives \lab{B-TYPE}, every later piece inside it \lab{I-TYPE}, and every other piece \lab{O}. Special tokens (\code{[CLS]}, \code{[SEP]}) receive the ignore index $-100$ and do not contribute to the loss.
+  \item Texts longer than 512 pieces are split into windows (stride 64 in the SILVER lineage). Only 52 training rows and 4 development rows in the MailEx-derived set are multi-window.
+  \item In the six-class SILVER set, where spans can nest, overlapping spans are placed on separate annotation layers marked with reserved \code{[unusedN]} tokens. The three-class sets are single-layer.
+  \item A reconstruction check decodes the BIO labels back to character spans and requires an exact match with the source spans. Across all 3,262 MailEx-derived train and development rows there were 0 mismatches.
+\end{enumerate}
+
+\Cref{fig:bio} shows this process for a real training record. The MailEx annotation of the email has two events. The \lab{Deliver\_Action\_Data} event (trigger \emph{'ll cover}) provides the action description \emph{'ll cover this}, the date \emph{tomorrow} and the member \emph{We}; the \lab{Deliver\_Meeting\_Data} event provides the members \emph{I} and \emph{Andrea}. The mapping keeps the commitment as a TASK because it starts with \emph{'ll}, keeps \emph{tomorrow} as TEMPORAL, rejects \emph{We} and \emph{I} as pronouns, and accepts \emph{Andrea} as a PERSON. WordPiece splits \emph{chatted} into \code{chat} and \code{\#\#ted} and the contraction into \code{'} and \code{ll}; the BIO labels follow the pieces.
+
+\begin{figure}[t]
+\centering
+\diagram{bio_tagging}
+\caption[BIO tagging of an annotated email]{From MailEx arguments to WordPiece BIO labels for training record \code{mailex:train:cash-m\_inbox272:turn\_0001}. Colours: TASK (blue), PERSON (teal), TEMPORAL (ochre). Character spans are offsets into the email text.}
+\label{fig:bio}
+\end{figure}
+
+\section{Relation formatting}
+\code{src/model\_data/relation\_classification.py} builds one row per candidate pair. For every email it enumerates the type-valid pairs (TASK$\to$PERSON and TASK$\to$TEMPORAL), labels each with its annotated relation or \lab{NONE}, and inserts typed markers into the raw text without otherwise changing it:
+\begin{center}
+\small\emph{Riya, please} \code{[E1\_TASK]}\,\emph{submit the report}\,\code{[/E1\_TASK]} \emph{by} \code{[E2\_TEMPORAL]}\,\emph{Friday}\,\code{[/E2\_TEMPORAL]}.
+\end{center}
+All positive pairs are kept; negatives are subsampled with a fixed seed to a 1:1 ratio for training, while validation and test keep every candidate. Out-of-scope positives are dropped and counted: 41 training \lab{ASSIGNED\_TO} links to GROUP entities and the 4 \lab{DEPENDS\_ON} links to EVENT entities.
+
+\section{Splitting, validation and leakage}
+\label{sec:leakage}
+All splits follow the original MailEx thread assignment, and builders verify that no thread appears in two splits. Nevertheless, after the first Phase 2 results an audit (\code{scripts/audit\_leakage.py}) found that 34 development emails were exact copies of training emails and 26 more were near-copies, 39 distinct emails in total, because Enron threads quote each other and the MailEx-derived builder had skipped the deduplication used in the SILVER lineage. A further 8 emails were repeated within the development set. Scores reported in this report for the MailEx-derived lineage use the deduplicated development set of 349 emails (351 rows). The underlying datasets have not yet been rebuilt and the models not retrained without the duplicates (\cref{ch:future}).
+
+\section{Why this annotation scheme}
+The three-type scheme is a compromise between what the application needs and what the data can support. TASK, PERSON and TEMPORAL are exactly the fields a task card shows. Richer types (GROUP, ARTIFACT, EVENT) were part of the original schema, but the training data contained too few examples for a model to learn them. Treating commitments as tasks follows the annotation guidelines (a task is a current request, a future commitment, a prohibition, a cancellation or update, or a concrete plan, but not completed history or a description of a state). The ablation in \cref{ch:results} shows that including commitments neither helped nor hurt measurably. Finally, deriving labels deterministically from human MailEx annotations, rather than from an LLM, trades coverage for precision and reproducibility: every label can be traced to a human annotation and a versioned rule.

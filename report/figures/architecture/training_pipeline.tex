@@ -1,0 +1,19 @@
+% Figure: fine-tuning loop as implemented (Hugging Face Trainer / custom loop, Apple MPS)
+\begin{tikzpicture}[node distance=5mm and 6mm, every node/.append style={minimum height=8mm}]
+\node[nn, minimum width=30mm] (pre) {Pre-trained checkpoint\\ \tiny distilbert-base-uncased};
+\node[data, minimum width=30mm, below=of pre] (data) {Model-ready rows\\ \tiny input ids, BIO ids on every piece\\ \tiny ($-100$ only on special tokens)};
+\coordinate (pd) at ($(pre.east)!0.5!(data.east)$);
+\node[rule, minimum width=30mm, right=10mm of pd, anchor=west] (batch) {Mini-batch\\ \tiny 4 rows $\times$ 4 accumulation\\ \tiny (relations: 8 $\times$ 2)};
+\node[nn, minimum width=30mm, right=of batch] (fwd) {Forward pass\\ \tiny logits $\mathbf{z}_i\in\mathbb{R}^{|\mathcal{Y}|}$};
+\node[nn, minimum width=30mm, right=of fwd] (loss) {Weighted cross-entropy\\ \tiny optional $\sqrt{\cdot}$ inverse-frequency\\ \tiny class weights};
+\node[nn, minimum width=30mm, below=9mm of loss] (opt) {AdamW update\\ \tiny weight decay 0.01, linear\\ \tiny warm-up 10\% then decay};
+\node[rule, minimum width=30mm, left=of opt] (eval) {End-of-epoch validation\\ \tiny lenient/strict span F1\\ \tiny (relations: macro F1)};
+\node[decision, left=of eval, minimum width=26mm] (best) {better than\\ best so far?};
+\node[data, minimum width=30mm, below=9mm of best] (ckpt) {Best checkpoint\\ \tiny + metrics, config, hashes,\\ \tiny provenance (SILVER)};
+\draw[flow] (pre) -| (batch); \draw[flow] (data) -| (batch);
+\draw[flow] (batch) -- (fwd); \draw[flow] (fwd) -- (loss); \draw[flow] (loss) -- node[note, right]{$\nabla_\theta\mathcal{L}$} (opt);
+\draw[flow] (opt) -- node[note, below]{epoch end} (eval); \draw[flow] (eval) -- (best);
+\draw[flow] (best) -- node[note, right]{yes} (ckpt);
+\draw[dflow] (opt.north east) ++(0,0) -- ++(4mm,0) |- node[note, pos=0.25, right]{next batch} ([yshift=5mm]fwd.north) -- (fwd.north);
+\draw[dflow] (best.north) |- node[note, pos=0.3, left]{no / continue} (batch.south);
+\end{tikzpicture}

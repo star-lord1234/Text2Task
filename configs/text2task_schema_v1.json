@@ -1,0 +1,208 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://text2task.local/schemas/text2task_schema_v1.json",
+  "title": "Text2Task annotated email record v1",
+  "description": "A unified email-turn record with optional Text2Task v1 span and graph annotations.",
+  "type": "object",
+  "required": [
+    "id",
+    "source",
+    "source_split",
+    "thread_id",
+    "turn_index",
+    "text",
+    "text2task_annotations"
+  ],
+  "properties": {
+    "id": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "source_split": {"enum": ["train", "dev", "test"]},
+    "thread_id": {"type": "string", "minLength": 1},
+    "turn_index": {"type": "integer", "minimum": 0},
+    "text": {"type": "string"},
+    "text2task_annotations": {
+      "description": "Null before annotation; otherwise a complete v1 annotation set.",
+      "anyOf": [
+        {"type": "null"},
+        {"$ref": "#/$defs/annotation_set"}
+      ]
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "evidence_span": {
+      "type": "object",
+      "required": ["start", "end", "text"],
+      "properties": {
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 1},
+        "text": {"type": "string", "minLength": 1}
+      },
+      "additionalProperties": false
+    },
+    "task_attributes": {
+      "type": "object",
+      "required": [
+        "operation",
+        "status",
+        "negated",
+        "ambiguous",
+        "missing_fields",
+        "unresolved_fields",
+        "thread_task_id",
+        "identity_status"
+      ],
+      "properties": {
+        "operation": {"enum": ["CREATE", "UPDATE", "COMPLETE", "CANCEL", "UNKNOWN"]},
+        "status": {"enum": ["PENDING", "COMPLETED", "CANCELED", "UNKNOWN"]},
+        "negated": {"type": "boolean"},
+        "ambiguous": {"type": "boolean"},
+        "missing_fields": {
+          "type": "array",
+          "items": {"enum": ["ASSIGNEE", "TEMPORAL"]},
+          "uniqueItems": true
+        },
+        "unresolved_fields": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "ASSIGNEE",
+              "TEMPORAL",
+              "DEPENDENCY",
+              "CROSS_EMAIL_IDENTITY",
+              "OPERATION",
+              "STATUS"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "thread_task_id": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string", "pattern": "^thread-task:[A-Za-z0-9._:-]+$"}
+          ]
+        },
+        "identity_status": {"enum": ["LOCAL_ONLY", "RESOLVED", "UNRESOLVED"]}
+      },
+      "additionalProperties": false
+    },
+    "entity": {
+      "type": "object",
+      "required": ["id", "type", "start", "end", "text", "task_attributes"],
+      "properties": {
+        "id": {"type": "string", "pattern": "^e[1-9][0-9]*$"},
+        "type": {"enum": ["TASK", "PERSON", "GROUP", "TEMPORAL", "EVENT", "ARTIFACT"]},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 1},
+        "text": {"type": "string", "minLength": 1},
+        "task_attributes": {
+          "anyOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/task_attributes"}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "relation": {
+      "type": "object",
+      "required": [
+        "id",
+        "type",
+        "source_entity_id",
+        "target_entity_id",
+        "relation_evidence",
+        "explicit_vs_inferred",
+        "ambiguous"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^r[1-9][0-9]*$"},
+        "type": {"enum": ["ASSIGNED_TO", "DUE_ON", "SCHEDULED_ON", "DEPENDS_ON"]},
+        "source_entity_id": {"type": "string", "pattern": "^e[1-9][0-9]*$"},
+        "target_entity_id": {"type": "string", "pattern": "^e[1-9][0-9]*$"},
+        "relation_evidence": {"$ref": "#/$defs/evidence_span"},
+        "explicit_vs_inferred": {"enum": ["EXPLICIT", "INFERRED"]},
+        "ambiguous": {"type": "boolean"}
+      },
+      "additionalProperties": false
+    },
+    "relation_candidate": {
+      "type": "object",
+      "required": [
+        "id",
+        "source_entity_id",
+        "target_entity_id",
+        "label",
+        "relation_evidence",
+        "explicit_vs_inferred"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^rc[1-9][0-9]*$"},
+        "source_entity_id": {"type": "string", "pattern": "^e[1-9][0-9]*$"},
+        "target_entity_id": {"type": "string", "pattern": "^e[1-9][0-9]*$"},
+        "label": {"enum": ["ASSIGNED_TO", "DUE_ON", "SCHEDULED_ON", "DEPENDS_ON", "NONE"]},
+        "relation_evidence": {
+          "anyOf": [
+            {"type": "null"},
+            {"$ref": "#/$defs/evidence_span"}
+          ]
+        },
+        "explicit_vs_inferred": {
+          "anyOf": [
+            {"type": "null"},
+            {"enum": ["EXPLICIT", "INFERRED"]}
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "annotation_set": {
+      "type": "object",
+      "required": [
+        "schema_version",
+        "annotation_status",
+        "annotator_id",
+        "entities",
+        "relations",
+        "relation_candidates",
+        "reference_resolution",
+        "notes"
+      ],
+      "properties": {
+        "schema_version": {"const": "1.0.0"},
+        "annotation_status": {"enum": ["DRAFT", "REVIEWED", "ADJUDICATED"]},
+        "annotator_id": {
+          "anyOf": [
+            {"type": "null"},
+            {"type": "string", "minLength": 1}
+          ]
+        },
+        "entities": {"type": "array", "items": {"$ref": "#/$defs/entity"}},
+        "relations": {"type": "array", "items": {"$ref": "#/$defs/relation"}},
+        "relation_candidates": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/relation_candidate"}
+        },
+        "reference_resolution": {
+          "type": "object",
+          "required": ["status", "mentions"],
+          "properties": {
+            "status": {"const": "DEFERRED_NO_REFERENCE_SPANS"},
+            "mentions": {"type": "array", "maxItems": 0}
+          },
+          "additionalProperties": false
+        },
+        "notes": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    }
+  },
+  "x-text2task-label-policy": {
+    "entity_labels": ["TASK", "PERSON", "GROUP", "TEMPORAL", "EVENT", "ARTIFACT"],
+    "stored_relation_labels": ["ASSIGNED_TO", "DUE_ON", "SCHEDULED_ON", "DEPENDS_ON"],
+    "candidate_relation_labels": ["ASSIGNED_TO", "DUE_ON", "SCHEDULED_ON", "DEPENDS_ON", "NONE"],
+    "deferred_relation_labels": ["REFERS_TO"],
+    "span_model": "CHARACTER_OFFSETS_WITH_OVERLAP",
+    "reference_span_policy": "NO_REFERENCE_MENTION_ENTITY_IN_V1"
+  }
+}

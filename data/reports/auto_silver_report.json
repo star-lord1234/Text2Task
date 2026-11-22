@@ -1,0 +1,52 @@
+{
+  "runs": [
+    {
+      "dependencies": 4,
+      "empty_task_records": 51,
+      "entities": 3216,
+      "input_path": "data/candidates/train.jsonl",
+      "input_records": 450,
+      "multiple_task_records": 380,
+      "output_path": "data/annotations/silver_auto/train.jsonl",
+      "records": 450,
+      "relations": 1189,
+      "split": "train",
+      "tasks": 1770,
+      "valid_outputs": 450,
+      "validation_failures": [],
+      "version": "mailex-auto-silver-v1.0.0"
+    },
+    {
+      "dependencies": 0,
+      "empty_task_records": 8,
+      "entities": 488,
+      "input_path": "data/candidates/dev.jsonl",
+      "input_records": 60,
+      "multiple_task_records": 51,
+      "output_path": "data/annotations/silver_auto/dev.jsonl",
+      "records": 60,
+      "relations": 171,
+      "split": "dev",
+      "tasks": 283,
+      "valid_outputs": 60,
+      "validation_failures": [],
+      "version": "mailex-auto-silver-v1.0.0"
+    },
+    {
+      "dependencies": 3,
+      "empty_task_records": 8,
+      "entities": 618,
+      "input_path": "data/candidates/test.jsonl",
+      "input_records": 90,
+      "multiple_task_records": 77,
+      "output_path": "data/annotations/silver_auto/test.jsonl",
+      "records": 90,
+      "relations": 226,
+      "split": "test",
+      "tasks": 340,
+      "valid_outputs": 90,
+      "validation_failures": [],
+      "version": "mailex-auto-silver-v1.0.0"
+    }
+  ]
+}

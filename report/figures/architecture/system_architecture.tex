@@ -1,0 +1,56 @@
+% Figure: overall layered architecture (live components left/top, offline training bottom)
+\begin{tikzpicture}[node distance=2.5mm and 3mm, every node/.append style={minimum height=7mm}]
+% --- presentation layer
+\node[ui, minimum width=24mm] (chat) {Team chat\\ \& composer};
+\node[ui, minimum width=24mm, right=of chat] (tasks) {Tasks panel\\ (Needs you / Mine / Team)};
+\node[ui, minimum width=22mm, right=of tasks] (graphui) {Dependency\\ explorer};
+\node[ui, minimum width=18mm, right=of graphui] (timeline) {Timeline};
+\node[ui, minimum width=22mm, right=of timeline] (insp) {AI Inspector \&\\ Model results};
+\node[layer, fit=(chat)(insp), inner ysep=7pt, yshift=2pt] (L1) {};
+\node[layerlabel, anchor=south east] at (L1.north east) {Presentation \mdseries{\tiny React 19 + TypeScript, React Query, React Flow/dagre}};
+
+% --- API layer
+\node[rule, minimum width=34mm, below=12mm of tasks.south west, anchor=north west, xshift=-14mm] (api) {FastAPI routes\\ \tiny messages, suggestions, tasks, dependencies, scenarios, settings};
+\node[rule, minimum width=30mm, right=of api] (authz) {Review authorisation\\ \tiny reviewer\_ids, 403 NOT\_YOUR\_REVIEW};
+\node[rule, minimum width=28mm, right=of authz] (scen) {Scenario runner\\ \tiny scripted A--F, replay};
+\node[nn, minimum width=24mm, right=of scen] (reg) {Model registry\\ \tiny load once, report health};
+\node[layer, fit=(api)(reg), inner ysep=7pt, yshift=2pt] (L2) {};
+\node[layerlabel, anchor=south east] at (L2.north east) {Application service};
+
+% --- analysis pipeline
+\node[nn, minimum width=24mm, below=13mm of api.south west, anchor=north west] (ent) {Entity model\\ \tiny DistilBERT, BIO tags};
+\node[nn, minimum width=24mm, right=of ent] (rel) {Relation model\\ \tiny typed markers};
+\node[rule, minimum width=26mm, right=of rel] (refine) {Refinement\\ \tiny 8 rule stages};
+\node[rule, minimum width=24mm, right=of refine] (temporal) {Temporal\\ normaliser};
+\node[rule, minimum width=22mm, right=of temporal] (ident) {Owner\\ resolution};
+\node[rule, minimum width=18mm, right=of ident] (flags) {Uncertainty\\ flags};
+\node[layer, fit=(ent)(flags), inner ysep=7pt, yshift=2pt] (L3) {};
+\node[layerlabel, anchor=south east] at (L3.north east) {Analysis pipeline \mdseries{\tiny (per message)}};
+
+% --- state layer
+\node[rule, minimum width=30mm, below=13mm of ent.south west, anchor=north west] (recon) {Reconciler\\ \tiny cue intents, referent matching};
+\node[rule, minimum width=30mm, right=of recon] (graph) {Graph editor \& state\\ \tiny NetworkX, cycle checks};
+\node[store, minimum width=24mm, right=6mm of graph] (db) {SQLite store\\ \tiny tasks, proposals,\\ \tiny history, edges};
+\node[data, minimum width=34mm, right=6mm of db] (hist) {Append-only history\\ \tiny every change keeps its source};
+\node[layer, fit=(recon)(hist), inner ysep=7pt, yshift=2pt] (L4) {};
+\node[layerlabel, anchor=south east] at (L4.north east) {Task state \mdseries{\tiny (review mode: proposals only until accepted)}};
+
+% --- offline layer
+\node[data, minimum width=24mm, below=14mm of recon.south west, anchor=north west] (mailex) {MailEx\\ \tiny 3,936 emails};
+\node[data, minimum width=27mm, right=of mailex] (prep) {Cleaning, mapping,\\ \tiny BIO + relation datasets};
+\node[nn, minimum width=26mm, right=of prep] (train) {Fine-tuning\\ \tiny MPS, AdamW};
+\node[nn, minimum width=24mm, right=of train] (ckpt) {Checkpoints\\ \tiny + provenance};
+\node[data, minimum width=27mm, right=of ckpt] (evalf) {Saved evaluations\\ \tiny results/};
+\node[layer, fit=(mailex)(evalf), inner ysep=7pt, yshift=2pt, draw=ochre] (L5) {};
+\node[layerlabel, text=ochre, anchor=south east] at (L5.north east) {Offline training and evaluation};
+
+% --- flows
+\draw[flow] (L1.south -| tasks) -- node[note, right]{HTTP/JSON} (L2.north -| tasks);
+\draw[flow] (api.south) -- (L3.north -| api);
+\draw[flow] (ent) -- (rel); \draw[flow] (rel) -- (refine); \draw[flow] (refine) -- (temporal); \draw[flow] (temporal) -- (ident); \draw[flow] (ident) -- (flags);
+\draw[flow] (flags.south) -- ++(0,-2.5mm) -| (recon.north);
+\draw[flow] (recon) -- (graph); \draw[flow] (graph) -- (db); \draw[flow] (db) -- (hist);
+\draw[flow] (mailex) -- (prep); \draw[flow] (prep) -- (train); \draw[flow] (train) -- (ckpt); \draw[flow] (ckpt) -- (evalf);
+\draw[dflow] (ckpt.north) -- ++(0,5mm) -| node[note, pos=0.08, left]{loaded at startup} (reg.south);
+\draw[dflow] (evalf.east) -- ++(4mm,0) |- node[note, pos=0.2, right]{read-only} (insp.east);
+\end{tikzpicture}

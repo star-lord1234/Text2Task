@@ -1,0 +1,147 @@
+\chapter{Rule-Based Engine}
+\label{ch:rules}
+
+\section{Why rules alongside neural models}
+The neural models answer one narrow question each: which tokens form a span, and how two spans are related. A task tracker needs much more. Dates must be turned into calendar values against a time zone; owners must be identified among real participants; a message must be matched to the task it talks about; status changes must respect a lifecycle; dependency edges must not form cycles. None of these were learnable from the available data: the corpus has no timestamps, almost no update messages and seven dependency annotations. They are also exactly the decisions for which a wrong answer is most harmful and an explanation most valuable. The deterministic engine therefore does three jobs: it \emph{completes} the neural output (normalisation, resolution), it \emph{repairs} it (refinement), and it \emph{guards} the task state (reconciliation, graph validation, review authorisation). Every rule is either covered by developer-written tests or fuzzed against invariants; none is an accuracy claim.
+
+\section{Refinement of neural spans}
+\label{sec:refinement}
+\Cref{tab:refine} describes the eight refinement stages (\code{src/refine/}). Each can be switched individually, and the presets of \cref{ch:evolution} are named combinations. Grammar recovery uses closed-class function words and an explicit lexicon of about 200 base action verbs with positional evidence (start of a clause, after \emph{please}, after \emph{to}, after a modal, after a subject, after \emph{let me}). Past tense and passives are deliberately not treated as task evidence (\emph{``We shipped it''}, \emph{``was cancelled''}). No parser or external NLP library is used.
+
+\begin{table}[h]
+\centering
+\caption{Refinement stages, in execution order (\code{src/refine/config.py}).}
+\label{tab:refine}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{34mm}L@{}}
+\toprule
+Stage & Effect \\
+\midrule
+\code{span\_snap} & Extends spans that start or end inside a word to the word boundary \\
+\code{filter\_invalid\_tasks} & Drops TASK spans made only of function words, punctuation or one or two characters \\
+\code{merge\_adjacent} & Merges same-type spans separated only by whitespace or overlapping \\
+\code{temporal\_detect} & Adds dates and times the model missed, labelled \code{rule} \\
+\code{temporal\_merge} & Joins deadline cue, date and time pieces (\emph{by} + \emph{Friday} + \emph{3 pm}) \\
+\code{grammar\_recovery} & Completes fragments to the full action phrase; recovers missing action phrases and participant names from the roster \\
+\code{clause\_dependencies} & Finds prerequisite structures in raw text: \emph{after A, B}; \emph{B once/after/until A}; \emph{A, then B}; \emph{before A, B} \\
+\code{context\_lifecycle} & Recognises completion, progress and acknowledgement of an existing task in sentences without a TASK span (\emph{``The dataset is cleaned.''}) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Temporal normalisation}
+\label{sec:temporal}
+The normaliser (\code{src/temporal/normalize.py}) maps a temporal expression, a reference timestamp and a time zone to a structured value with a \emph{status}, a granularity (date, datetime, week, range, month), start and end values, and a list of assumptions it applied. The statuses are designed so that a value is either resolved or explicitly not:
+\begin{description}[leftmargin=1.6em, font=\normalfont\sffamily\small\bfseries\color{navy}]
+  \item[RESOLVED] a calendar value could be computed;
+  \item[PARTIAL] some component is missing (a time without a date, a date without a year);
+  \item[UNRESOLVED\_NO\_ANCHOR] the expression is relative but no reference time exists;
+  \item[UNRESOLVED\_EVENT\_CONDITION] the expression refers to an event (\emph{once the build is ready});
+  \item[AMBIGUOUS] several readings are plausible (\emph{by Wednesday} written on a Wednesday);
+  \item[VAGUE] the expression is not a firm time (\emph{soon}, \emph{at some point});
+  \item[UNPARSEABLE] none of the grammar applies.
+\end{description}
+Conventions that the grammar must assume (end of day as 17:00, ISO weeks, business-hours inference of a.m./p.m., US month--day order) are recorded per value and surfaced as information-level flags. \Cref{fig:temporal} shows decisions taken by the normaliser on real inputs; each row was re-run against the code for this report.
+
+\begin{figure}[t]
+\centering
+\diagram[0.94\linewidth]{ex_temporal}
+\caption[Temporal normalisation decisions]{Temporal normalisation of five expressions against the same anchor. Only the first two become calendar values used by a task; the others are kept with an explicit status and are never guessed.}
+\label{fig:temporal}
+\end{figure}
+
+The normaliser passes 102 of 102 hand-written fixtures covering relative dates, time zones and daylight-saving transitions, missing anchors and years, same-weekday ambiguity, ranges, event conditions and vague terms. These are regression tests written by the developer, not an independent benchmark. On the real corpus the picture is different (\cref{fig:temporalstatus}): because MailEx has no timestamps, only 1.3\% of the 606 temporal spans resolve. When an illustrative anchor is supplied, 40\% resolve, and 27\% remain unparseable, mostly annotation noise (\emph{the}, \emph{process}), durations (\emph{1 hr}), past references and holidays.
+
+\begin{figure}[t]
+\centering
+\chart{temporal_status}
+\caption[Temporal resolution status on the corpus]{Resolution status of 606 TEMPORAL spans from the training and validation emails, without an anchor (the real situation, since MailEx has no timestamps) and with an illustrative anchor (2001-11-15) used only to exercise the relative-date rules (\code{results/phase4/report.json}).}
+\label{fig:temporalstatus}
+\end{figure}
+
+\section{Owner resolution}
+Owner resolution (\code{src/pipeline/identity\_resolution.py}) decides who a task belongs to, conservatively and in a fixed order.
+\begin{enumerate}
+  \item If the relation model linked one or more PERSON spans: names resolve against the participant list by exact alias or e-mail, or by a name token that identifies exactly one participant; \emph{I} or \emph{me} resolves to the sender only with a first-person commitment cue; \emph{you} resolves to the recipient only if there is exactly one. Several distinct people give \lab{AMBIGUOUS}; collective words (\emph{team}, \emph{everyone}) give \lab{UNSUPPORTED\_GROUP}.
+  \item Otherwise the sentence is examined. A first-person plural (\emph{we'll}, \emph{let's}) leaves the task unassigned; a first-person singular commitment (\emph{I'll}, \emph{I can}) assigns it to the sender.
+  \item A request directed at someone (\emph{please}, \emph{can you}\ldots) is assigned to the single participant named as its addressee, before the action (\emph{``Bianca please \ldots''}) or as a trailing vocative (\emph{``\ldots, Bianca.''}). This rule was added late in the project after observing that the entity model often misses a name without a following comma, which left team-wide messages unassigned.
+  \item Failing that, it is assigned to the single non-sender recipient, if there is exactly one; with several recipients it stays \lab{UNASSIGNED}, with the recipients recorded as candidates.
+\end{enumerate}
+Ambiguity is always reported, never resolved by guessing: a task with two plausible owners or none is shown with the question and offers \emph{I'll take it}, \emph{Leave open} or an explicit edit.
+
+\section{Uncertainty and flags}
+Every candidate and proposal carries flags with a code, a severity (\code{info}, \code{warn}, \code{block}) and, where helpful, a question for the reviewer. More than sixty flag codes exist, grouped into date issues (\lab{DATE\_UNRESOLVED\_NO\_ANCHOR}, \lab{DATE\_AMBIGUOUS}, \lab{COMPETING\_DATES}, \lab{DATE\_RELATION\_CONFLICT}, \lab{PAST\_DATE}\ldots), owner issues (\lab{NO\_ASSIGNEE}, \lab{AMBIGUOUS\_ASSIGNEE}, \lab{UNKNOWN\_PERSON}, \lab{MULTIPLE\_ASSIGNEES}), model issues (\lab{WEAK\_RELATION\_SCORE}, \lab{MODEL\_DISAGREEMENT} when the neural and rule linkers disagree), and reconciliation issues (\lab{POSSIBLE\_DUPLICATE}, \lab{AMBIGUOUS\_REFERENT}, \lab{UNAUTHORIZED\_CONFIRMER}, \lab{CONFLICTING\_PROPOSAL}\ldots). Flags of severity \code{warn} or above mark a proposal as needing attention; nothing is ever applied because of, or despite, a flag without a person's decision. On SILVER validation emails 90\% of task candidates carried at least one non-information flag, an honest reflection of extraction quality on formal email rather than a tuned threshold.
+
+\section{Task reconciliation}
+\label{sec:reconciliation}
+The reconciler decides what each sentence means for the task list. \Cref{fig:ruleengine} shows the decision path.
+
+\begin{figure}[t]
+\centering
+\diagram[0.98\linewidth]{rule_engine}
+\caption[Rule-based reconciliation flowchart]{Decision path of the cue-based reconciler for one sentence. Intent cues are tried in a fixed priority order; gates turn questions, negations, conditionals, historical statements and tentative phrasing into explained no-actions; ambiguous references become clarification requests; every outcome is a proposal for review.}
+\label{fig:ruleengine}
+\end{figure}
+
+\subsection{Intent detection}
+Messages are split into sentences with character offsets. Each sentence is tested against cue patterns in a fixed priority order: reopen, cancel, complete (first-person, passive, plain and ``\emph{X is ready}'' forms), reassign, date change, decline or confirm (short replies to a pending proposal), status, and dependency (\emph{waiting on}, \emph{depends on}, \emph{blocked by}). The first cue that matches and passes the gates wins. If none matches, a sentence with a request or commitment and a task candidate becomes a creation proposal; anything else is a no-action note.
+
+\subsection{Gates}
+A cue is gated, that is, turned into an explained no-action, when the sentence is a question (unless the intent allows questions, as requests and reschedule asks do), when a negation occurs within 28 characters before the cue, when the cue sits inside a subordinate clause (\emph{when}, \emph{if}, \emph{once}, \emph{after}\ldots), or when the sentence is historical (\emph{yesterday}, \emph{last week}, \emph{was}, \emph{failed}). The gates are why \emph{``The server went down yesterday''} and \emph{``If you approve, I'll start''} change nothing.
+
+\subsection{Referent matching}
+Update cues must be attached to an existing task. The matcher scores open tasks by content-token overlap with the sentence, ownership by the speaker, recency, explicit identifiers (\emph{T-3}), and anaphora (\emph{it}, \emph{this}) resolved to the most recently touched task when unambiguous. The outcome is \lab{MATCHED} only when one candidate is clearly ahead; otherwise it is \lab{AMBIGUOUS\_REFERENT} with the ranked candidates, or \lab{NO\_REFERENT}. \Cref{fig:ambiguity} shows Scenario C, where a volunteer's sentence matches two similar open tasks and the system asks which one is meant instead of guessing.
+
+\begin{figure}[t]
+\centering
+\diagram[0.94\linewidth]{ex_ambiguity}
+\caption[Ambiguity handling]{Ambiguity handling in Scenario C. Two open tasks share most of their words, so the volunteer's sentence cannot be attached to either. The reviewer chooses; until then nothing changes.}
+\label{fig:ambiguity}
+\end{figure}
+
+\subsection{Operations and their safety guards}
+The reconciler emits nine operation types: \code{CREATE\_TASK}, \code{UPDATE\_ASSIGNEE}, \code{PROPOSE\_DUE\_DATE\_CHANGE}, \code{CONFIRM\_DUE\_DATE\_CHANGE}, \code{UPDATE\_STATUS}, \code{COMPLETE\_TASK}, \code{CANCEL\_TASK}, \code{ADD\_DEPENDENCY} and \code{NO\_ACTION}. Applying an accepted operation is guarded by checks that refuse the change and write nothing when they fail:
+\begin{itemize}
+  \item \textbf{optimistic concurrency}: the proposal records the task version it was based on, and a stale version is refused (\lab{STALE\_VERSION});
+  \item \textbf{lifecycle}: only the transitions open $\to$ in progress, open $\to$ completed, open $\to$ cancelled, in progress $\to$ completed and in progress $\to$ cancelled are legal (\lab{ILLEGAL\_TRANSITION});
+  \item \textbf{prerequisites}: a dependency cannot be accepted before the tasks it connects exist (\lab{PREREQUISITE\_PENDING});
+  \item \textbf{unresolved values}: an owner or date change without a value must be edited first (\lab{UNRESOLVED\_VALUE});
+  \item \textbf{no degradation}: a resolved date is never overwritten by an unresolved one;
+  \item \textbf{idempotency}: accepting the same proposal twice, or replaying the same message identifier, writes nothing new.
+\end{itemize}
+
+\subsection{Date changes as a two-step protocol}
+A deadline move requested by someone other than the task's creator or owner is not a change but a \emph{proposal}: accepting it records a pending change on the task, while the due date stays as it is. A later message from a person whose agreement is needed (\emph{``Friday is fine.''}) is recognised as a confirmation of that specific proposal; only accepting the confirmation moves the date. A confirmation by the proposer is flagged \lab{UNAUTHORIZED\_CONFIRMER}, and a reply naming a different date becomes a counter-proposal.
+
+\subsection{Evidence}
+The reconciler passes 91 developer-written scenarios (43 original and 48 added later), with 0 duplicate tasks in the duplicate-attempt scenarios and 0 incorrect overwrites. Invariant fuzzing over 200 seeds of 60 random steps each (12,000 steps) found 0 violations of the invariants that task identifiers never disappear, versions never decrease, history is never rewritten, history alone reconstructs every task, replays write nothing and every applied update had a matched referent. A mutation check showed the fuzzing is not vacuous: removing history writes for status changes was caught in 5 of 15 seeds.
+
+\section{Dependency graph}
+The graph layer (\code{src/graph/}) builds a NetworkX directed graph from the store on every request, with an edge from each prerequisite to its dependent. A new edge is refused, and kept as a \emph{held} edge with a recorded reason, if it is a self-loop, references an unknown task, or would close a cycle (\lab{CYCLE}, with the cycle path); adding an existing edge again is idempotent. Held edges are displayed but never block a task. From the accepted edges and task statuses the layer derives three states: \emph{ready} (no open prerequisite), \emph{blocked} (at least one open prerequisite) and \emph{needs review} (the only unfinished prerequisites were cancelled; cancellation does not satisfy a dependency). A what-if function computes which tasks would change state if a task were completed, cancelled or reopened, without changing anything. An oracle fuzz of 12,000 random edit decisions and 72,120 derived-state comparisons against independent DFS and Kahn implementations \citep{kahn1962topological} found 0 disagreements.
+
+\section{Review authorisation}
+\label{sec:reviewer}
+The last rule decides who may approve a suggestion. Early versions allowed any participant to accept anything, so a project lead could accept work on behalf of the people it was assigned to. The final rule, enforced by the API, gives each suggestion a list of reviewers derived from the people it affects (\cref{tab:reviewer}). Anyone else receives \code{403 NOT\_YOUR\_REVIEW}. The author of a message may additionally dismiss a suggestion derived from it, since they know best when it misreads them.
+
+\begin{table}[h]
+\centering
+\caption{Who may accept a suggestion (\code{src/api/views.py}, function \code{reviewers}).}
+\label{tab:reviewer}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{46mm}L@{}}
+\toprule
+Operation & Reviewers \\
+\midrule
+New task & The proposed owner; anyone if no owner is known \\
+Hand-over (\code{UPDATE\_ASSIGNEE}) & The new owner \\
+Date change requested by someone else & Its author (confirming the request was read correctly); the change itself is confirmed in the next step \\
+Direct date change, confirmation & The owner; for a confirmation, the people whose agreement the request needed \\
+Status change, completion & The task owner \\
+Cancellation & The owner or the creator of the task \\
+New prerequisite & The owner of the task that will have to wait \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Fallback mechanisms}
+Fallbacks in Text2Task are explicit and visible. The \code{rule\_only} preset runs the whole pipeline with spans from the rule baseline instead of the entity model, and is selectable in the settings. A separate rule fallback for an unavailable model exists but is off by default, and when it is used every output is labelled \code{rule}. When a model is unavailable and the fallback is off, the message is stored as failed and the interface says so. At no point does the system substitute scripted demonstration output for a failed live analysis.

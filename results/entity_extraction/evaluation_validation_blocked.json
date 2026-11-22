@@ -1,0 +1,9 @@
+{
+  "emails": 60,
+  "human_reviewed_gold_emails": 0,
+  "model_available": false,
+  "reason": "evaluation_requires_fully_human_reviewed_gold",
+  "split": "validation",
+  "status": "BLOCKED",
+  "timestamp": "2026-10-31T22:32:49.048071Z"
+}

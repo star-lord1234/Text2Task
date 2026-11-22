@@ -1,0 +1,12 @@
+% Small figure: ambiguous referent (Scenario C, step 3)
+\begin{tikzpicture}[node distance=4mm and 7mm, every node/.append style={minimum height=7mm}]
+\node[nn, minimum width=34mm] (t1) {T-1 ``review the slides''\\ \tiny open, no owner};
+\node[nn, minimum width=34mm, below=of t1] (t2) {T-2 ``review the slides for\\ the client deck'' \tiny open, no owner};
+\coordinate (mid) at ($(t1.west)!0.5!(t2.west)$);
+\coordinate (mide) at ($(t1.east)!0.5!(t2.east)$);
+\node[data, minimum width=36mm, left=14mm of mid, anchor=east] (m) {Anushree: \emph{``I can review}\\ \emph{the slides.''}\\ \tiny volunteer cue, TASK span};
+\node[decision, right=10mm of mide, minimum width=24mm] (d) {one clear\\ winner?};
+\node[warn, right=8mm of d, minimum width=36mm] (c) {AMBIGUOUS\_REFERENT\\ \tiny chooser shows both tasks with\\ \tiny their match scores; owner of\\ \tiny neither changes until a pick};
+\draw[flow] (m) -- node[note, above, sloped]{match} (t1); \draw[flow] (m) -- node[note, below, sloped]{match} (t2);
+\draw[flow] (t1) -- (d); \draw[flow] (t2) -- (d); \draw[flow] (d) -- node[note, above]{no} (c);
+\end{tikzpicture}

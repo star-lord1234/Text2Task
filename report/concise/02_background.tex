@@ -1,0 +1,29 @@
+\chapter{Background and Related Work}
+\label{ch:background}
+
+\textbf{Action items in email.} \citet{cohen2004speechacts} classified emails into speech acts such as request and commit; \citet{bennett2005actionitems} compared message- and sentence-level action-item detection; \citet{lampert2010requests} studied how often requests are indirect. These works predict a label per message or sentence and do not maintain a task list. Smart To-Do \citep{mukherjee2020smarttodo} generates to-do text from commitments (BLEU 0.23, ROUGE 0.63); Text2Task is extractive and structured instead. Most of this research, including our data, uses the Enron corpus \citep{klimt2004enron}.
+
+\textbf{MailEx.} \citet{srivastava2023mailex} annotated 1,500 email threads (3,936 emails) with 10 event types, 76 argument roles and 8,392 events. With end-to-end BERT sequence labelling they report test F1 of 0.537 for trigger identification and 0.368 for argument classification (0.651 given gold triggers), and only 0.169 trigger identification for GPT-3.5 prompting. Their arguments (\lab{Action Description}, \lab{Members}, \lab{Date}) map naturally onto our TASK, PERSON and TEMPORAL types, but the tasks differ, so their numbers are not comparable with ours.
+
+\textbf{Sequence labelling and encoders.} Spans are cast as BIO token labels \citep{ramshaw1995chunking} and scored with exact-match entity F1 as in CoNLL-2003 \citep{tjongkimsang2003conll,nakayama2018seqeval}. BiLSTM-CRF models \citep{lample2016ner} gave way to fine-tuned transformers \citep{vaswani2017attention,devlin2019bert}. DistilBERT \citep{sanh2019distilbert}, a six-layer distilled BERT about 40\% smaller and 60\% faster, made local training feasible. Implementation used PyTorch \citep{paszke2019pytorch}, Transformers \citep{wolf2020transformers} and AdamW \citep{loshchilov2019adamw}.
+
+\textbf{Relations, time and rules.} Entity markers improve relation classification \citep{baldinisoares2019mtb}, and typed markers in a simple pipeline outperform joint models by 1.7 to 2.8 relation F1 \citep{zhong2021pure}; our relation model follows this design. Temporal normalisation is traditionally rule-based \citep{strotgen2010heideltime,chang2012sutime}. Rules remain the norm in industrial extraction for their transparency \citep{chiticariu2013rules}, and weak supervision turns rules into training labels \citep{ratner2017snorkel}. Text2Task uses both ideas: derived labels for training and rules with provenance at inference.
+
+\begin{table}[htbp]
+\centering
+\caption{Comparison with related work. Reported results are quoted from the papers and use different tasks and metrics.}
+\label{tab:literature}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{30mm}p{8mm}LLp{30mm}@{}}
+\toprule
+Work & Year & Method & Data & Reported result \\
+\midrule
+\citet{cohen2004speechacts} & 2004 & Speech-act classification & Email corpora & message-level \\
+\citet{lampert2010requests} & 2010 & Request-for-action detection & Enron subset & message-level \\
+\citet{mukherjee2020smarttodo} & 2020 & Commitment detection + seq2seq & Own dataset & BLEU 0.23, ROUGE 0.63 \\
+\citet{srivastava2023mailex} & 2023 & BERT / BART / GPT-3.5 & MailEx & trig.\ id.\ 0.537, arg.\ cls.\ 0.368 \\
+\citet{zhong2021pure} & 2021 & Typed-marker relation pipeline & ACE, SciERC & +1.7--2.8 rel.\ F1 \\
+\textbf{Text2Task} & 2026 & DistilBERT + rules, review-first & MailEx-derived & lenient ent.\ F1 0.555, rel.\ F1 0.764 \\
+\bottomrule
+\end{tabularx}
+\end{table}

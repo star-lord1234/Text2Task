@@ -1,0 +1,80 @@
+\chapter{Model Evolution and Hybrid Architecture}
+\label{ch:evolution}
+
+Text2Task was not designed as a hybrid from the start. It began as a neural extraction project and became a hybrid system because of what each iteration revealed. \Cref{fig:evolution} places the iterations on a timeline (dates from the saved run metadata), and \cref{fig:iterations} compares the entity-model iterations. Scores in the two panels of \cref{fig:iterations} are measured against different references and must not be compared across panels.
+
+\begin{figure}[t]
+\centering
+\diagram{model_evolution}
+\caption[Model and system evolution]{Chronology of the implemented iterations, with the headline number of each on its own reference set.}
+\label{fig:evolution}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\chart{model_iterations}
+\caption[Entity model iterations]{Overall entity F1 of the entity-model iterations. (a) SILVER lineage, scored on the 60-email SILVER-v1 validation set (the six-class model with seqeval over six classes; the others over three). (b) MailEx-derived lineage, scored on the deduplicated development set (349 emails); *Run 3 is scored on its own requests-only labels. Strict = exact boundaries and type; lenient = same type and IoU $\ge 0.5$.}
+\label{fig:iterations}
+\end{figure}
+
+\section{Iteration 1: six-class SILVER model}
+\textit{Motivation.} The original plan extracted six entity types (TASK, PERSON, GROUP, TEMPORAL, EVENT, ARTIFACT) with nested spans from the 450 SILVER-v1 training emails.
+\textit{Configuration.} DistilBERT, 13 BIO labels, overlap layers, learning rate $2\times10^{-5}$, 3 epochs, no class weights (132 optimiser steps, 79 s).
+\textit{Outcome.} Entity F1 0.008 on SILVER-v1 validation (precision 0.08, recall 0.004), with token accuracy 0.73 entirely due to the \lab{O} class. The model predicted almost no entities; only TEMPORAL had any correct span. On five hand-written unseen messages it produced fragments such as \emph{the} and \emph{report to}.
+\textit{Lessons.} Three problems compounded: noisy labels (73\% of audited records had major errors), little data spread over six types, and extreme class imbalance. A strict ``GOLD evaluation'' mode was also implemented at this point; it refuses to run because no validation email is human-verified, and has never been bypassed.
+
+\section{Iteration 2: three-class SILVER-v2 models}
+\textit{Motivation.} Reduce the problem to the three types with enough data and repair the labels.
+\textit{Changes.} SILVER-v2 labels (major-error rate 33\%), three classes, single layer; validation on SILVER-v1 transformed to three classes.
+\textit{Configuration and outcome.} Three runs: unweighted for 3 epochs (F1 0.019, the model predicted no \lab{B-} label at all); unweighted for 6 epochs (0.046); and with square-root inverse-frequency weights for 3 epochs (strict 0.127, lenient 0.226). The weighted model found people and dates (PERSON strict 0.333, TEMPORAL 0.220) but almost no exact TASK spans (strict 0.004), although its TASK spans overlapped references at the token level (overlap-any 0.325).
+\textit{Status.} This weighted checkpoint is the one the application loads. It is the strongest model of its lineage for PERSON and TEMPORAL, but a poor TASK model.
+\textit{Remaining limitation.} Validation labels used a different TASK definition from training, so even these numbers mix model error with definitional mismatch.
+
+\section{Iteration 3: MailEx-derived labels (Phase 2)}
+\textit{Motivation.} Replace LLM-built labels with human MailEx annotations mapped deterministically, and use six times more training data.
+\textit{Changes.} The mapping of \cref{tab:mapping}; 2,845 training emails; 10 epochs with warm-up and no class weights; selection by lenient F1; new strict, lenient, overlap and token metrics.
+\textit{Outcome.} On the original development set the best run reached lenient F1 0.575 and strict 0.420. The leakage audit then showed that 39 development emails copied training emails; on the deduplicated set Run 1 scores lenient 0.555 and strict 0.390 (TASK 0.482, PERSON 0.594, TEMPORAL 0.645), against 0.401 and 0.260 for the rule baseline. On the 45 reference spans inside the leaked emails alone, Run 1 scored 0.82 lenient F1, a direct measure of memorisation.
+\textit{Interpretation.} The jump from iteration 2 is large but is \emph{not} a controlled comparison: labels, data size, training recipe and the validation definition all changed together, and no experiment isolated one factor.
+\textit{Remaining limitation.} Not wired into the application, single seed, model selection on the reported set, no test-set result.
+
+\section{Iteration 4: relation model (Phase 3)}
+\textit{Motivation.} Link tasks to owners and dates with a learned model instead of proximity rules.
+\textit{Configuration.} Typed markers, marker pooling, square-root weights, learning rate $3\times10^{-5}$, best epoch 3 (\cref{ch:models}).
+\textit{Outcome.} With reference spans, micro F1 0.764 and macro F1 0.719 against 0.527 and 0.517 for the rule linker (\cref{ch:results}). With spans predicted by the deployed entity checkpoint, relation F1 collapses to 0.024 (lenient matching), because the relation references use SILVER-v1 span definitions that the SILVER-v2 entity model does not reproduce: on 25 validation records only 3 of 139 reference TASK spans are matched at IoU $\ge 0.5$. This number measures the mismatch between span definitions, not relation quality.
+
+\section{Iteration 5: deterministic task layer (Phases 4--6)}
+Temporal normalisation, owner resolution and uncertainty flags (Phase 4), reconciliation and lifecycle (Phase 5) and the dependency graph (Phase 6) were added as rule-based components, because the corpus offers no labels to learn them from (\cref{ch:rules}). Replaying 510 corpus emails through the full chain produced about 1.8 creation proposals per message, almost all flagged, and 0 dependency proposals: on formal email with a weak TASK model, the downstream components mostly receive noise, which they flag rather than act on.
+
+\section{Iteration 6: the application (Phase 7)}
+The first version of the application ran the two checkpoints with the rule dependency linker and no refinement, the configuration now called \code{neural\_plus\_linker}. Using it on short chat messages exposed the fragmentation problem directly: the entity model's TASK spans on chat were often function-word fragments, and an audit found that short chat messages show four times more mid-word truncation than email.
+
+\section{Iteration 7: hybrid refinement (Phase 7.5)}
+\textit{Motivation.} Make the live system usable without retraining, while keeping the neural output visible and comparable.
+\textit{Changes.} The eight refinement stages of \cref{tab:refine}, owner-link scoping, context-aware lifecycle handling, and five named presets:
+\begin{center}
+\footnotesize
+\begin{tabular}{@{}ll@{}}
+\toprule
+Preset & Components \\
+\midrule
+\code{neural\_only} & Raw checkpoints; no refinement, no rule dependency linker \\
+\code{neural\_plus\_linker} & Raw checkpoints plus the rule dependency linker (Phase 7 behaviour) \\
+\code{refined} & Span repair and temporal stages (stages 1--5) \\
+\code{hybrid} & All eight stages plus the linker (default) \\
+\code{rule\_only} & No neural entity model: rule-baseline spans with the same rule stages \\
+\bottomrule
+\end{tabular}
+\end{center}
+\textit{Experimental configuration.} Three sets of developer-written chat cases (24 used during development, 34 written before the code and then used for debugging, and 30 held out: written before the fixes and executed only after them), run against the real checkpoints with a simulated reviewer that accepts every actionable proposal. A case passes strictly only if every expected task, owner, due day, status and edge is present and nothing else.
+\textit{Outcome.} On the holdout set, hybrid passed 23 of 30 cases against 7 for \code{neural\_only} and 22 for \code{rule\_only}; task recall rose from 0.09 to 0.91. The first run of the new set, before generic bugs in the new stages were fixed, gave hybrid only 14 of 34; this run was saved unchanged and is reported in \cref{ch:results}. No case that passed with \code{neural\_only} failed with \code{hybrid}.
+\textit{Remaining limitation.} On chat, \code{hybrid} and \code{rule\_only} are almost equal, so the hybrid score is not evidence that the neural entity model is good. On real email the order is different: the hybrid improves entity agreement over neural-only (0.203 to 0.255 lenient F1), and the neural PERSON and TEMPORAL spans matter more.
+
+\section{The final hybrid architecture}
+\Cref{fig:hybrid} shows how neural and deterministic components interact in the deployed configuration. The interaction is layered rather than voted: the neural models propose spans and links, the rules repair, complete or reinterpret them under recorded provenance, and the reconciler and graph decide what the proposals mean for the task list. Conflicts are resolved by explicit precedence, not by scores: a rule may extend or merge a neural span but keeps the original; a deadline cue overrides a \lab{SCHEDULED\_ON} label but records the disagreement as a flag; a clause boundary removes an owner link the model scored highly; and nothing reaches the task list without a person's acceptance.
+
+\begin{figure}[t]
+\centering
+\diagram[0.98\linewidth]{hybrid_architecture}
+\caption[Hybrid system architecture]{The hybrid pipeline. Raw neural spans (or rule-baseline spans in the \code{rule\_only} preset) pass through eight switchable rule stages before relation classification; owner links are scoped to clauses, task fields are built, and the reconciler proposes operations. The Inspector receives raw and refined spans, origins and the rule trace.}
+\label{fig:hybrid}
+\end{figure}

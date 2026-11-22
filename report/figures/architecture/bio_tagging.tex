@@ -1,0 +1,38 @@
+% Figure: token-level BIO annotation of a real MailEx-derived training record (mailex:train:cash-m_inbox272:turn_0001)
+\begin{tikzpicture}[x=11mm, y=1mm]
+\foreach \i/\tk/\lb/\fillc/\drawc in {
+  0/{[CLS]}/--/white/rulegrey,
+  1/{i}/O/palegrey/rulegrey,
+  2/{just}/O/palegrey/rulegrey,
+  3/{chat}/O/palegrey/rulegrey,
+  4/{\#\#ted}/O/palegrey/rulegrey,
+  5/{with}/O/palegrey/rulegrey,
+  6/{andrea}/B-PER/paleteal/teal,
+  7/{.}/O/palegrey/rulegrey,
+  8/{we}/O/palegrey/rulegrey,
+  9/{'}/B-TASK/paleblue/navy,
+  10/{ll}/I-TASK/paleblue/navy,
+  11/{cover}/I-TASK/paleblue/navy,
+  12/{this}/I-TASK/paleblue/navy,
+  13/{tomorrow}/B-TEMP/paleochre/ochre,
+  14/{.}/O/palegrey/rulegrey,
+  15/{[SEP]}/--/white/rulegrey} {
+  \node[tok, draw=\drawc, fill=\fillc, minimum width=10.2mm] (t\i) at (\i,0) {\tk};
+  \node[font=\sffamily\tiny\bfseries, text=\drawc] (l\i) at (\i,-8) {\lb};
+}
+\node[anchor=east, font=\sffamily\scriptsize\bfseries, text=navy] at (-0.6,0) {WordPiece};
+\node[anchor=east, font=\sffamily\scriptsize\bfseries, text=navy] at (-0.6,-8) {BIO label};
+% original text and MailEx arguments above
+\node[anchor=east, font=\sffamily\scriptsize\bfseries, text=navy] at (-0.6,14) {Email text};
+\node[font=\small, anchor=west] at (0.5,14) {\textit{I just chatted with \textbf{Andrea}. We\textbf{'ll cover this} \textbf{tomorrow}.}};
+\node[anchor=east, font=\sffamily\scriptsize\bfseries, text=navy] at (-0.6,26) {MailEx slots};
+\draw[decorate, decoration={brace, amplitude=3pt}, teal] (5.6,20) -- node[above=2pt, font=\sffamily\tiny, text=teal]{Meeting Members} (6.4,20);
+\draw[decorate, decoration={brace, amplitude=3pt}, rulegrey] (7.6,20) -- node[above=9pt, font=\sffamily\tiny, text=rulegrey, align=center]{Action Members ``We''\\(pronoun: rejected)} (8.4,20);
+\draw[decorate, decoration={brace, amplitude=3pt}, navy] (8.6,20) -- node[above=2pt, font=\sffamily\tiny, text=navy, align=center]{Action Description\\ (commitment form ``'ll'')} (12.4,20);
+\draw[decorate, decoration={brace, amplitude=3pt}, ochre] (12.6,20) -- node[above=2pt, font=\sffamily\tiny, text=ochre]{Action Date} (13.4,20);
+% spans below
+\draw[decorate, decoration={brace, mirror, amplitude=3pt}, teal] (5.6,-12) -- node[below=2pt, font=\sffamily\tiny, text=teal]{PERSON [20,26)} (6.4,-12);
+\draw[decorate, decoration={brace, mirror, amplitude=3pt}, navy] (8.6,-12) -- node[below=2pt, font=\sffamily\tiny, text=navy]{TASK [30,44)} (12.4,-12);
+\draw[decorate, decoration={brace, mirror, amplitude=3pt}, ochre] (12.6,-12) -- node[below=2pt, font=\sffamily\tiny, text=ochre]{TEMPORAL [45,53)} (13.4,-12);
+\node[anchor=east, font=\sffamily\scriptsize\bfseries, text=navy] at (-0.6,-17) {Character span};
+\end{tikzpicture}

@@ -1,0 +1,16 @@
+% Figure: entity extraction model (DistilBERT token classification) and span reconstruction
+\begin{tikzpicture}[node distance=3.2mm and 4mm, every node/.append style={minimum height=7.5mm}]
+\node[data, minimum width=34mm] (txt) {Message text\\ \tiny ``Bianca please prepare the report by Friday.''};
+\node[rule, minimum width=34mm, right=of txt] (tokz) {WordPiece tokeniser\\ \tiny uncased vocab (30,522), offsets kept};
+\node[rule, minimum width=34mm, right=of tokz] (win) {Windowing\\ \tiny $\le$512 pieces, stride 64};
+\node[nn, minimum width=104mm+8mm, below=7mm of tokz, alias=L0] (emb) {Input embeddings $\mathbf{e}_i=\mathbf{W}_{\text{tok}}[x_i]+\mathbf{W}_{\text{pos}}[i]$ \quad (LayerNorm, dropout) \quad $d=768$};
+\foreach \k [evaluate=\k as \prev using int(\k-1)] in {1,...,6} {
+  \node[nn, minimum width=104mm+8mm, minimum height=5.6mm, below=1.6mm of L\prev] (L\k) {Transformer layer \k: multi-head self-attention (12 heads) $\rightarrow$ add \& norm $\rightarrow$ FFN (3072) $\rightarrow$ add \& norm};
+}
+\node[nn, minimum width=104mm+8mm, below=3mm of L6] (head) {Token-classification head: dropout $\rightarrow$ linear $768\times7$ $\rightarrow$ softmax over \{O, B/I-TASK, B/I-PERSON, B/I-TEMPORAL\}};
+\node[rule, minimum width=50mm, below=6mm of head.south west, anchor=north west] (dec) {BIO decoding\\ \tiny B opens a span, I extends it;\\ \tiny an I after O also opens a span};
+\node[rule, minimum width=50mm, right=12mm of dec] (spans) {Character spans + scores\\ \tiny via offset mapping; mean token probability};
+\draw[flow] (txt) -- (tokz); \draw[flow] (tokz) -- (win); \draw[flow] (win.south) -- (win.south |- emb.north);
+\draw[flow] (L6) -- (head); \draw[flow] (head.south -| dec.north) -- (dec.north); \draw[flow] (dec) -- (spans);
+\draw[decorate, decoration={brace, amplitude=4pt}, navy] ([xshift=2mm]L1.north east) -- node[right=4pt, note, align=left]{DistilBERT encoder\\ 6 layers, 66M params\\ (pre-trained, fine-tuned)} ([xshift=2mm]L6.south east);
+\end{tikzpicture}

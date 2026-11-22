@@ -1,0 +1,7 @@
+flowchart LR
+    T_1["T-1 draft the report   bianca   done"]
+    T_2["T-2 review the draft   dev   ready"]
+    T_3["T-3 send to the client   riya   blocked"]
+    T_1 --> T_2
+    T_2 --> T_3
+    T_3 -. "held: CYCLE" .-> T_1

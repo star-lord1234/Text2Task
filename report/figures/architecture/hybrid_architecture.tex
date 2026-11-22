@@ -1,0 +1,28 @@
+% Figure: hybrid refinement pipeline (src/refine/pipeline.py, presets in src/refine/config.py)
+\begin{tikzpicture}[node distance=3mm and 5mm, every node/.append style={minimum height=7mm}]
+\node[data, minimum width=28mm] (msg) {Chat message\\ \tiny + sender, recipients, time};
+\node[nn, minimum width=28mm, right=8mm of msg, yshift=8mm] (ent) {Entity model\\ \tiny raw neural spans};
+\node[nn, minimum width=28mm, right=8mm of msg, yshift=-8mm] (rb) {Rule baseline spans\\ \tiny (\code{rule\_only} preset)};
+% refinement stages column
+\node[rule, minimum width=46mm, right=12mm of ent, yshift=6mm] (s1) {1 span\_snap \tiny extend to word boundaries};
+\node[rule, minimum width=46mm, below=1.4mm of s1] (s2) {2 filter\_invalid\_tasks \tiny drop function-word fragments};
+\node[rule, minimum width=46mm, below=1.4mm of s2] (s3) {3 merge\_adjacent \tiny join same-type pieces};
+\node[rule, minimum width=46mm, below=1.4mm of s3] (s4) {4 temporal\_detect \tiny dates the model missed};
+\node[rule, minimum width=46mm, below=1.4mm of s4] (s5) {5 temporal\_merge \tiny ``by'' + date + time};
+\node[rule, minimum width=46mm, below=1.4mm of s5] (s6) {6 grammar\_recovery \tiny action phrases, roster names};
+\node[rule, minimum width=46mm, below=1.4mm of s6] (s7) {7 clause\_dependencies \tiny once/after/before/then/until};
+\node[rule, minimum width=46mm, below=1.4mm of s7] (s8) {8 context\_lifecycle \tiny status without a TASK span};
+\node[layer, fit=(s1)(s8), inner sep=4pt] (R) {};
+\node[layerlabel] at (R.north west) {Refinement (rules, each switchable)};
+\node[nn, minimum width=30mm, right=12mm of s2] (rel) {Relation model\\ \tiny on refined spans};
+\node[rule, minimum width=30mm, below=3mm of rel] (owner) {Owner-link scoping\\ \tiny drop cross-clause owners};
+\node[rule, minimum width=30mm, below=3mm of owner] (fields) {Task fields\\ \tiny dates, owner, flags};
+\node[rule, minimum width=30mm, below=3mm of fields] (recon) {Reconciler\\ \tiny proposals};
+\node[ui, minimum width=30mm, below=3mm of recon] (ins) {Inspector record\\ \tiny raw vs refined, origin,\\ \tiny rule trace};
+\draw[flow] (msg.east) -- ++(3mm,0) |- (ent.west); \draw[flow] (msg.east) -- ++(3mm,0) |- (rb.west);
+\draw[flow] (ent.east) -- (ent.east -| R.west); \draw[dflow] (rb.east) -- (rb.east -| R.west);
+\draw[flow] (R.east |- rel.west) -- (rel.west);
+\draw[flow] (rel) -- (owner); \draw[flow] (owner) -- (fields); \draw[flow] (fields) -- (recon); \draw[flow] (recon) -- (ins);
+\draw[dflow] (s7.east) -| ([xshift=-4mm]recon.west) -- (recon.west);
+\node[note, below=2mm of R, align=left, text width=50mm] {Every span keeps its origin: \textbf{neural}, \textbf{refined} (a neural span a rule changed; the raw span is kept) or \textbf{rule}.};
+\end{tikzpicture}

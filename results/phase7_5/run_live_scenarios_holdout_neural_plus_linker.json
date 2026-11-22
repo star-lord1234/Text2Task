@@ -1,0 +1,2035 @@
+{
+ "fixture": "live_scenarios_holdout",
+ "preset": "neural_plus_linker",
+ "cases": [
+  {
+   "id": "H1",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please rewrite the onboarding guide by Friday.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cplease\u201d \u2014 Bianca, due no confirmed date",
+       "flags": [
+        "COMPETING_DATES"
+       ]
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cwrite the\u201d \u2014 Bianca, due no confirmed date",
+       "flags": [
+        "COMPETING_DATES"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "please",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "write the",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['rewrite', 'onboarding guide']",
+     "spurious tasks ['please', 'write the']"
+    ],
+    "spurious_tasks": [
+     "please",
+     "write the"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H2",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, can you translate the user manual by Monday?",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccan\u201d \u2014 unassigned, due 2026-11-16",
+       "flags": [
+        "NO_ASSIGNEE",
+        "DATE_RELATION_CONFLICT",
+        "WEAK_RELATION_SCORE",
+        "TENTATIVE_REQUEST"
+       ]
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ctranslate the\u201d \u2014 Anushree, due 2026-11-16",
+       "flags": [
+        "DATE_RELATION_CONFLICT",
+        "TENTATIVE_REQUEST"
+       ]
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cmanual\u201d \u2014 Anushree, due 2026-11-16",
+       "flags": [
+        "DATE_RELATION_CONFLICT",
+        "TENTATIVE_REQUEST"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "can",
+      "owner": null,
+      "lifecycle": "open",
+      "due": "2026-11-16"
+     },
+     {
+      "id": "T-2",
+      "title": "translate the",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-16"
+     },
+     {
+      "id": "T-3",
+      "title": "manual",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-16"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['translate', 'manual']",
+     "spurious tasks ['can', 'translate the', 'manual']"
+    ],
+    "spurious_tasks": [
+     "can",
+     "translate the",
+     "manual"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H3",
+   "group": "independent",
+   "messages": [
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "I'll upload the screenshots tomorrow.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cload\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "load",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['upload', 'screenshots']",
+     "spurious tasks ['load']"
+    ],
+    "spurious_tasks": [
+     "load"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H4",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Could someone proofread the contract?",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "question",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['proofread', 'contract']"
+    ],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H5",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, I need you to renew the license by Friday.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cneed\u201d \u2014 unassigned, due 2026-11-13",
+       "flags": [
+        "NO_ASSIGNEE",
+        "DATE_RELATION_CONFLICT",
+        "WEAK_RELATION_SCORE"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "need",
+      "owner": null,
+      "lifecycle": "open",
+      "due": "2026-11-13"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['renew', 'license']",
+     "spurious tasks ['need']"
+    ],
+    "spurious_tasks": [
+     "need"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H6",
+   "group": "independent",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Let me test the payment flow by Thursday.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cLet me test the payment flow\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "Let me test the payment flow",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 1,
+    "due_expected": 1,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "H7",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please print the invitations and mail them by Friday.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cprint the\u201d \u2014 Bianca, due no confirmed date",
+       "flags": [
+        "COMPETING_DATES",
+        "WEAK_RELATION_SCORE"
+       ]
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cand mail them\u201d \u2014 Bianca, due no confirmed date",
+       "flags": [
+        "COMPETING_DATES"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "print the",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "and mail them",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 2,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['print', 'invitations']",
+     "spurious tasks ['print the']"
+    ],
+    "spurious_tasks": [
+     "print the"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H8",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree will refactor the parser next week.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "task-like phrase without request, owner or deadline",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['refactor', 'parser']"
+    ],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H9",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please export the customer list by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, merge the duplicates once Anushree finishes the export.",
+     "09:35"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cexport the\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201clist\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     []
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "export the",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     },
+     {
+      "id": "T-2",
+      "title": "list",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['export', 'customer list']",
+     "missing task ['merge', 'duplicates']",
+     "spurious tasks ['export the', 'list']",
+     "missing edge ['merge', 'duplicates'] <- ['export', 'customer list']"
+    ],
+    "spurious_tasks": [
+     "export the",
+     "list"
+    ],
+    "edges_expected": 1,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H10",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please configure the build server.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, run the tests after the build server is configured.",
+     "09:34"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccon\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cgure the\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "task-like phrase without request, owner or deadline",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "con",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "gure the",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['configure', 'build server']",
+     "missing task ['run', 'tests']",
+     "spurious tasks ['con', 'gure the']",
+     "missing edge ['run', 'tests'] <- ['configure', 'build server']"
+    ],
+    "spurious_tasks": [
+     "con",
+     "gure the"
+    ],
+    "edges_expected": 1,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H11",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "After you review the draft, send it to the client.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "task-like phrase without request, owner or deadline",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['review', 'draft']",
+     "missing task ['send']",
+     "missing edge ['send'] <- ['review', 'draft']"
+    ],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H12",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Before we publish the article, someone must fact-check it.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     []
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['publish', 'article']",
+     "missing task ['fact']",
+     "missing edge ['publish', 'article'] <- ['fact']"
+    ],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H13",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please draft the agenda, then Anushree should circulate it.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cdraft the\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cshould ci\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201culate\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "draft the",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "should ci",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-3",
+      "title": "ulate",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['draft', 'agenda']",
+     "missing task ['circulate']",
+     "spurious tasks ['draft the', 'should ci', 'ulate']",
+     "missing edge ['circulate'] <- ['draft', 'agenda']"
+    ],
+    "spurious_tasks": [
+     "draft the",
+     "should ci",
+     "ulate"
+    ],
+    "edges_expected": 1,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H14",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, set up the staging database.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, load the sample data.",
+     "09:32"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Loading the data is waiting on the staging database.",
+     "09:35"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "task-like phrase without request, owner or deadline",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cload the\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cdata\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "dependency endpoints not both identified",
+       "flags": [
+        "DEPENDENCY_ENDPOINT_UNMATCHED"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "load the",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "data",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['set up', 'staging database']",
+     "missing task ['load', 'sample data']",
+     "spurious tasks ['load the', 'data']",
+     "missing edge ['load', 'sample data'] <- ['set up', 'staging database']"
+    ],
+    "spurious_tasks": [
+     "load the",
+     "data"
+    ],
+    "edges_expected": 1,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H15",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please book the venue by Friday.",
+     "09:33"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccompile\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cbook the venue\u201d \u2014 Bianca, due 2026-11-13",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "compile",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     },
+     {
+      "id": "T-2",
+      "title": "book the venue",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": "2026-11-13"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 2,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 1,
+    "due_expected": 1,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['compile', 'sales figures']",
+     "spurious tasks ['compile']"
+    ],
+    "spurious_tasks": [
+     "compile"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H16",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, water the plants when you can.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cwater\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cwhen\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "water",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "when",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['water', 'plants']",
+     "spurious tasks ['water', 'when']"
+    ],
+    "spurious_tasks": [
+     "water",
+     "when"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "H17",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, send the summary after the standup.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "task-like phrase without request, owner or deadline",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['send', 'summary']"
+    ],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "L1",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "The sales figures are ready.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccompile\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "COMPLETE_TASK without a matching task",
+       "flags": [
+        "NO_REFERENT"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "compile",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['compile', 'sales figures']",
+     "spurious tasks ['compile']"
+    ],
+    "spurious_tasks": [
+     "compile"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "L2",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I compiled the sales figures.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccompile\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     []
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "compile",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['compile', 'sales figures']",
+     "spurious tasks ['compile']"
+    ],
+    "spurious_tasks": [
+     "compile"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "L3",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I'm working on the sales figures.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccompile\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "UPDATE_STATUS without a matching task",
+       "flags": [
+        "NO_REFERENT"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "compile",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['compile', 'sales figures']",
+     "spurious tasks ['compile']"
+    ],
+    "spurious_tasks": [
+     "compile"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "L4",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Forget the sales figures, we don't need them.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccompile\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     []
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "compile",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['compile', 'sales figures']",
+     "spurious tasks ['compile']"
+    ],
+    "spurious_tasks": [
+     "compile"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "L5",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Great, thanks!",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccompile\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "acknowledgement with no pending change",
+       "flags": [
+        "NO_PENDING_PROPOSAL"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "compile",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['compile', 'sales figures']",
+     "spurious tasks ['compile']"
+    ],
+    "spurious_tasks": [
+     "compile"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "L6",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I compiled the expense report.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccompile\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "task-like phrase without request, owner or deadline",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "compile",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['compile', 'sales figures']",
+     "spurious tasks ['compile']"
+    ],
+    "spurious_tasks": [
+     "compile"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "L7",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please compile the sales figures by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Would Monday work instead of Thursday?",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ccompile\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "DATE_RELATION_CONFLICT"
+       ]
+      }
+     ],
+     [
+      {
+       "op": "UPDATE_ASSIGNEE",
+       "summary": "Reassign \u201ccompile\u201d to unassigned",
+       "flags": [
+        "UNRESOLVED_NEW_OWNER"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "compile",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['compile', 'sales figures']",
+     "spurious tasks ['compile']",
+     "last message ops ['UPDATE_ASSIGNEE'] lack ['PROPOSE_DUE_DATE_CHANGE']"
+    ],
+    "spurious_tasks": [
+     "compile"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "Y1",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Congratulations on the promotion!",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     []
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 0,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "Y2",
+   "group": "negative",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "The printer is out of paper again.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     []
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 0,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "Y3",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "We met the client on Tuesday and it went fine.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     []
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 0,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "Y4",
+   "group": "negative",
+   "messages": [
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "Is the report ready?",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "task-like phrase without request, owner or deadline",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 0,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "Y5",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Happy Friday, everyone.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     []
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 0,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "Y6",
+   "group": "negative",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I reviewed the contract last week.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "COMPLETE_TASK without a matching task",
+       "flags": [
+        "NO_REFERENT"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 0,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  }
+ ],
+ "summary": {
+  "independent": {
+   "cases": 8,
+   "passed_strict": 1,
+   "passed_ignoring_spurious": 1,
+   "task_recall": 0.222,
+   "owner_accuracy": 1.0,
+   "due_accuracy": 1.0,
+   "status_accuracy": null,
+   "edge_recall": null,
+   "expected_edges": 0,
+   "spurious_tasks": 8,
+   "spurious_edges": 0
+  },
+  "ALL": {
+   "cases": 30,
+   "passed_strict": 7,
+   "passed_ignoring_spurious": 7,
+   "task_recall": 0.094,
+   "owner_accuracy": 1.0,
+   "due_accuracy": 1.0,
+   "status_accuracy": null,
+   "edge_recall": 0.0,
+   "expected_edges": 6,
+   "spurious_tasks": 27,
+   "spurious_edges": 0
+  },
+  "dependent": {
+   "cases": 6,
+   "passed_strict": 0,
+   "passed_ignoring_spurious": 0,
+   "task_recall": 0.0,
+   "owner_accuracy": null,
+   "due_accuracy": null,
+   "status_accuracy": null,
+   "edge_recall": 0.0,
+   "expected_edges": 6,
+   "spurious_tasks": 9,
+   "spurious_edges": 0
+  },
+  "negative_dependency": {
+   "cases": 3,
+   "passed_strict": 0,
+   "passed_ignoring_spurious": 0,
+   "task_recall": 0.25,
+   "owner_accuracy": 1.0,
+   "due_accuracy": 1.0,
+   "status_accuracy": null,
+   "edge_recall": null,
+   "expected_edges": 0,
+   "spurious_tasks": 3,
+   "spurious_edges": 0
+  },
+  "lifecycle": {
+   "cases": 7,
+   "passed_strict": 0,
+   "passed_ignoring_spurious": 0,
+   "task_recall": 0.0,
+   "owner_accuracy": null,
+   "due_accuracy": null,
+   "status_accuracy": null,
+   "edge_recall": null,
+   "expected_edges": 0,
+   "spurious_tasks": 7,
+   "spurious_edges": 0
+  },
+  "negative": {
+   "cases": 6,
+   "passed_strict": 6,
+   "passed_ignoring_spurious": 6,
+   "task_recall": null,
+   "owner_accuracy": null,
+   "due_accuracy": null,
+   "status_accuracy": null,
+   "edge_recall": null,
+   "expected_edges": 0,
+   "spurious_tasks": 0,
+   "spurious_edges": 0
+  }
+ }
+}

@@ -1,0 +1,103 @@
+\chapter{Rule-Based Engine and Hybrid Design}
+\label{ch:rules}
+
+The models only answer which tokens form spans and how two spans relate. Turning dates into calendar values, matching messages to existing tasks, respecting a lifecycle and refusing cyclic dependencies could not be learned (the corpus has no timestamps, almost no update messages and seven dependency labels), and these are exactly the decisions where a wrong answer hurts most. The deterministic layer therefore \emph{repairs}, \emph{completes} and \emph{guards}. Every rule is covered by developer-written tests or fuzzing; none is an accuracy claim.
+
+\section{Refinement of neural spans}
+Eight switchable stages run in order (\cref{tab:refine}). Grammar recovery uses about 200 action verbs with positional evidence (clause start, after \emph{please}, after a modal or subject) and no parser; past tense and passives are not task evidence.
+
+\begin{table}[htbp]
+\centering
+\caption{Refinement stages in execution order.}
+\label{tab:refine}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{36mm}L@{}}
+\toprule
+Stage & Effect \\
+\midrule
+\code{span\_snap} & extend spans that start or end inside a word \\
+\code{filter\_invalid\_tasks} & drop TASK spans made only of function words or 1--2 characters \\
+\code{merge\_adjacent} & merge same-type spans separated only by whitespace \\
+\code{temporal\_detect}, \code{temporal\_merge} & add missed dates; join deadline cue, date and time pieces \\
+\code{grammar\_recovery} & complete fragments to the full action phrase; recover phrases and participant names \\
+\code{clause\_dependencies} & \emph{after A, B}; \emph{B once/after/until A}; \emph{A, then B}; \emph{before A, B} \\
+\code{context\_lifecycle} & completion, progress and acknowledgement without a TASK span (\emph{``The dataset is cleaned.''}) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+ Each span keeps its origin: \emph{neural}, \emph{refined} (raw span kept) or \emph{rule}. Five presets make behaviour comparable: \code{neural\_only}, \code{neural\_plus\_linker}, \code{refined}, \code{hybrid} (default) and \code{rule\_only} (no neural entity model). \Cref{fig:hybrid} shows the hybrid pipeline.
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.92\linewidth]{hybrid_architecture}
+\caption{Hybrid pipeline: neural (or rule-baseline) spans pass eight switchable rule stages before relation classification, owner scoping, task fields and reconciliation.}
+\label{fig:hybrid}
+\end{figure}
+
+\section{Dates, owners and flags}
+The temporal normaliser maps an expression, the message time and the time zone to a value with an explicit status: \lab{RESOLVED}, \lab{PARTIAL}, \lab{UNRESOLVED\_NO\_ANCHOR}, \lab{UNRESOLVED\_EVENT\_CONDITION}, \lab{AMBIGUOUS}, \lab{VAGUE} or \lab{UNPARSEABLE}; conventions it assumes (end of day 17:00, ISO weeks) are recorded. Against Wednesday 11 November 2026, \emph{by Friday} resolves to 13 November, \emph{by Wednesday} is \lab{AMBIGUOUS}, and \emph{once the build is ready} stays an event condition. It passes 102/102 developer fixtures, but only 1.3\% of the 606 corpus date spans resolve because MailEx has no timestamps. Owner resolution is conservative and ordered: linked names (unique match only); first-person commitments (sender); a request addressed to one named participant; a single non-sender recipient; otherwise unassigned, never guessed. \Cref{fig:temporal} shows these decisions on real inputs.
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.9\linewidth]{ex_temporal}
+\caption{Temporal normalisation against the same anchor; only the first two become calendar values, the others are never guessed.}
+\label{fig:temporal}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\chart[0.85\linewidth]{temporal_status}
+\caption{Resolution status of 606 corpus date spans without an anchor (reality: MailEx has no timestamps) and with an illustrative one.}
+\label{fig:tempstatus}
+\end{figure}
+
+More than sixty flag codes (\lab{DATE\_AMBIGUOUS}, \lab{NO\_ASSIGNEE}, \lab{WEAK\_RELATION\_SCORE} below 0.9, \lab{AMBIGUOUS\_REFERENT}\ldots) route uncertain proposals to attention without ever applying or discarding anything on their own.
+
+\section{Reconciliation, graph and review rights}
+\Cref{fig:rules} shows how each sentence is interpreted. Intent cues are tried in a fixed priority (reopen, cancel, complete, reassign, date change, decline/confirm, status, dependency); gates turn questions, negations, conditionals and historical statements into explained no-actions; a lexical matcher attaches updates to an existing task only when one candidate clearly wins, otherwise the reviewer is asked to choose. Applying an accepted proposal is guarded by version checks, legal lifecycle transitions, prerequisites, and idempotency, and never replaces a resolved date with an unresolved one. Date moves requested by someone else are two-step: a pending proposal, then a confirmation by the person whose agreement is needed. The graph layer (NetworkX, \citealp{hagberg2008networkx}) refuses self-loops, unknown endpoints and cycle-forming edges, keeping them as \emph{held} edges with the reason, and derives \emph{ready}, \emph{blocked} and \emph{needs review} (only cancelled prerequisites remain) states. \Cref{fig:ambiguity} shows an ambiguous reference from a demo story.
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.85\linewidth]{ex_ambiguity}
+\caption{Ambiguity handling: a volunteer's sentence matches two similar open tasks, so the reviewer chooses and nothing changes until then.}
+\label{fig:ambiguity}
+\end{figure}
+
+\section{Who may approve, and the task lifecycle}
+Only the person a suggestion affects may accept it (\cref{tab:reviewer}); anyone else receives \code{403 NOT\_YOUR\_REVIEW}, and the author of a message may additionally dismiss suggestions derived from it. \Cref{fig:lifecycle} combines this rule with the safety checks and the task states.
+
+\begin{table}[htbp]
+\centering
+\caption{Who may accept a suggestion.}
+\label{tab:reviewer}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{52mm}L@{}}
+\toprule
+Operation & Reviewers \\
+\midrule
+New task & the proposed owner; anyone if no owner is known \\
+Hand-over & the new owner \\
+Status change, completion & the task owner \\
+Cancellation & the owner or the creator of the task \\
+New prerequisite & the owner of the task that will wait \\
+Date change requested by someone else & its author confirms the request; the people whose agreement it needs confirm the change \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.9\linewidth]{lifecycle}
+\caption{Proposal and task lifecycle: a proposal is applied only by an affected person and only if the safety checks pass; stored states follow the allowed transitions and the graph derives ready, blocked and needs-review states.}
+\label{fig:lifecycle}
+\end{figure}
+
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.86\linewidth]{rule_engine}
+\caption{Decision path of the cue-based reconciler for one sentence.}
+\label{fig:rules}
+\end{figure}
+
+The evidence is functional: 91/91 reconciliation scenarios; 12,000 random fuzz steps with 0 invariant violations (no lost tasks, monotonic versions, history reconstructs every task); 12,000 graph edits and 72,120 derived-state checks against independent oracles with 0 disagreements.

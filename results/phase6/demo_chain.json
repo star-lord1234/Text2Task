@@ -1,0 +1,128 @@
+{
+  "mode": "SCRIPTED demo data",
+  "passed": true,
+  "graph": {
+    "nodes": [
+      {
+        "id": "T-1",
+        "title": "draft the report",
+        "owner_id": "bianca",
+        "status": "completed",
+        "derived_state": "done",
+        "blocked_by": [],
+        "cancelled_prereqs": [],
+        "root_blockers": [],
+        "due": "2026-11-12",
+        "due_status": "RESOLVED",
+        "scheduled": null,
+        "layer": 0,
+        "source_message_id": "m0",
+        "thread_id": "th1",
+        "version": 2
+      },
+      {
+        "id": "T-2",
+        "title": "review the draft",
+        "owner_id": "dev",
+        "status": "open",
+        "derived_state": "ready",
+        "blocked_by": [],
+        "cancelled_prereqs": [],
+        "root_blockers": [],
+        "due": "2026-11-13",
+        "due_status": "RESOLVED",
+        "scheduled": null,
+        "layer": 1,
+        "source_message_id": "m0",
+        "thread_id": "th1",
+        "version": 1
+      },
+      {
+        "id": "T-3",
+        "title": "send to the client",
+        "owner_id": "riya",
+        "status": "open",
+        "derived_state": "blocked",
+        "blocked_by": [
+          "T-2"
+        ],
+        "cancelled_prereqs": [],
+        "root_blockers": [
+          "T-2"
+        ],
+        "due": "2026-11-16",
+        "due_status": "RESOLVED",
+        "scheduled": null,
+        "layer": 2,
+        "source_message_id": "m0",
+        "thread_id": "th1",
+        "version": 1
+      }
+    ],
+    "edges": [
+      {
+        "id": "E-3665ef2b208e",
+        "source": "T-1",
+        "target": "T-2",
+        "kind": "accepted",
+        "status": "accepted",
+        "evidence": "",
+        "source_message_id": null,
+        "source_kind": "human",
+        "score": null,
+        "reason": "",
+        "warnings": [],
+        "redundant": false,
+        "dangling": false
+      },
+      {
+        "id": "E-601740d9eef4",
+        "source": "T-2",
+        "target": "T-3",
+        "kind": "accepted",
+        "status": "accepted",
+        "evidence": "",
+        "source_message_id": null,
+        "source_kind": "human",
+        "score": null,
+        "reason": "",
+        "warnings": [],
+        "redundant": false,
+        "dangling": false
+      },
+      {
+        "id": "E-4fe62176369d",
+        "source": "T-3",
+        "target": "T-1",
+        "kind": "held",
+        "status": "rejected",
+        "evidence": "",
+        "source_message_id": null,
+        "source_kind": "human",
+        "score": null,
+        "reason": "CYCLE: adding T-3 -> T-1 closes the cycle T-3 -> T-1 -> T-2 -> T-3",
+        "warnings": [],
+        "redundant": false,
+        "dangling": false
+      }
+    ],
+    "meta": {
+      "schema": "phase6-v1",
+      "workspace": "w",
+      "acyclic": true,
+      "cycle": [],
+      "node_count": 3,
+      "accepted_edges": 2,
+      "proposed_edges": 0,
+      "held_edges": 1,
+      "dangling_accepted_edges": [],
+      "ready": [
+        "T-2"
+      ],
+      "blocked": [
+        "T-3"
+      ],
+      "needs_review": []
+    }
+  }
+}

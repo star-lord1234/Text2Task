@@ -1,0 +1,232 @@
+{
+  "audit_version": "1.0.0",
+  "bio_labels": [
+    "O",
+    "B-ARTIFACT",
+    "I-ARTIFACT",
+    "B-EVENT",
+    "I-EVENT",
+    "B-GROUP",
+    "I-GROUP",
+    "B-PERSON",
+    "I-PERSON",
+    "B-TASK",
+    "I-TASK",
+    "B-TEMPORAL",
+    "I-TEMPORAL"
+  ],
+  "blocking_issues": [
+    "validation_and_test_not_human_reviewed_gold"
+  ],
+  "context_limit": 512,
+  "cross_split_record_overlaps": [],
+  "cross_split_thread_overlaps": [],
+  "ignore_index": -100,
+  "insufficient_label_support": [
+    {
+      "count": 3,
+      "label": "GROUP",
+      "split": "test",
+      "threshold": 5
+    },
+    {
+      "count": 4,
+      "label": "EVENT",
+      "split": "train",
+      "threshold": 20
+    },
+    {
+      "count": 0,
+      "label": "EVENT",
+      "split": "validation",
+      "threshold": 5
+    },
+    {
+      "count": 3,
+      "label": "EVENT",
+      "split": "test",
+      "threshold": 5
+    }
+  ],
+  "insufficient_support_policy": {
+    "minimum_spans_per_evaluation_split": 5,
+    "minimum_train_spans": 20,
+    "note": "Screening thresholds, not claims of statistical sufficiency."
+  },
+  "ready_for_training_with_gold_evaluation": false,
+  "schema_entity_labels": [
+    "TASK",
+    "PERSON",
+    "GROUP",
+    "TEMPORAL",
+    "EVENT",
+    "ARTIFACT"
+  ],
+  "split_reports": {
+    "test": {
+      "annotation_tiers_by_email": {
+        "SILVER": 90
+      },
+      "annotation_tiers_by_model_row": {
+        "SILVER": 140
+      },
+      "bio_token_label_counts": {
+        "B-ARTIFACT": 75,
+        "B-EVENT": 3,
+        "B-GROUP": 3,
+        "B-PERSON": 102,
+        "B-TASK": 340,
+        "B-TEMPORAL": 95,
+        "I-ARTIFACT": 442,
+        "I-EVENT": 26,
+        "I-GROUP": 6,
+        "I-PERSON": 85,
+        "I-TASK": 2591,
+        "I-TEMPORAL": 289,
+        "O": 12553
+      },
+      "emails": 90,
+      "emails_exceeding_context_limit": [],
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 140,
+      "overlap": {
+        "emails_with_overlaps": 46,
+        "maximum_bio_layers": 4,
+        "overlapping_span_pairs": 83
+      },
+      "paths": {
+        "finalized": "data/final/test.jsonl",
+        "model_ready": "data/model_ready/entities/test.jsonl"
+      },
+      "span_counts": {
+        "ARTIFACT": 75,
+        "EVENT": 3,
+        "GROUP": 3,
+        "PERSON": 102,
+        "TASK": 340,
+        "TEMPORAL": 95
+      },
+      "threads": 70,
+      "token_lengths_with_special_tokens": {
+        "maximum": 434,
+        "median": 87.0,
+        "minimum": 6,
+        "p90": 262.20000000000005,
+        "p95": 293.95,
+        "p99": 379.71
+      }
+    },
+    "train": {
+      "annotation_tiers_by_email": {
+        "SILVER": 450
+      },
+      "annotation_tiers_by_model_row": {
+        "SILVER": 704
+      },
+      "bio_token_label_counts": {
+        "B-ARTIFACT": 412,
+        "B-EVENT": 4,
+        "B-GROUP": 35,
+        "B-PERSON": 463,
+        "B-TASK": 1770,
+        "B-TEMPORAL": 532,
+        "I-ARTIFACT": 2624,
+        "I-EVENT": 54,
+        "I-GROUP": 172,
+        "I-PERSON": 374,
+        "I-TASK": 13124,
+        "I-TEMPORAL": 1630,
+        "O": 70255
+      },
+      "emails": 450,
+      "emails_exceeding_context_limit": [],
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 704,
+      "overlap": {
+        "emails_with_overlaps": 224,
+        "maximum_bio_layers": 8,
+        "overlapping_span_pairs": 506
+      },
+      "paths": {
+        "finalized": "data/final/train.jsonl",
+        "model_ready": "data/model_ready/entities/train.jsonl"
+      },
+      "span_counts": {
+        "ARTIFACT": 412,
+        "EVENT": 4,
+        "GROUP": 35,
+        "PERSON": 463,
+        "TASK": 1770,
+        "TEMPORAL": 532
+      },
+      "threads": 364,
+      "token_lengths_with_special_tokens": {
+        "maximum": 475,
+        "median": 96.5,
+        "minimum": 3,
+        "p90": 251.0,
+        "p95": 311.0999999999999,
+        "p99": 432.51
+      }
+    },
+    "validation": {
+      "annotation_tiers_by_email": {
+        "SILVER": 60
+      },
+      "annotation_tiers_by_model_row": {
+        "SILVER": 101
+      },
+      "bio_token_label_counts": {
+        "B-ARTIFACT": 59,
+        "B-GROUP": 11,
+        "B-PERSON": 63,
+        "B-TASK": 283,
+        "B-TEMPORAL": 74,
+        "I-ARTIFACT": 405,
+        "I-GROUP": 49,
+        "I-PERSON": 53,
+        "I-TASK": 2151,
+        "I-TEMPORAL": 210,
+        "O": 9166
+      },
+      "emails": 60,
+      "emails_exceeding_context_limit": [],
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 101,
+      "overlap": {
+        "emails_with_overlaps": 36,
+        "maximum_bio_layers": 5,
+        "overlapping_span_pairs": 82
+      },
+      "paths": {
+        "finalized": "data/final/validation.jsonl",
+        "model_ready": "data/model_ready/entities/validation.jsonl"
+      },
+      "span_counts": {
+        "ARTIFACT": 59,
+        "EVENT": 0,
+        "GROUP": 11,
+        "PERSON": 63,
+        "TASK": 283,
+        "TEMPORAL": 74
+      },
+      "threads": 51,
+      "token_lengths_with_special_tokens": {
+        "maximum": 368,
+        "median": 104.5,
+        "minimum": 2,
+        "p90": 237.0,
+        "p95": 263.8499999999999,
+        "p99": 329.64999999999975
+      }
+    }
+  },
+  "status": "NOT_READY",
+  "structural_errors": [],
+  "structurally_valid_for_silver_experiments": true,
+  "vocabulary_path": "configs/tokenizers/distilbert-base-uncased-vocab.txt",
+  "warnings": [
+    "validation and test are not fully human-reviewed GOLD",
+    "one or more entity labels are below the documented minimum-support thresholds"
+  ]
+}

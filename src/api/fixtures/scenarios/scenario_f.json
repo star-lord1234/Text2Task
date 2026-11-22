@@ -1,0 +1,486 @@
+{
+ "id": "F",
+ "title": "Scenario F — Full demo: launch the sentiment model",
+ "timezone": "America/Chicago",
+ "description": "Seventeen messages covering assignment, acknowledgement, an open call and a volunteer, chained, fan-in and fan-out dependencies, a date change with confirmation, a past-event message, completion unblocking work, progress, a held cycle and a cancelled prerequisite.",
+ "messages": [
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree",
+    "bianca"
+   ],
+   "text": "Anushree, please collect the customer reviews by Monday.",
+   "created_at": "2026-11-11T09:00:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "collect the customer reviews"
+     ],
+     "PERSON": [
+      "Anushree"
+     ],
+     "TEMPORAL": [
+      "Monday"
+     ]
+    },
+    "links": [
+     [
+      "collect the customer reviews",
+      "Anushree",
+      "ASSIGNED_TO"
+     ],
+     [
+      "collect the customer reviews",
+      "Monday",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "New task for Anushree with a due date. Only Anushree can accept it."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya"
+   ],
+   "text": "Sure, I'll collect the customer reviews.",
+   "created_at": "2026-11-11T09:02:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "collect the customer reviews"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "NO_ACTION"
+    ],
+    "note": "Anushree acknowledges her own task: recognised, no duplicate is created."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree"
+   ],
+   "text": "Anushree, please clean the review dataset by Tuesday once you collect the customer reviews.",
+   "created_at": "2026-11-11T09:05:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "clean the review dataset"
+     ],
+     "PERSON": [
+      "Anushree"
+     ],
+     "TEMPORAL": [
+      "Tuesday"
+     ]
+    },
+    "links": [
+     [
+      "clean the review dataset",
+      "Anushree",
+      "ASSIGNED_TO"
+     ],
+     [
+      "clean the review dataset",
+      "Tuesday",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK",
+     "ADD_DEPENDENCY"
+    ],
+    "note": "Second task for Anushree that waits on the first: a 'once ...' clause naming an existing task (chain step 1)."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Bianca, please train the sentiment model by November 18 once the review dataset is cleaned.",
+   "created_at": "2026-11-11T09:08:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "train the sentiment model"
+     ],
+     "PERSON": [
+      "Bianca"
+     ],
+     "TEMPORAL": [
+      "November 18"
+     ]
+    },
+    "links": [
+     [
+      "train the sentiment model",
+      "Bianca",
+      "ASSIGNED_TO"
+     ],
+     [
+      "train the sentiment model",
+      "November 18",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK",
+     "ADD_DEPENDENCY"
+    ],
+    "note": "Task for Bianca that waits on Anushree's cleaning (chain step 2, across people)."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Bianca, please write the evaluation script by Thursday.",
+   "created_at": "2026-11-11T09:10:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "write the evaluation script"
+     ],
+     "PERSON": [
+      "Bianca"
+     ],
+     "TEMPORAL": [
+      "Thursday"
+     ]
+    },
+    "links": [
+     [
+      "write the evaluation script",
+      "Bianca",
+      "ASSIGNED_TO"
+     ],
+     [
+      "write the evaluation script",
+      "Thursday",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "An independent task with a deadline."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree",
+    "bianca"
+   ],
+   "text": "Can someone set up the demo server?",
+   "created_at": "2026-11-11T09:12:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "set up the demo server"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "Open call to everyone: no one is named, so the task is proposed as unassigned (anyone may accept it)."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya"
+   ],
+   "text": "I can set up the demo server.",
+   "created_at": "2026-11-11T09:15:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "set up the demo server"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "UPDATE_ASSIGNEE"
+    ],
+    "note": "Anushree volunteers: the unowned task is assigned to her."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Bianca, please build the demo dashboard by November 20 after you train the sentiment model.",
+   "created_at": "2026-11-11T09:18:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "build the demo dashboard"
+     ],
+     "PERSON": [
+      "Bianca"
+     ],
+     "TEMPORAL": [
+      "November 20"
+     ]
+    },
+    "links": [
+     [
+      "build the demo dashboard",
+      "Bianca",
+      "ASSIGNED_TO"
+     ],
+     [
+      "build the demo dashboard",
+      "November 20",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK",
+     "ADD_DEPENDENCY"
+    ],
+    "note": "Dashboard waits on training ('after ...' clause): chain step 3."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree",
+    "bianca"
+   ],
+   "text": "The demo dashboard is waiting on the demo server. The demo dashboard is blocked by the evaluation script.",
+   "created_at": "2026-11-11T09:20:00-06:00",
+   "scripted": {
+    "spans": {},
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "ADD_DEPENDENCY",
+     "ADD_DEPENDENCY"
+    ],
+    "note": "Two explicit dependency cues between existing tasks: the dashboard now waits on three tasks (fan-in)."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree",
+    "bianca"
+   ],
+   "text": "Bianca, please share the results report after you write the evaluation script.",
+   "created_at": "2026-11-11T09:22:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "share the results report"
+     ],
+     "PERSON": [
+      "Bianca"
+     ]
+    },
+    "links": [
+     [
+      "share the results report",
+      "Bianca",
+      "ASSIGNED_TO"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK",
+     "ADD_DEPENDENCY"
+    ],
+    "note": "A second task waits on the evaluation script, which now blocks two tasks (fan-out)."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya"
+   ],
+   "text": "The office wifi went down yesterday.",
+   "created_at": "2026-11-11T09:24:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "went down"
+     ],
+     "TEMPORAL": [
+      "yesterday"
+     ]
+    },
+    "links": [
+     [
+      "went down",
+      "yesterday",
+      "SCHEDULED_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "NO_ACTION"
+    ],
+    "note": "A report about the past: recognised as not a to-do."
+   }
+  },
+  {
+   "sender": "bianca",
+   "recipients": [
+    "riya"
+   ],
+   "text": "Could we move the evaluation script deadline to Friday?",
+   "created_at": "2026-11-11T09:30:00-06:00",
+   "scripted": {
+    "spans": {
+     "TEMPORAL": [
+      "Friday"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "PROPOSE_DUE_DATE_CHANGE"
+    ],
+    "note": "Bianca asks for a new date: proposed only, the due date does not change yet."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Friday is fine.",
+   "created_at": "2026-11-11T09:33:00-06:00",
+   "scripted": {
+    "spans": {
+     "TEMPORAL": [
+      "Friday"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "CONFIRM_DUE_DATE_CHANGE"
+    ],
+    "note": "Riya agrees: the new date applies once this confirmation is accepted."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya",
+    "bianca"
+   ],
+   "text": "I've finished collecting the customer reviews.",
+   "created_at": "2026-11-11T09:40:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "collecting the customer reviews"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "COMPLETE_TASK"
+    ],
+    "note": "Completion: once accepted, cleaning the dataset is no longer blocked."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya",
+    "bianca"
+   ],
+   "text": "I'm working on the review dataset now.",
+   "created_at": "2026-11-11T09:42:00-06:00",
+   "scripted": {
+    "spans": {
+     "TEMPORAL": [
+      "now"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "UPDATE_STATUS"
+    ],
+    "note": "Progress update: the cleaning task moves to In progress."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree",
+    "bianca"
+   ],
+   "text": "The sentiment model is waiting on the demo dashboard.",
+   "created_at": "2026-11-11T09:45:00-06:00",
+   "scripted": {
+    "spans": {},
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "ADD_DEPENDENCY"
+    ],
+    "note": "This would close a loop (the dashboard already waits on the model), so it is held for review instead of breaking the graph."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree",
+    "bianca"
+   ],
+   "text": "We no longer need the evaluation script.",
+   "created_at": "2026-11-11T09:50:00-06:00",
+   "scripted": {
+    "spans": {},
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "CANCEL_TASK"
+    ],
+    "note": "Cancelling a prerequisite does not count as done: the results report (which waited only on it) is flagged for review; the dashboard stays blocked by training."
+   }
+  }
+ ]
+}

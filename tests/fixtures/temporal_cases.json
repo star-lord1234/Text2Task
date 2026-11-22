@@ -1,0 +1,1149 @@
+{
+ "description": "Hand-authored functional regression fixtures (NOT an independent benchmark). Default reference: Wed 2026-11-11 09:30 America/Chicago.",
+ "cases": [
+  {
+   "raw": "Friday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-13"
+   }
+  },
+  {
+   "raw": "on Friday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-13"
+   }
+  },
+  {
+   "raw": "by Friday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-13",
+    "deadline_phrase": true
+   }
+  },
+  {
+   "raw": "Thursday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-12"
+   }
+  },
+  {
+   "raw": "Wednesday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "AMBIGUOUS",
+    "granularity": "DATE",
+    "candidate_dates": [
+     "2026-11-11",
+     "2026-11-18"
+    ]
+   }
+  },
+  {
+   "raw": "this Wednesday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-11"
+   }
+  },
+  {
+   "raw": "next Monday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-16"
+   }
+  },
+  {
+   "raw": "next Friday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-20",
+    "candidate_dates": [
+     "2026-11-13"
+    ],
+    "assumptions_include": [
+     "NEXT_WEEKDAY_ISO_WEEK"
+    ]
+   }
+  },
+  {
+   "raw": "last Friday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-06",
+    "in_past": true
+   }
+  },
+  {
+   "raw": "this Monday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-09",
+    "in_past": true
+   }
+  },
+  {
+   "raw": "today",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-11",
+    "in_past": false
+   }
+  },
+  {
+   "raw": "tomorrow",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-12"
+   }
+  },
+  {
+   "raw": "yesterday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-10",
+    "in_past": true
+   }
+  },
+  {
+   "raw": "tonight",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "PART_OF_DAY",
+    "value": "2026-11-11",
+    "part_of_day": "night"
+   }
+  },
+  {
+   "raw": "tomorrow morning",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "PART_OF_DAY",
+    "value": "2026-11-12",
+    "part_of_day": "morning"
+   }
+  },
+  {
+   "raw": "this afternoon",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "PART_OF_DAY",
+    "value": "2026-11-11",
+    "part_of_day": "afternoon"
+   }
+  },
+  {
+   "raw": "the day after tomorrow",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-13"
+   }
+  },
+  {
+   "raw": "tomorrow at 10",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-12T10:00:00-06:00",
+    "assumptions_include": [
+     "AMPM_INFERRED_BUSINESS_HOURS"
+    ]
+   }
+  },
+  {
+   "raw": "Monday at 10",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-16T10:00:00-06:00"
+   }
+  },
+  {
+   "raw": "Monday at 2:30 pm",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-16T14:30:00-06:00",
+    "assumptions_exclude": [
+     "AMPM_INFERRED_BUSINESS_HOURS"
+    ]
+   }
+  },
+  {
+   "raw": "3pm tomorrow",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-12T15:00:00-06:00"
+   }
+  },
+  {
+   "raw": "Friday at noon",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-13T12:00:00-06:00"
+   }
+  },
+  {
+   "raw": "tomorrow EOD",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-12T17:00:00-06:00",
+    "assumptions_include": [
+     "TIME_CONVENTION_APPLIED"
+    ]
+   }
+  },
+  {
+   "raw": "next week",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "WEEK",
+    "start": "2026-11-16",
+    "end": "2026-11-22"
+   }
+  },
+  {
+   "raw": "this week",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "WEEK",
+    "start": "2026-11-09",
+    "end": "2026-11-15"
+   }
+  },
+  {
+   "raw": "last week",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "WEEK",
+    "start": "2026-11-02",
+    "end": "2026-11-08",
+    "in_past": true
+   }
+  },
+  {
+   "raw": "later this week",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "RANGE",
+    "start": "2026-11-11",
+    "end": "2026-11-15"
+   }
+  },
+  {
+   "raw": "this weekend",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "RANGE",
+    "start": "2026-11-14",
+    "end": "2026-11-15"
+   }
+  },
+  {
+   "raw": "next weekend",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "RANGE",
+    "start": "2026-11-21",
+    "end": "2026-11-22"
+   }
+  },
+  {
+   "raw": "next month",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "MONTH",
+    "start": "2026-12-01",
+    "end": "2026-12-31"
+   }
+  },
+  {
+   "raw": "this month",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "MONTH",
+    "start": "2026-11-01",
+    "end": "2026-11-30"
+   }
+  },
+  {
+   "raw": "last year",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "YEAR",
+    "start": "2025-01-01",
+    "end": "2025-12-31",
+    "in_past": true
+   }
+  },
+  {
+   "raw": "end of the month",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-30",
+    "assumptions_include": [
+     "END_OF_PERIOD"
+    ]
+   }
+  },
+  {
+   "raw": "end of the week",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-13"
+   }
+  },
+  {
+   "raw": "in 3 days",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-14"
+   }
+  },
+  {
+   "raw": "in 2 weeks",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-25"
+   }
+  },
+  {
+   "raw": "in a month",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-12-11"
+   }
+  },
+  {
+   "raw": "in 2 hours",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-11T11:30:00-06:00"
+   }
+  },
+  {
+   "raw": "a week from today",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-18"
+   }
+  },
+  {
+   "raw": "in December",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "MONTH",
+    "start": "2026-12-01",
+    "end": "2026-12-31",
+    "assumptions_include": [
+     "YEAR_INFERRED"
+    ]
+   }
+  },
+  {
+   "raw": "in October",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "MONTH",
+    "start": "2027-10-01",
+    "end": "2027-10-31",
+    "assumptions_include": [
+     "YEAR_INFERRED"
+    ]
+   }
+  },
+  {
+   "raw": "November",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "MONTH",
+    "start": "2026-11-01",
+    "end": "2026-11-30"
+   }
+  },
+  {
+   "raw": "Nov. 15",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-15",
+    "assumptions_include": [
+     "YEAR_INFERRED"
+    ]
+   }
+  },
+  {
+   "raw": "Nov. 5",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2027-11-05",
+    "assumptions_include": [
+     "YEAR_INFERRED"
+    ]
+   }
+  },
+  {
+   "raw": "March 23, 2001",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2001-03-23"
+   }
+  },
+  {
+   "raw": "23-NOV-2001",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2001-11-23"
+   }
+  },
+  {
+   "raw": "2026-12-01",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-12-01"
+   }
+  },
+  {
+   "raw": "11/20/2026",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-20",
+    "assumptions_include": [
+     "US_DATE_ORDER"
+    ]
+   }
+  },
+  {
+   "raw": "20/11/2026",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-20",
+    "assumptions_include": [
+     "DAY_FIRST_DATE_ORDER"
+    ]
+   }
+  },
+  {
+   "raw": "9/20",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2027-09-20",
+    "assumptions_include": [
+     "US_DATE_ORDER",
+     "YEAR_INFERRED"
+    ]
+   }
+  },
+  {
+   "raw": "Oct. 29 - Nov. 2",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "RANGE",
+    "start": "2027-10-29",
+    "end": "2027-11-02"
+   }
+  },
+  {
+   "raw": "September 20",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "PARTIAL",
+    "assumptions_include": [
+     "YEAR_MISSING"
+    ]
+   }
+  },
+  {
+   "raw": "Thursday, Nov. 12",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-12",
+    "assumptions_include": [
+     "YEAR_INFERRED_FROM_WEEKDAY"
+    ]
+   }
+  },
+  {
+   "raw": "Monday, October 29, 2001",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2001-10-29",
+    "assumptions_exclude": [
+     "WEEKDAY_DATE_MISMATCH"
+    ]
+   }
+  },
+  {
+   "raw": "Friday, October 29, 2001",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2001-10-29",
+    "assumptions_include": [
+     "WEEKDAY_DATE_MISMATCH"
+    ]
+   }
+  },
+  {
+   "raw": "Feb 30, 2026",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "UNPARSEABLE",
+    "assumptions_include": [
+     "INVALID_CALENDAR_DATE"
+    ]
+   }
+  },
+  {
+   "raw": "noon",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "PARTIAL",
+    "granularity": "TIME_ONLY",
+    "value": "12:00",
+    "assumptions_include": [
+     "DATE_MISSING"
+    ]
+   }
+  },
+  {
+   "raw": "5pm",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "PARTIAL",
+    "granularity": "TIME_ONLY",
+    "value": "17:00"
+   }
+  },
+  {
+   "raw": "EOD",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-11T17:00:00-06:00",
+    "assumptions_include": [
+     "TIME_CONVENTION_APPLIED",
+     "DATE_ASSUMED_REFERENCE_DAY"
+    ]
+   }
+  },
+  {
+   "raw": "close of business",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-11T17:00:00-06:00"
+   }
+  },
+  {
+   "raw": "10am-11am",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "PARTIAL",
+    "granularity": "TIME_ONLY",
+    "start": "10:00",
+    "end": "11:00"
+   }
+  },
+  {
+   "raw": "Monday 10-11am",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "start": "2026-11-16T10:00:00-06:00",
+    "end": "2026-11-16T11:00:00-06:00"
+   }
+  },
+  {
+   "raw": "after approval",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "UNRESOLVED_EVENT_CONDITION"
+   }
+  },
+  {
+   "raw": "once the draft is done",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "UNRESOLVED_EVENT_CONDITION"
+   }
+  },
+  {
+   "raw": "as soon as we know the exact date",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "UNRESOLVED_EVENT_CONDITION"
+   }
+  },
+  {
+   "raw": "After that time",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "UNRESOLVED_EVENT_CONDITION"
+   }
+  },
+  {
+   "raw": "after Friday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-13",
+    "assumptions_include": [
+     "BOUND_AFTER"
+    ]
+   }
+  },
+  {
+   "raw": "soon",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "VAGUE"
+   }
+  },
+  {
+   "raw": "ASAP",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "VAGUE"
+   }
+  },
+  {
+   "raw": "every Monday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "VAGUE",
+    "assumptions_include": [
+     "RECURRING_UNSUPPORTED"
+    ]
+   }
+  },
+  {
+   "raw": "morning",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "PARTIAL",
+    "granularity": "PART_OF_DAY",
+    "part_of_day": "morning"
+   }
+  },
+  {
+   "raw": "blah blah",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "UNPARSEABLE"
+   }
+  },
+  {
+   "raw": "yesterday at 3pm",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-10T15:00:00-06:00",
+    "in_past": true
+   }
+  },
+  {
+   "raw": "Friday",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "UNRESOLVED_NO_ANCHOR"
+   }
+  },
+  {
+   "raw": "tomorrow",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "UNRESOLVED_NO_ANCHOR"
+   }
+  },
+  {
+   "raw": "next week",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "UNRESOLVED_NO_ANCHOR"
+   }
+  },
+  {
+   "raw": "in 3 days",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "UNRESOLVED_NO_ANCHOR"
+   }
+  },
+  {
+   "raw": "today",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "UNRESOLVED_NO_ANCHOR"
+   }
+  },
+  {
+   "raw": "next Monday",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "UNRESOLVED_NO_ANCHOR"
+   }
+  },
+  {
+   "raw": "EOD",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "PARTIAL",
+    "granularity": "TIME_ONLY",
+    "value": "17:00",
+    "assumptions_include": [
+     "TIME_CONVENTION_APPLIED"
+    ]
+   }
+  },
+  {
+   "raw": "in December",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "PARTIAL",
+    "assumptions_include": [
+     "YEAR_MISSING"
+    ]
+   }
+  },
+  {
+   "raw": "Nov. 15",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "PARTIAL",
+    "assumptions_include": [
+     "YEAR_MISSING"
+    ]
+   }
+  },
+  {
+   "raw": "Friday",
+   "ref": "garbage",
+   "tz": null,
+   "expect": {
+    "status": "UNRESOLVED_NO_ANCHOR",
+    "assumptions_include": [
+     "REFERENCE_UNPARSEABLE"
+    ]
+   }
+  },
+  {
+   "raw": "tomorrow at 10",
+   "ref": "2026-11-11T09:30:00",
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-12T10:00:00",
+    "assumptions_include": [
+     "TZ_ASSUMED"
+    ]
+   }
+  },
+  {
+   "raw": "tomorrow",
+   "ref": "2026-11-12T03:00:00+00:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-12"
+   }
+  },
+  {
+   "raw": "today",
+   "ref": "2026-11-12T03:00:00+00:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-11"
+   }
+  },
+  {
+   "raw": "tomorrow at 10",
+   "ref": "2026-11-11T09:30:00+05:30",
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-12T10:00:00+05:30",
+    "assumptions_include": [
+     "TZ_FROM_REFERENCE_OFFSET"
+    ]
+   }
+  },
+  {
+   "raw": "Sunday at 2:30 am",
+   "ref": "2026-03-06T09:00:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "assumptions_include": [
+     "DST_GAP_ADJUSTED"
+    ]
+   }
+  },
+  {
+   "raw": "Sunday at 1:30 am",
+   "ref": "2026-10-30T09:00:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "assumptions_include": [
+     "DST_AMBIGUOUS_TIME_FIRST_OCCURRENCE"
+    ]
+   }
+  },
+  {
+   "raw": "Sunday at 1:30 am",
+   "ref": "2026-10-30T09:00:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "start": "2026-11-01T01:30:00-05:00",
+    "assumptions_include": [
+     "DST_AMBIGUOUS_TIME_FIRST_OCCURRENCE"
+    ]
+   }
+  },
+  {
+   "raw": "Thursday or Friday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "AMBIGUOUS",
+    "granularity": "DATE",
+    "candidate_dates": [
+     "2026-11-12",
+     "2026-11-13"
+    ],
+    "assumptions_include": [
+     "MULTIPLE_DATES"
+    ]
+   }
+  },
+  {
+   "raw": "today and tomorrow",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "AMBIGUOUS",
+    "granularity": "DATE",
+    "candidate_dates": [
+     "2026-11-11",
+     "2026-11-12"
+    ]
+   }
+  },
+  {
+   "raw": "before year-end",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-12-31",
+    "deadline_phrase": true
+   }
+  },
+  {
+   "raw": "within the next 2 weeks",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "RANGE",
+    "start": "2026-11-11",
+    "end": "2026-11-25",
+    "deadline_phrase": true,
+    "assumptions_include": [
+     "WITHIN_WINDOW"
+    ]
+   }
+  },
+  {
+   "raw": "late yesterday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-10",
+    "assumptions_include": [
+     "MODIFIER_APPROXIMATED:late"
+    ]
+   }
+  },
+  {
+   "raw": "by no later than November 1, 2001",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2001-11-01",
+    "deadline_phrase": true
+   }
+  },
+  {
+   "raw": "by the close of business today",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-11T17:00:00-06:00"
+   }
+  },
+  {
+   "raw": "before we agree to an OBA at the point",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "UNRESOLVED_EVENT_CONDITION"
+   }
+  },
+  {
+   "raw": "in March of 1999",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "MONTH",
+    "start": "1999-03-01",
+    "end": "1999-03-31"
+   }
+  },
+  {
+   "raw": "for approximately 8 hours",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "UNPARSEABLE",
+    "assumptions_include": [
+     "DURATION_NOT_A_TIME"
+    ]
+   }
+  },
+  {
+   "raw": "Oct. 29 Monday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2027-10-29",
+    "assumptions_include": [
+     "YEAR_INFERRED_WEEKDAY_MISMATCH"
+    ]
+   }
+  },
+  {
+   "raw": "Thursday or Friday",
+   "ref": null,
+   "tz": null,
+   "expect": {
+    "status": "UNRESOLVED_NO_ANCHOR"
+   }
+  },
+  {
+   "raw": "to Monday",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATE",
+    "value": "2026-11-16"
+   }
+  },
+  {
+   "raw": "to Monday at 10",
+   "ref": "2026-11-11T09:30:00",
+   "tz": "America/Chicago",
+   "expect": {
+    "status": "RESOLVED",
+    "granularity": "DATETIME",
+    "value": "2026-11-16T10:00:00-06:00"
+   }
+  }
+ ]
+}

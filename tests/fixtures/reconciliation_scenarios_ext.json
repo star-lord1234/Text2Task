@@ -1,0 +1,5604 @@
+{
+ "description": "Regression scenarios for the four Phase 5 extensions (owner acknowledgement, prerequisite clause, 'is ready' completion, 'I'll begin'). Positive and negative cases, several domains. Developer-authored; extractor output is scripted.",
+ "scenarios": [
+  {
+   "name": "X01_ack_generic_commitment",
+   "description": "owner says 'I'll take care of X' about a task they own: acknowledgement, no duplicate",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "Sure, I'll take care of the dataset.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "take care of the dataset"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "ACKNOWLEDGES_EXISTING_TASK"
+      ],
+      "pending": 0,
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X02_ack_same_verb",
+   "description": "same verb as the existing task also counts as acknowledgement",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "I'll prepare the dataset.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the dataset"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "RESTATED_EXISTING_TASK"
+      ],
+      "task_count": 1
+     }
+    }
+   ]
+  },
+  {
+   "name": "X03_ack_other_domain",
+   "description": "generalises beyond the dataset example",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Dev, please write the migration script by Friday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "write the migration script"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "write the migration script",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "write the migration script",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "dev",
+     "text": "Sure, I'll handle the migration script.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "handle the migration script"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "ACKNOWLEDGES_EXISTING_TASK"
+      ],
+      "task_count": 1
+     }
+    }
+   ]
+  },
+  {
+   "name": "X04_neg_different_action_same_object",
+   "description": "a NEW action on the same object is a new task (flagged), not an acknowledgement",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "I'll upload the dataset to the bucket.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "upload the dataset to the bucket"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "POSSIBLE_DUPLICATE"
+      ],
+      "no_flags": [
+       "ACKNOWLEDGES_EXISTING_TASK"
+      ],
+      "task_count": 2
+     }
+    }
+   ]
+  },
+  {
+   "name": "X05_neg_speaker_does_not_own_the_task",
+   "description": "someone else's commitment is never an acknowledgement of Anushree's task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I'll take care of the dataset.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "take care of the dataset"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "no_flags": [
+       "ACKNOWLEDGES_EXISTING_TASK"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "X06_neg_ambiguous_two_owned_tasks",
+   "description": "speaker owns two tasks about the object: nothing is silently merged",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Anushree, please validate the dataset schema by Friday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "validate the dataset schema"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "validate the dataset schema",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "validate the dataset schema",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "anushree",
+     "text": "I'll take care of the dataset.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "take care of the dataset"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "POSSIBLE_DUPLICATE"
+      ],
+      "no_flags": [
+       "ACKNOWLEDGES_EXISTING_TASK"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "X07_neg_different_object",
+   "description": "an unrelated commitment from the same person creates a normal task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "I'll take care of the slides.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "take care of the slides"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "no_flags": [
+       "ACKNOWLEDGES_EXISTING_TASK",
+       "POSSIBLE_DUPLICATE"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "X08_owner_restates_with_another_date",
+   "description": "same action, different deadline -> a date-change proposal on the same task, not a duplicate",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "I'll prepare the dataset by Friday.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the dataset"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the dataset",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "flags": [
+       "RESTATED_WITH_DIFFERENT_DATE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-12",
+        "pending_due": "2026-11-13"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X09_clause_dependency_positive",
+   "description": "'<new task> once <existing task's work>' proposes an edge; creation must be accepted first",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Dev, please write the migration script by Thursday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "write the migration script"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "write the migration script",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "write the migration script",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, please deploy the service once Dev finishes the migration script.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "deploy the service"
+      ],
+      "PERSON": [
+       "Bianca",
+       "Dev"
+      ]
+     },
+     "links": [
+      [
+       "deploy the service",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": {
+        "op": "ADD_DEPENDENCY"
+       },
+       "expect_error": "PREREQUISITE_PENDING"
+      },
+      {
+       "accept": {
+        "op": "CREATE_TASK"
+       }
+      },
+      {
+       "accept": {
+        "op": "ADD_DEPENDENCY"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK",
+       "ADD_DEPENDENCY"
+      ],
+      "task_count": 2,
+      "dependencies": [
+       [
+        "T-2",
+        "T-1",
+        "accepted"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "X10_clause_dependency_after_variant",
+   "description": "works with 'after' and a different object",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, please train the entity model after the dataset is ready.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the entity model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ]
+     },
+     "links": [
+      [
+       "train the entity model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": {
+        "op": "CREATE_TASK"
+       }
+      },
+      {
+       "accept": {
+        "op": "ADD_DEPENDENCY"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK",
+       "ADD_DEPENDENCY"
+      ],
+      "dependencies": [
+       [
+        "T-2",
+        "T-1",
+        "accepted"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "X11_neg_clause_matches_no_task",
+   "description": "a clause about something that is not a tracked task proposes nothing",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, please send the report once the client approves the budget.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "send the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ]
+     },
+     "links": [
+      [
+       "send the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "dependencies": []
+     }
+    }
+   ]
+  },
+  {
+   "name": "X12_neg_ambiguous_clause_is_flagged_not_guessed",
+   "description": "the clause matches two tasks: flagged for review, no edge",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Dev, please validate the dataset schema by Friday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "validate the dataset schema"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "validate the dataset schema",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "validate the dataset schema",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "riya",
+     "text": "Bianca, please train the model once the dataset is ready.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ]
+     },
+     "links": [
+      [
+       "train the model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": {
+        "op": "CREATE_TASK"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK",
+       "NO_ACTION"
+      ],
+      "flags": [
+       "DEPENDENCY_ENDPOINT_UNMATCHED"
+      ],
+      "dependencies": []
+     }
+    }
+   ]
+  },
+  {
+   "name": "X13_neg_temporal_clause_is_not_a_task",
+   "description": "'once Friday arrives' is a date, not a prerequisite task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, please send the report once Friday arrives.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "send the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "send the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "dependencies": []
+     }
+    }
+   ]
+  },
+  {
+   "name": "X14_neg_vague_clause",
+   "description": "'when you can' names nothing",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the cleaned dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the cleaned dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the cleaned dataset",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, please send the report when you can.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "send the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ]
+     },
+     "links": [
+      [
+       "send the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "dependencies": []
+     }
+    }
+   ]
+  },
+  {
+   "name": "X15_ready_completes_the_matched_task",
+   "description": "'<noun phrase> is ready' completes a matching task (other domain)",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Dev, please write the migration script by Friday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "write the migration script"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "write the migration script",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "write the migration script",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "dev",
+     "text": "The migration script is ready.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "completed"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X16_neg_ready_false_cues",
+   "description": "pronoun subjects, 'ready to', questions, conditionals and negations never complete",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Dev, please write the migration script by Friday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "write the migration script"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "write the migration script",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "write the migration script",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "dev",
+     "text": "We are ready to start.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [],
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "dev",
+     "text": "I am ready for the meeting.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [],
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     }
+    },
+    {
+     "id": "m4",
+     "sender": "riya",
+     "text": "Is the migration script ready?",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     }
+    },
+    {
+     "id": "m5",
+     "sender": "riya",
+     "text": "Please tell me when the migration script is ready.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     }
+    },
+    {
+     "id": "m6",
+     "sender": "dev",
+     "text": "The migration script is not ready yet.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [],
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X17_neg_ready_for_something_unrelated",
+   "description": "'ready' about an untracked object finds no referent and changes nothing",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Dev, please write the migration script by Friday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "write the migration script"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "write the migration script",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "write the migration script",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "dev",
+     "text": "The conference room is ready.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X18_neg_ready_is_ambiguous_between_tasks",
+   "description": "two tasks about the object: no guess",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Dev, please write the migration script by Friday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "write the migration script"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "write the migration script",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "write the migration script",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Dev, please review the migration script by Monday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the migration script"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [
+      [
+       "review the migration script",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "review the migration script",
+       "Monday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "dev",
+     "text": "The migration script is ready.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ],
+      "flags": [
+       "AMBIGUOUS_REFERENT"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       },
+       "T-2": {
+        "status": "open"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X19_begin_now_updates_status",
+   "description": "'I'll begin training now' -> in progress (with 'now' extracted as a TEMPORAL span)",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, please train the entity model by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the entity model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "train the entity model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "train the entity model",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I'll begin training now.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "now"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_STATUS"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "in_progress",
+        "version": 2
+       }
+      }
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "I'll start training now.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "now"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "ALREADY_IN_STATE"
+      ],
+      "tasks": {
+       "T-1": {
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X20_neg_deferred_start",
+   "description": "a start deferred to another time is not a status change",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, please train the entity model by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the entity model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "train the entity model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "train the entity model",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I'll start training tomorrow.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "tomorrow"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X21_neg_start_of_something_else",
+   "description": "starting an untracked activity changes no task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, please train the entity model by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the entity model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "train the entity model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "train the entity model",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I'll begin the review now.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "now"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "X22_start_variants",
+   "description": "start / begin / kick off all work; a third person's statement is flagged by owner checks, not guessed",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, please train the entity model by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the entity model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "train the entity model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "train the entity model",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I will kick off training now.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "now"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_STATUS"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "in_progress"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y01_claim_unowned_task",
+   "description": "'I can review the slides' about an unassigned task assigns it to the speaker, no duplicate",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "I can review the slides.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_ASSIGNEE"
+      ],
+      "flags": [
+       "CLAIMS_UNASSIGNED_TASK"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "anushree",
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y02_claim_with_pronoun_object",
+   "description": "'I can review them' still finds the single unassigned review task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I can review them.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review them"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y03_claim_ambiguous_between_two_unowned_tasks",
+   "description": "two unassigned slide tasks: options are shown, nothing is guessed, the reviewer chooses",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Can someone review the slides for the client deck?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides for the client deck"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 2
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "anushree",
+     "text": "I can review the slides.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all",
+       "expect_error": "REFERENT_REQUIRED"
+      },
+      {
+       "accept": "all",
+       "edits": {
+        "task_id": "T-2"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_ASSIGNEE"
+      ],
+      "flags": [
+       "AMBIGUOUS_REFERENT"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       },
+       "T-2": {
+        "owner_id": "anushree"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y04_neg_task_owned_by_someone_else_is_not_claimed",
+   "description": "a volunteer cannot take over a task that already has an owner",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Dev, please review the slides by Friday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "review the slides",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "review the slides",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "I can review the slides.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "no_flags": [
+       "CLAIMS_UNASSIGNED_TASK"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y05_neg_different_action_on_the_same_object",
+   "description": "an unassigned 'review the slides' task is not claimed by 'I can print the slides'",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "I can print the slides.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "print the slides"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "no_flags": [
+       "CLAIMS_UNASSIGNED_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y06_neg_closed_unowned_task_is_ignored",
+   "description": "a canceled unassigned task cannot be claimed",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Please cancel the slides.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CANCEL_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "cancelled"
+       }
+      }
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "anushree",
+     "text": "I can review the slides.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "no_flags": [
+       "CLAIMS_UNASSIGNED_TASK"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y07_neg_a_request_to_someone_else_is_not_a_claim",
+   "description": "'Can you review the slides?' asks someone else; it is not a volunteer claim",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, can you review the slides?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ],
+      "PERSON": [
+       "Bianca"
+      ]
+     },
+     "links": [
+      [
+       "review the slides",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [],
+     "expect": {
+      "no_flags": [
+       "CLAIMS_UNASSIGNED_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y08_neg_joint_commitment_is_not_a_solo_claim",
+   "description": "'Ellen and I will review the slides' commits two people; it must not assign the task to the speaker alone",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "Ellen and I will review the slides.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "no_flags": [
+       "CLAIMS_UNASSIGNED_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y09_neg_joint_can_is_not_a_solo_claim",
+   "description": "'Riya and I can review the slides' is not the speaker volunteering alone",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "Riya and I can review the slides.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "no_flags": [
+       "CLAIMS_UNASSIGNED_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Y10_neg_question_is_not_a_claim",
+   "description": "'Can I review the slides?' asks permission, it does not take the task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Can someone review the slides?",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "Can I review the slides?",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "no_flags": [
+       "CLAIMS_UNASSIGNED_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": null
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z01_ctx_completion_without_task_span",
+   "description": "'The dataset is cleaned.' completes the existing 'clean the dataset' task although no TASK span is present (context_lifecycle on)",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "The dataset is cleaned.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "completed"
+       }
+      }
+     },
+     "options": {
+      "context_lifecycle": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z02_neg_ctx_completion_off_is_phase5_behaviour",
+   "description": "the same sentence does nothing when context_lifecycle is off",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "The dataset is cleaned.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [],
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z03_neg_ctx_completion_other_object",
+   "description": "'The desk is cleaned.' shares the verb but no object with the task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "The desk is cleaned.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [],
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     },
+     "options": {
+      "context_lifecycle": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z04_neg_ctx_completion_question",
+   "description": "a question about completion is not a completion",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Is the dataset cleaned?",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "no_flags": [
+       "THIRD_PARTY_COMPLETION"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     },
+     "options": {
+      "context_lifecycle": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z05_neg_ctx_completion_conditional",
+   "description": "'Once the dataset is cleaned, I will start.' is a plan, not a report",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "Once the dataset is cleaned, I will start.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     },
+     "options": {
+      "context_lifecycle": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z06_neg_ctx_completion_negated",
+   "description": "'The dataset is not cleaned yet.' must not complete it",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "The dataset is not cleaned yet.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "tasks": {
+       "T-1": {
+        "status": "open"
+       }
+      }
+     },
+     "options": {
+      "context_lifecycle": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z07_ctx_ack_without_task_span",
+   "description": "'Sure, I'll take care of it.' by the only owner is recognised as an acknowledgement, not ignored",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "anushree",
+     "text": "Sure, I'll take care of it.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "ACKNOWLEDGES_EXISTING_TASK"
+      ],
+      "task_count": 1
+     },
+     "options": {
+      "context_lifecycle": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z08_neg_ctx_ack_owner_has_two_tasks",
+   "description": "with two open tasks 'I'll take care of it' is not attributed to either",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Anushree, please review the slides by Friday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the slides"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Friday"
+      ]
+     },
+     "links": [
+      [
+       "review the slides",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "review the slides",
+       "by Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 2
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "anushree",
+     "text": "Sure, I'll take care of it.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [],
+      "task_count": 2
+     },
+     "options": {
+      "context_lifecycle": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z09_neg_ctx_ack_by_non_owner",
+   "description": "a non-owner saying 'I'll take care of it' is not an acknowledgement of someone else's task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I'll take care of it.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "no_flags": [
+       "ACKNOWLEDGES_EXISTING_TASK"
+      ],
+      "task_count": 1
+     },
+     "options": {
+      "context_lifecycle": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z10_imperative_passes_the_create_gate",
+   "description": "a bare imperative marked by the grammar stage creates a (flagged) task instead of being ignored",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Write a report.",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "Write a report"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "NO_ASSIGNEE"
+      ],
+      "task_count": 1
+     },
+     "options": {
+      "imperative": [
+       "Write a report"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z11_neg_same_phrase_without_the_imperative_mark",
+   "description": "without the mark the Phase 5 gate still refuses a task-like phrase with no request, owner or deadline",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Write a report.",
+     "recipients": [
+      "anushree",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "Write a report"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "task_count": 0
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z12_clause_hint_points_at_existing_task",
+   "description": "a refinement hint ('once Anushree finishes the dataset') makes the new task depend on the EXISTING dataset task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, train the model once Anushree finishes the dataset.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ]
+     },
+     "links": [
+      [
+       "train the model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK",
+       "ADD_DEPENDENCY"
+      ],
+      "dependencies": [
+       [
+        "T-2",
+        "T-1",
+        "accepted"
+       ]
+      ]
+     },
+     "options": {
+      "hints": [
+       {
+        "kind": "task_reference",
+        "dependent": "train the model",
+        "prerequisite": "Anushree finishes the dataset"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z13_neg_hint_matches_no_task",
+   "description": "a prerequisite that names no existing task ('after lunch') proposes no dependency",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, train the model after lunch.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ]
+     },
+     "links": [
+      [
+       "train the model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "dependencies": []
+     },
+     "options": {
+      "hints": [
+       {
+        "kind": "task_reference",
+        "dependent": "train the model",
+        "prerequisite": "lunch"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z14_neg_hint_is_ambiguous_between_two_tasks",
+   "description": "a prerequisite matching two tasks equally is flagged for the reviewer, never guessed",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please clean the dataset by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "clean the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "clean the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "clean the dataset",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Anushree, please validate the dataset by Friday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "validate the dataset"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Friday"
+      ]
+     },
+     "links": [
+      [
+       "validate the dataset",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "validate the dataset",
+       "by Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 2
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "riya",
+     "text": "Bianca, train the model after the dataset is ready.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "train the model"
+      ],
+      "PERSON": [
+       "Bianca"
+      ]
+     },
+     "links": [
+      [
+       "train the model",
+       "Bianca",
+       "ASSIGNED_TO"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "dependencies": []
+     },
+     "options": {
+      "hints": [
+       {
+        "kind": "task_reference",
+        "dependent": "train the model",
+        "prerequisite": "the dataset is ready"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z15_reference_to_reference_dependency",
+   "description": "'The build can't start until the test server is set up' links two EXISTING tasks",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please set up the test server by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "set up the test server"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "set up the test server",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "set up the test server",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, please deploy the build by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "deploy the build"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "by Friday"
+      ]
+     },
+     "links": [
+      [
+       "deploy the build",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "deploy the build",
+       "by Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 2
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "riya",
+     "text": "The build can't start until the test server is set up.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "ADD_DEPENDENCY"
+      ],
+      "dependencies": [
+       [
+        "T-2",
+        "T-1",
+        "accepted"
+       ]
+      ]
+     },
+     "options": {
+      "hints": [
+       {
+        "kind": "reference_reference",
+        "dependent_text": "The build can't start",
+        "prerequisite": "the test server is set up"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "Z16_neg_reference_to_reference_unmatched",
+   "description": "if one side matches no task, nothing is proposed",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "anushree",
+     "display_name": "Anushree Rao",
+     "aliases": [
+      "Anushree"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Anushree, please set up the test server by Thursday.",
+     "recipients": [
+      "anushree"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "set up the test server"
+      ],
+      "PERSON": [
+       "Anushree"
+      ],
+      "TEMPORAL": [
+       "by Thursday"
+      ]
+     },
+     "links": [
+      [
+       "set up the test server",
+       "Anushree",
+       "ASSIGNED_TO"
+      ],
+      [
+       "set up the test server",
+       "by Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 1
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "The launch can't start until the test server is set up.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "dependencies": []
+     },
+     "options": {
+      "hints": [
+       {
+        "kind": "reference_reference",
+        "dependent_text": "The launch can't start",
+        "prerequisite": "the test server is set up"
+       }
+      ]
+     }
+    }
+   ]
+  }
+ ]
+}

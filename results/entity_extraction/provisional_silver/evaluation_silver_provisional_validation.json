@@ -1,0 +1,76 @@
+{
+  "experiment_mode": "provisional_silver",
+  "human_reviewed_gold_emails": 0,
+  "metric_provenance": {
+    "annotation_tier": "SILVER",
+    "disclaimer": "SILVER validation metrics are provisional development signals, not human-grounded research results.",
+    "is_final_research_metric": false,
+    "metric_prefix": "silver_provisional",
+    "mode": "provisional_silver"
+  },
+  "silver_provisional_overall": {
+    "accuracy": 0.7317949536889172,
+    "f1": 0.0077669902912621365,
+    "precision": 0.08,
+    "recall": 0.004081632653061225
+  },
+  "silver_provisional_per_entity": {
+    "ARTIFACT": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 59
+    },
+    "GROUP": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 11
+    },
+    "PERSON": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 63
+    },
+    "TASK": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 283
+    },
+    "TEMPORAL": {
+      "f1-score": 0.047619047619047616,
+      "precision": 0.2,
+      "recall": 0.02702702702702703,
+      "support": 74
+    },
+    "macro avg": {
+      "f1-score": 0.009523809523809523,
+      "precision": 0.04,
+      "recall": 0.005405405405405406,
+      "support": 490
+    },
+    "micro avg": {
+      "f1-score": 0.0077669902912621365,
+      "precision": 0.08,
+      "recall": 0.004081632653061225,
+      "support": 490
+    },
+    "weighted avg": {
+      "f1-score": 0.007191448007774538,
+      "precision": 0.030204081632653063,
+      "recall": 0.004081632653061225,
+      "support": 490
+    }
+  },
+  "split": "validation",
+  "status": "COMPLETED",
+  "trainer_metrics": {
+    "silver_provisional_validation_loss": 0.8511966466903687,
+    "silver_provisional_validation_model_preparation_time": 0.0004,
+    "silver_provisional_validation_runtime": 0.8693,
+    "silver_provisional_validation_samples_per_second": 116.182,
+    "silver_provisional_validation_steps_per_second": 29.908
+  }
+}

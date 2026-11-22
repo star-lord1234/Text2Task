@@ -1,0 +1,35 @@
+{
+  "schema_version": "phase4-v1",
+  "temporal": {
+    "eod_hour": 17,
+    "eod_minute": 0,
+    "bare_weekday_same_day": "ambiguous",
+    "business_hours_ampm": true,
+    "default_timezone": null
+  },
+  "uncertainty": {
+    "min_relation_score": 0.9,
+    "min_relation_score_note": "Provisional default chosen from the validation selective-prediction table (results/phase4/report.json): at 0.9, link precision 0.945 (0.76 with no threshold), recall 0.65, 68% of predicted links kept. SILVER labels, uncalibrated softmax; it only FLAGS weak links for review, it never drops them. Set 0.0 to disable.",
+    "severities": {
+      "NO_ASSIGNEE": "warn",
+      "AMBIGUOUS_ASSIGNEE": "warn",
+      "UNKNOWN_PERSON": "warn",
+      "UNSUPPORTED_GROUP": "warn",
+      "MULTIPLE_ASSIGNEES": "warn",
+      "ASSIGNEE_BY_NAME_MATCH": "info",
+      "DATE_UNRESOLVED_NO_ANCHOR": "warn",
+      "DATE_AMBIGUOUS": "warn",
+      "DATE_EVENT_CONDITION": "warn",
+      "DATE_VAGUE": "warn",
+      "DATE_PARTIAL": "warn",
+      "DATE_ASSUMPTION": "info",
+      "DATE_RELATION_CONFLICT": "warn",
+      "COMPETING_DATES": "warn",
+      "PAST_DATE": "warn",
+      "WEAK_RELATION_SCORE": "warn",
+      "MODEL_DISAGREEMENT": "warn",
+      "UNSUPPORTED_PREREQUISITE": "warn",
+      "TZ_ASSUMED": "info"
+    }
+  }
+}

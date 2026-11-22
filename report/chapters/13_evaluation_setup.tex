@@ -1,0 +1,75 @@
+\chapter{Experimental Setup and Evaluation Metrics}
+\label{ch:evalsetup}
+
+\section{Evaluation framework}
+Three kinds of reference exist in this project, and each supports a different kind of claim (\cref{fig:evalframework}).
+\begin{enumerate}
+  \item \textbf{Label agreement.} Entity and relation predictions are compared with SILVER or MailEx-derived references. These numbers measure agreement with provisional labels, not accuracy against human judgement.
+  \item \textbf{Functional fixtures.} The rule-based components and the end-to-end system are tested against developer-written cases with expected outcomes (102 temporal, 91 reconciliation, 15 graph and 88 live chat cases). These measure whether the system behaves as specified on those cases, not how often it is right on real conversations.
+  \item \textbf{Invariant checks.} Fuzzing and oracle comparisons check properties that must always hold (no lost tasks, no cycles, consistent derived states). These measure correctness of the state logic, not extraction quality.
+\end{enumerate}
+Every saved metric is tagged \code{is\_final\_research\_metric: false}.
+
+\begin{figure}[t]
+\centering
+\diagram[0.95\linewidth]{evaluation_framework}
+\caption[Evaluation framework]{Evaluation framework. References and system outputs are compared with three matching schemes; uncertainty is estimated with bootstrap intervals; every result carries a provenance tag stating that it is not a final research metric.}
+\label{fig:evalframework}
+\end{figure}
+
+\section{Data splits and conditions}
+\begin{itemize}
+  \item \textbf{Entity models, SILVER lineage.} Trained on 449--450 SILVER emails; validated and reported on the 60 SILVER-v1 validation emails (408 three-class reference spans: 272 TASK, 63 PERSON, 73 TEMPORAL).
+  \item \textbf{Entity models, MailEx-derived lineage.} Trained on 2,845 emails; validated on 389 development emails and reported on the deduplicated 349 (351 rows). The test split was not built.
+  \item \textbf{Relation model.} Trained on 2,288 sampled pairs from 450 emails; reported on all 922 candidate pairs of 59 validation emails (160 positive). The test split was built but never read.
+  \item \textbf{Live system.} 88 developer-written chat cases in three sets (24/34/30) and the 60 SILVER validation emails posted as live messages.
+\end{itemize}
+All runs used fixed seeds (20261101 for entity models, 20261102 for the relation model and data sampling) and ran on one Apple M5 machine. Each configuration was trained once; there are no repeated seeds. Checkpoints were selected on the same validation data that is reported, which introduces a small optimism (\cref{ch:models}).
+
+\section{Span metrics}
+Let $\mathcal{P}$ and $\mathcal{R}$ be the sets of predicted and reference spans, each a triple $(t, s, e)$ of type and WordPiece start and end. With $m$ the number of matched pairs,
+\begin{equation}
+P = \frac{m}{|\mathcal{P}|}, \qquad R = \frac{m}{|\mathcal{R}|}, \qquad F_1 = \frac{2PR}{P+R}.
+\end{equation}
+The metrics differ only in what counts as a match.
+\begin{description}[leftmargin=1.6em, font=\normalfont\sffamily\small\bfseries\color{navy}]
+  \item[Strict] same type and identical boundaries. This equals entity-level seqeval F1 \citep{nakayama2018seqeval}, which was verified to nine decimal places on real predictions.
+  \item[Lenient] same type and intersection over union
+  \begin{equation}
+  \operatorname{IoU}(a,b) = \frac{|a\cap b|}{|a\cup b|} = \frac{\max\big(0, \min(e_a,e_b)-\max(s_a,s_b)\big)}{(e_a-s_a)+(e_b-s_b)-|a\cap b|} \ \ge\ 0.5,
+  \end{equation}
+  with pairs matched one-to-one greedily in decreasing order of IoU, so a single prediction cannot match two references.
+  \item[Overlap-any] same type and at least one shared piece, also one-to-one; reported as a diagnostic.
+  \item[Token] precision and recall over individual pieces carrying an entity type, ignoring the B/I distinction.
+\end{description}
+Overall scores pool all types (micro-averaging); per-type scores are reported separately. Lenient matching is needed because the main error for TASK is span extent, and because MailEx itself is inconsistent about boundaries (for example whether \emph{Please} is part of a request). The live-system evaluation on emails uses the same lenient definition at character level.
+
+\section{Relation metrics}
+Relations are evaluated per candidate pair with the gold label of the pair. For each positive label $\ell\in\{\lab{ASSIGNED\_TO},\lab{DUE\_ON},\lab{SCHEDULED\_ON}\}$, precision, recall and F1 are computed from the pairs predicted and annotated as $\ell$. The micro F1 pools the counts of the three positive labels; the macro F1 is their unweighted mean,
+\begin{equation}
+F_1^{\text{macro}} = \frac{1}{3}\sum_{\ell} F_1^{(\ell)},
+\end{equation}
+which gives the rare \lab{DUE\_ON} label the same weight as the others. The false-link rate is the fraction of \lab{NONE} pairs predicted as any positive label. Two settings are reported: \emph{Mode A} uses the reference entity spans, isolating relation classification; \emph{Mode B} uses spans predicted by the entity model and matches them to reference spans strictly, leniently or by any overlap.
+
+\section{Uncertainty}
+Confidence intervals are percentile bootstrap intervals \citep{efron1993bootstrap} over 1,000 resamples. For relations the resampling unit is the email thread, so that correlated pairs from one thread stay together; for entity runs it is the development row. Differences between two systems are bootstrapped on the same resamples (paired). These intervals capture variation in the evaluation sample only; they do not capture seed-to-seed training variation, which was not measured.
+
+\section{End-to-end scenario metrics}
+For the live chat cases, a simulated reviewer accepts every actionable proposal, and the resulting tasks and edges are compared with the case's expectation.
+\begin{itemize}
+  \item \textbf{Strict pass}: every expected task, owner, due day, status and edge is present and nothing else was created.
+  \item \textbf{Task recall}: the fraction of expected tasks that were created.
+  \item \textbf{Owner, due-date and status accuracy}: among found tasks that expect a value, the fraction with the right one.
+  \item \textbf{Edge recall} and \textbf{false edges}: expected dependency edges recovered, and edges that should not exist.
+  \item \textbf{False tasks}: tasks an accept-everything reviewer would have received but should not have.
+\end{itemize}
+For real emails, where no expected tasks exist, the \textbf{review load}, the number of actionable proposals per email, is reported as a measure of how much work the system would create for a reviewer.
+
+\section{Effects of class imbalance, SILVER labels and other limitations}
+\begin{itemize}
+  \item \textbf{Class imbalance.} Token accuracy is dominated by \lab{O} and is not reported as a quality measure. Entity-level metrics ignore \lab{O} and are therefore informative even when 91\% of tokens are outside every span. For relations, the macro F1 and the per-label table prevent the frequent \lab{NONE} class from hiding failures on \lab{DUE\_ON}.
+  \item \textbf{Incomplete references.} Because MailEx labels names and dates only as event arguments and misses some requests, correct predictions can count as false positives. Measured precision is a lower bound on true precision, and measured recall is relative to an incomplete set.
+  \item \textbf{Noisy references.} Wrong reference spans (\emph{off this list} as TEMPORAL) can make correct predictions count as misses.
+  \item \textbf{Small evaluation sets.} 60 SILVER validation emails and 10 \lab{DUE\_ON} pairs give wide intervals; differences below about 0.03 F1 between entity runs are not meaningful.
+  \item \textbf{Author-written fixtures.} The chat cases use the developer's own phrasing and were partly used for development; only the holdout set was unseen when first executed. They are functional comparisons, not estimates of accuracy on real conversations.
+\end{itemize}

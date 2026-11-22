@@ -1,0 +1,90 @@
+{
+ "raw_entities": [
+  {
+   "type": "TASK",
+   "text": "please prepare the",
+   "start": 7,
+   "end": 25,
+   "confidence": 0.4
+  },
+  {
+   "type": "TASK",
+   "text": "report",
+   "start": 36,
+   "end": 42,
+   "confidence": 0.43
+  },
+  {
+   "type": "TEMPORAL",
+   "text": "by Friday",
+   "start": 43,
+   "end": 52,
+   "confidence": 0.39
+  }
+ ],
+ "entities": [
+  {
+   "type": "TASK",
+   "text": "please prepare the quarterly report",
+   "start": 7,
+   "end": 42,
+   "origin": "refined"
+  },
+  {
+   "type": "TEMPORAL",
+   "text": "by Friday",
+   "start": 43,
+   "end": 52,
+   "origin": "neural"
+  }
+ ],
+ "relations": [
+  {
+   "source": "please prepare the quarterly report",
+   "label": "SCHEDULED_ON",
+   "target": "by Friday",
+   "score": 0.969,
+   "provenance": "neural"
+  }
+ ],
+ "candidate": [
+  {
+   "title": "prepare the quarterly report",
+   "assignee": {
+    "participant_id": "bianca",
+    "status": "RESOLVED",
+    "basis": "named_addressee"
+   },
+   "due": {
+    "raw": "by Friday",
+    "status": "RESOLVED",
+    "value": "2026-11-13",
+    "granularity": "DATE"
+   },
+   "flags": [
+    "DATE_RELATION_CONFLICT"
+   ]
+  }
+ ],
+ "proposal": [
+  {
+   "operation": "CREATE_TASK",
+   "summary": "Create task \u201cprepare the quarterly report\u201d \u2014 Bianca, due 2026-11-13",
+   "status": "pending",
+   "reviewer_ids": [
+    "bianca"
+   ],
+   "source_kind": "neural"
+  }
+ ],
+ "provenance": {
+  "entities": "neural",
+  "entity_refinement": "rule",
+  "identity": "rule",
+  "reconciliation": "rule (cue-based)",
+  "refinement_preset": "hybrid",
+  "relations": "neural",
+  "temporal": "rule"
+ },
+ "duration_ms": 207.9
+}

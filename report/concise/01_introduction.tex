@@ -1,0 +1,40 @@
+\chapter{Introduction}
+\label{ch:intro}
+
+Much coordination work happens in free text. A lead writes \emph{``Anushree, please prepare the cleaned dataset by Thursday''}, the colleague replies \emph{``Sure, I'll take care of it''}, and days later someone writes \emph{``The cleaned dataset is ready.''} The first message creates a task with an owner and a deadline, the second acknowledges it and the third completes it. Task trackers only know about work someone types into them, and what is not copied across is lost. Text2Task closes this gap: given a message with its sender, recipients and time, it proposes operations on a shared task list (create, assign, propose or confirm a date, start, complete, cancel, or record that one task waits for another) and shows them to people for review.
+
+\section{Why the problem is hard}
+\begin{itemize}
+  \item \textbf{Implicit requests and commitments.} Requests are often questions (\emph{``Could you forward the article?''}); commitments (\emph{``I'll send it tonight''}) resemble predictions (\emph{``Customers are going to get cranky''}); reports of the past (\emph{``We shipped it yesterday''}) must produce nothing.
+  \item \textbf{Temporal expressions.} Deadlines are relative and need the sending time and time zone; some are ambiguous (\emph{``by Wednesday''} written on a Wednesday) or are events, not dates (\emph{``once the build is ready''}).
+  \item \textbf{Assignees.} Owners may be named, implied by a single recipient or a first-person promise, or deliberately open (\emph{``Can someone \ldots''}). A system must not invent one.
+  \item \textbf{References and relationships.} Most messages refer to existing tasks, sometimes ambiguously, and dependencies (\emph{``train the model once the dataset is cleaned''}) can contradict earlier statements and form cycles.
+\end{itemize}
+Mistakes are costly: silently assigning work to the wrong person or closing a task that is not done destroys trust. With limited, noisy training data, the design principle is therefore that \emph{machine learning proposes, people decide}, every change is attributable, and deterministic checks guard the task state.
+
+\section{Objectives and scope}
+The project aimed to (i) extract task phrases, people and temporal expressions; (ii) link tasks to owners and dates; (iii) normalise dates; (iv) recognise updates to existing tasks instead of duplicating them; (v) maintain a valid dependency graph; and (vi) present everything as explained, reviewable suggestions. It also asked how well a compact encoder learns from labels derived from an existing corpus (RQ1), how much label quality matters compared with the model (RQ2), and what neural and rule components each contribute end to end (RQ3). Constraints were local training on one Apple M5 laptop (16\,GB, MPS backend), no annotation budget, and safety over coverage. \Cref{tab:scope} separates what was planned from what was built.
+
+\begin{table}[htbp]
+\centering
+\caption{Intended versus implemented scope.}
+\label{tab:scope}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{42mm}p{20mm}L@{}}
+\toprule
+Element & Status & Notes \\
+\midrule
+TASK, PERSON, TEMPORAL entities & evaluated & three-class DistilBERT models \\
+GROUP, EVENT, ARTIFACT entities & deferred & in the original six-class schema; too few examples \\
+ASSIGNED\_TO, DUE\_ON, SCHEDULED\_ON & evaluated & neural relation model, reference spans \\
+DEPENDS\_ON & rules only & 4 training examples made a neural class impossible \\
+Dates, owners, reconciliation, graph & implemented & functionally tested and fuzzed; no labelled data \\
+Hybrid refinement & evaluated & on chat fixtures and 60 SILVER emails \\
+Best entity model in the app & partial & app loads the SILVER-v2 checkpoint, not the stronger Phase 2 model \\
+Human-verified evaluation & not done & no GOLD labels exist \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Contributions}
+A reproducible pipeline from MailEx to three versioned label sets; an entity and a relation model with strict, lenient and bootstrap-backed evaluation; a rule layer for dates, owners, reconciliation and dependency graphs with strong safety guarantees; a hybrid refinement pipeline with presets that make neural, rule and combined behaviour comparable; a review-first application; and an honest account of what the evaluation can and cannot show, including a train/development leakage found during evaluation.

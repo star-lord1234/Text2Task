@@ -1,0 +1,58 @@
+\chapter{Literature Review}
+\label{ch:literature}
+
+This chapter situates Text2Task within five lines of work: action-item detection in email, the MailEx corpus on which the project is built, sequence labelling for entity recognition, transformer-based encoders and relation extraction, and hybrid systems that combine learned models with rules. \Cref{tab:literature} summarises the most relevant studies.
+
+\section{Email mining and actionable information}
+Early work treated email as a classification problem over speech acts. \citet{cohen2004speechacts} defined a taxonomy of email acts (request, propose, commit, deliver and others) and showed that supervised text classifiers can recognise them at the message level. \citet{bennett2005actionitems} focused specifically on action items, comparing message-level and sentence-level detection. \citet{lampert2010requests} studied which emails contain requests for action, emphasising how often requests are indirect and how much annotator agreement depends on careful guidelines. These studies establish that requests and commitments are recognisable but subtle, and that sentence-level analysis is necessary when several acts share one message. All of them predict a label per message or sentence; none maintains a structured task list.
+
+Much of this research, including the corpus used here, draws on the Enron email collection released for research by \citet{klimt2004enron}. Its realistic business language, quoted replies and legal disclaimers are both an asset and a source of noise.
+
+\citet{mukherjee2020smarttodo} moved from detection to generation: their Smart To-Do system identifies emails in which the sender commits to an action and generates a short to-do item with a sequence-to-sequence model, reporting BLEU 0.23 and ROUGE 0.63 on their dataset. Text2Task shares the goal of producing actionable items but takes an extractive approach: the task title is a span of the original text, and owners, dates and dependencies are structured fields rather than free text. Generation metrics such as BLEU are therefore not comparable with the span and relation metrics used here.
+
+\section{The MailEx corpus}
+\citet{srivastava2023mailex} introduced MailEx, described by its authors as the first dataset for event extraction from conversational email threads. It defines a taxonomy of 10 event types (for example \lab{Request\_Action}, \lab{Deliver\_Action\_Data}, \lab{Request\_Meeting}) and 76 argument roles, and annotates about 1,500 threads containing 3,936 emails with 8,392 event instances (train/dev/test: 1,200/150/150 threads; 3,117/414/405 emails). The authors compare fine-tuned sequence labelling (BERT), fine-tuned generative extraction (BART) and few-shot prompting of GPT-3.5. With end-to-end BERT sequence labelling they report a trigger-identification F1 of 0.537 and an argument-classification F1 of 0.368 on the test set; given gold triggers, argument classification rises to 0.651. GPT-3.5 in-context learning was far weaker (trigger identification 0.169). They identify non-continuous shared triggers, non-named-entity arguments and conversational history as the main difficulties.
+
+MailEx is valuable to this project because its \lab{Action Description}, \lab{Members} and \lab{Date}/\lab{Time} arguments are human annotations that map naturally onto TASK, PERSON and TEMPORAL spans. Its task definition is nonetheless different: MailEx extracts event triggers and typed arguments, while Text2Task extracts task phrases and links them to owners and dates. \Cref{ch:dataset,ch:preprocessing} describe the mapping and its consequences, and \cref{sec:litcompare} explains why the MailEx figures cannot be compared directly with ours.
+
+\section{Named entity recognition and BIO tagging}
+Span extraction is commonly cast as token-level sequence labelling with the BIO scheme of \citet{ramshaw1995chunking}: each token is labelled as the beginning (\lab{B-X}) or inside (\lab{I-X}) of a span of type \lab{X}, or outside any span (\lab{O}). The CoNLL-2003 shared task \citep{tjongkimsang2003conll} established entity-level exact-match F1 as the standard metric, later implemented in tools such as seqeval \citep{nakayama2018seqeval}, which this project uses as its strict metric. Before pre-trained transformers, BiLSTM-CRF architectures \citep{lample2016ner} were the dominant approach, reaching around 91 F1 on English CoNLL-2003. Those benchmarks involve short, well-defined named entities; TASK spans in email are long, verb-headed clauses whose boundaries annotators themselves disagree on, which is why this project also reports overlap-based scores.
+
+\section{Transformer encoders}
+The transformer \citep{vaswani2017attention} replaced recurrence with self-attention. BERT \citep{devlin2019bert} pre-trained a bidirectional transformer encoder with masked language modelling and showed that fine-tuning with a simple linear head achieves strong results on token-classification tasks, including CoNLL-2003. DistilBERT \citep{sanh2019distilbert} distils BERT into a six-layer model that retains most of its language-understanding performance while being about 40\% smaller and 60\% faster, which made it suitable for training and running locally on a laptop GPU in this project. RoBERTa \citep{liu2019roberta} and DeBERTa \citep{he2021deberta} improve pre-training and attention, and both are available in cased variants; they were considered but not trained here (\cref{ch:future}). The models were implemented with PyTorch \citep{paszke2019pytorch} and Hugging Face Transformers \citep{wolf2020transformers}, and optimised with AdamW \citep{loshchilov2019adamw}.
+
+\section{Relation extraction}
+Given two entity mentions, relation extraction predicts the relation between them. \citet{baldinisoares2019mtb} showed that inserting marker tokens around the two entities and classifying from the representations of the start markers outperforms using the \texttt{[CLS]} token alone. \citet{zhong2021pure} demonstrated that a simple pipeline, with separate entity and relation encoders and \emph{typed} markers that also encode the entity types, outperforms more complex joint models, reporting 1.7 to 2.8 absolute relation-F1 gains on ACE04, ACE05 and SciERC; typed markers alone improved over untyped markers in their ablations. The Text2Task relation model follows this design: typed markers such as \code{[E1\_TASK]} and \code{[E2\_TEMPORAL]}, and a classifier over the concatenation of the \texttt{[CLS]} vector and both start-marker vectors.
+
+\section{Temporal expression normalisation}
+Rule-based normalisers remain the standard for mapping temporal expressions to calendar values. HeidelTime \citep{strotgen2010heideltime} and SUTime \citep{chang2012sutime} use hand-written patterns and a reference date to resolve relative expressions. Text2Task's normaliser follows the same principle but adds explicit statuses for values that cannot be resolved (no anchor, event conditions, ambiguity, vagueness) so that downstream components can refuse to guess.
+
+\section{Hybrid neural and rule-based systems}
+\citet{chiticariu2013rules} observed that industrial information-extraction systems overwhelmingly rely on rules, citing their transparency, debuggability and ease of incorporating domain knowledge, while academic research focuses on learned models. Weak-supervision frameworks such as Snorkel \citep{ratner2017snorkel} instead use rules as noisy labelling functions to create training data for a learned model. Text2Task combines both ideas: SILVER training labels are produced by deterministic mapping and automatic annotation, and at inference time rules repair and complement the model's output under explicit provenance. Dependency handling relies on standard graph algorithms (NetworkX, \citealp{hagberg2008networkx}; topological ordering after \citealp{kahn1962topological}).
+
+\section{Comparative summary}
+\label{sec:litcompare}
+\begin{table}[t]
+\centering
+\caption[Comparative literature review]{Comparative literature review. Reported results are quoted from the original papers and are not comparable across rows or with this project unless stated; they use different tasks, datasets and metrics.}
+\label{tab:literature}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{24mm}p{8mm}LLp{25mm}L@{}}
+\toprule
+Paper & Year & Method & Data & Reported result & Relevance to Text2Task \\
+\midrule
+\citet{cohen2004speechacts} & 2004 & Supervised classification of email speech acts & Annotated email corpora & Message-level act classification (no figure quoted here) & Taxonomy of requests, commitments, deliveries \\
+\citet{bennett2005actionitems} & 2005 & Message vs sentence-level action-item detection & Annotated email & Detection accuracy (no figure quoted here) & Motivates sentence-level analysis \\
+\citet{lampert2010requests} & 2010 & Classifier for emails requesting action & Enron subset & Message-level detection (no figure quoted here) & Indirect requests, annotation guidelines \\
+\citet{mukherjee2020smarttodo} & 2020 & Two-stage commitment detection + seq2seq generation & New commitment dataset & BLEU 0.23, ROUGE 0.63 & Same goal, generative not extractive \\
+\citet{srivastava2023mailex} & 2023 & BERT sequence labelling, BART generation, GPT-3.5 ICL & MailEx (3,936 emails) & BERT end-to-end: trigger id.\ F1 0.537, arg.\ cls.\ F1 0.368 & Source corpus; arguments mapped to our entity types \\
+\citet{lample2016ner} & 2016 & BiLSTM-CRF & CoNLL-2003 & English F1 90.94 & BIO sequence labelling baseline \\
+\citet{devlin2019bert} & 2019 & Pre-trained bidirectional transformer & CoNLL-2003 (among others) & Fine-tuned NER F1 around 92 & Fine-tuning paradigm used here \\
+\citet{sanh2019distilbert} & 2019 & Knowledge-distilled 6-layer BERT & GLUE & Retains most of BERT's GLUE score, 40\% smaller & Backbone of both models \\
+\citet{zhong2021pure} & 2021 & Pipeline RE with typed entity markers & ACE04, ACE05, SciERC & +1.7--2.8 relation F1 over joint models & Marker design of our RE model \\
+\citet{chiticariu2013rules} & 2013 & Survey of rule-based IE in practice & Industry and academic systems & Qualitative & Rationale for the deterministic layer \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The closest point of comparison is MailEx itself, but the numbers do not transfer. MailEx scores trigger and typed-argument extraction over its own 10-type, 76-role schema with exact triggers and partially matching arguments. Text2Task scores three collapsed entity types derived from those arguments, on a development split, after a heuristic mapping that discards some annotations and is itself incomplete (\cref{ch:preprocessing}). Our best lenient entity F1 of 0.555 and the MailEx argument-identification F1 of 0.454 measure different things and should not be read as one system beating the other. What the literature does support is the qualitative picture that also emerges here: arguments that are not named entities (TASK phrases) are much harder than names and dates, and email history and context matter.

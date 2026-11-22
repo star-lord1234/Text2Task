@@ -1,0 +1,55 @@
+{
+  "run": "markers_sqrt",
+  "note": "stopped manually in epoch 5; history parsed from log",
+  "best_epoch": 3,
+  "history": [
+    {
+      "epoch": 1,
+      "train_loss": 0.7651170274386039,
+      "macro_positive_f1": 0.3519647696476964,
+      "micro_positive_f1": 0.5186813186813187,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.5583333333333332,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.49756097560975604
+      },
+      "none_fpr": 0.2230971128608924
+    },
+    {
+      "epoch": 2,
+      "train_loss": 0.3674182112856241,
+      "macro_positive_f1": 0.4862379502790462,
+      "micro_positive_f1": 0.6916890080428955,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.6392694063926941,
+        "DUE_ON": 0.0,
+        "SCHEDULED_ON": 0.8194444444444445
+      },
+      "none_fpr": 0.1010498687664042
+    },
+    {
+      "epoch": 3,
+      "train_loss": 0.16669249479411416,
+      "macro_positive_f1": 0.7188090050835149,
+      "micro_positive_f1": 0.7639751552795032,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.6941176470588236,
+        "DUE_ON": 0.588235294117647,
+        "SCHEDULED_ON": 0.874074074074074
+      },
+      "none_fpr": 0.045931758530183726
+    },
+    {
+      "epoch": 4,
+      "train_loss": 0.09088941133976751,
+      "macro_positive_f1": 0.6810612574768705,
+      "micro_positive_f1": 0.7131782945736433,
+      "per_label_f1": {
+        "ASSIGNED_TO": 0.6728971962616823,
+        "DUE_ON": 0.588235294117647,
+        "SCHEDULED_ON": 0.782051282051282
+      },
+      "none_fpr": 0.11023622047244094
+    }
+  ]
+}

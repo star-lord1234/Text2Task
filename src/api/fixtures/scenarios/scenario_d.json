@@ -1,0 +1,83 @@
+{
+ "id": "D",
+ "title": "Scenario D \u2014 Non-actionable messages",
+ "timezone": "America/Chicago",
+ "description": "Past events and status reports do not become to-dos; a clear request does.",
+ "messages": [
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree"
+   ],
+   "text": "The server went down yesterday.",
+   "created_at": "2026-11-11T09:30:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "went down"
+     ],
+     "TEMPORAL": [
+      "yesterday"
+     ]
+    },
+    "links": [
+     [
+      "went down",
+      "yesterday",
+      "SCHEDULED_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "NO_ACTION"
+    ],
+    "note": "A historical event: no task."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya"
+   ],
+   "text": "The request was rejected.",
+   "created_at": "2026-11-11T09:32:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "was rejected"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "NO_ACTION"
+    ],
+    "note": "Status information, not a new to-do."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree"
+   ],
+   "text": "Please investigate why the server went down.",
+   "created_at": "2026-11-11T09:35:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "investigate why the server went down"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "A clear request: a task for the single addressee."
+   }
+  }
+ ]
+}

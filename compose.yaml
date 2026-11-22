@@ -1,0 +1,17 @@
+services:
+  text2task:
+    image: ${T2T_IMAGE:?Set T2T_IMAGE in .env to the published GHCR image}
+    pull_policy: if_not_present
+    ports:
+      - "${T2T_PORT:-8000}:8000"
+    environment:
+      T2T_DB: /app/state/text2task.db
+      T2T_TZ: ${T2T_TZ:-UTC}
+      HF_HUB_OFFLINE: "1"
+      TRANSFORMERS_OFFLINE: "1"
+    volumes:
+      - text2task-state:/app/state
+    restart: unless-stopped
+
+volumes:
+  text2task-state:

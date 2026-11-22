@@ -1,0 +1,143 @@
+{
+ "id": "A",
+ "title": "Scenario A \u2014 Simple assignment",
+ "timezone": "America/Chicago",
+ "description": "Assign, acknowledge (no duplicate), add a prerequisite, complete it, start the dependent task. Extraction is scripted; reconciliation, review and the graph are the real code.",
+ "messages": [
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree"
+   ],
+   "text": "Anushree, please prepare the cleaned dataset by Thursday.",
+   "created_at": "2026-11-11T09:30:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "prepare the cleaned dataset"
+     ],
+     "PERSON": [
+      "Anushree"
+     ],
+     "TEMPORAL": [
+      "Thursday"
+     ]
+    },
+    "links": [
+     [
+      "prepare the cleaned dataset",
+      "Anushree",
+      "ASSIGNED_TO"
+     ],
+     [
+      "prepare the cleaned dataset",
+      "Thursday",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "Propose 'prepare the cleaned dataset' for Anushree, due Thu 12 Nov (resolved from the message time)."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya"
+   ],
+   "text": "Sure, I'll take care of the dataset.",
+   "created_at": "2026-11-11T09:32:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "take care of the dataset"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "NO_ACTION"
+    ],
+    "note": "Recognised as Anushree acknowledging her own task: no duplicate."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Bianca, please train the entity model once Anushree finishes the dataset.",
+   "created_at": "2026-11-11T09:35:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "train the entity model"
+     ],
+     "PERSON": [
+      "Bianca",
+      "Anushree"
+     ]
+    },
+    "links": [
+     [
+      "train the entity model",
+      "Bianca",
+      "ASSIGNED_TO"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK",
+     "ADD_DEPENDENCY"
+    ],
+    "note": "New task for Bianca, plus a prerequisite edge from the dataset task (accept the task first)."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya",
+    "bianca"
+   ],
+   "text": "The cleaned dataset is ready.",
+   "created_at": "2026-11-11T09:41:00-06:00",
+   "scripted": {
+    "spans": {},
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "COMPLETE_TASK"
+    ],
+    "note": "Completion of Anushree's existing task; once accepted, Bianca's task becomes ready."
+   }
+  },
+  {
+   "sender": "bianca",
+   "recipients": [
+    "riya"
+   ],
+   "text": "I'll begin training now.",
+   "created_at": "2026-11-11T09:44:00-06:00",
+   "scripted": {
+    "spans": {
+     "TEMPORAL": [
+      "now"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "UPDATE_STATUS"
+    ],
+    "note": "Progress update on the existing training task: no duplicate."
+   }
+  }
+ ]
+}

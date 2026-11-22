@@ -1,0 +1,190 @@
+{
+  "export_checks": {
+    "test": {
+      "labels": {
+        "ASSIGNED_TO": 122,
+        "DEPENDS_ON": 3,
+        "DUE_ON": 7,
+        "NONE": 226,
+        "SCHEDULED_ON": 94
+      },
+      "marker_roundtrip_failures": 0,
+      "max_len": 460,
+      "over_512_tokens": 0,
+      "p50_len": 175,
+      "p95_len": 328,
+      "pair_types": {
+        "TASK->EVENT": 4,
+        "TASK->GROUP": 3,
+        "TASK->PERSON": 161,
+        "TASK->TASK": 149,
+        "TASK->TEMPORAL": 135
+      },
+      "rows": 452
+    },
+    "train": {
+      "labels": {
+        "ASSIGNED_TO": 620,
+        "DEPENDS_ON": 4,
+        "DUE_ON": 33,
+        "NONE": 1189,
+        "SCHEDULED_ON": 532
+      },
+      "marker_roundtrip_failures": 0,
+      "max_len": 501,
+      "over_512_tokens": 0,
+      "p50_len": 187,
+      "p95_len": 382,
+      "pair_types": {
+        "TASK->EVENT": 6,
+        "TASK->GROUP": 54,
+        "TASK->PERSON": 752,
+        "TASK->TASK": 795,
+        "TASK->TEMPORAL": 771
+      },
+      "rows": 2378
+    },
+    "validation": {
+      "labels": {
+        "ASSIGNED_TO": 90,
+        "DUE_ON": 10,
+        "NONE": 171,
+        "SCHEDULED_ON": 71
+      },
+      "marker_roundtrip_failures": 0,
+      "max_len": 394,
+      "over_512_tokens": 0,
+      "p50_len": 218,
+      "p95_len": 394,
+      "pair_types": {
+        "TASK->GROUP": 19,
+        "TASK->PERSON": 89,
+        "TASK->TASK": 129,
+        "TASK->TEMPORAL": 105
+      },
+      "rows": 342
+    }
+  },
+  "leakage": {
+    "train~test": {
+      "exact_normalized_text_duplicates": 0,
+      "shared_threads": 0
+    },
+    "train~validation": {
+      "exact_normalized_text_duplicates": 1,
+      "shared_threads": 0
+    },
+    "validation~test": {
+      "exact_normalized_text_duplicates": 0,
+      "shared_threads": 0
+    }
+  },
+  "splits": {
+    "test": {
+      "ambiguous": {
+        "ASSIGNED_TO|False": 122,
+        "DEPENDS_ON|True": 3,
+        "DUE_ON|False": 7,
+        "SCHEDULED_ON|False": 47,
+        "SCHEDULED_ON|True": 47
+      },
+      "dropped_for_unsupported_endpoints_or_missing": {
+        "ASSIGNED_TO:TASK->GROUP": 3,
+        "DEPENDS_ON:TASK->EVENT": 3
+      },
+      "entity_offset_mismatches": 0,
+      "entity_types": {
+        "ARTIFACT": 75,
+        "EVENT": 3,
+        "GROUP": 3,
+        "PERSON": 102,
+        "TASK": 340,
+        "TEMPORAL": 95
+      },
+      "evidence_not_in_text": 0,
+      "explicit_vs_inferred": {
+        "ASSIGNED_TO|EXPLICIT": 122,
+        "DEPENDS_ON|EXPLICIT": 3,
+        "DUE_ON|EXPLICIT": 7,
+        "SCHEDULED_ON|EXPLICIT": 94
+      },
+      "records": 90,
+      "relations_by_type": {
+        "ASSIGNED_TO": 122,
+        "DEPENDS_ON": 3,
+        "DUE_ON": 7,
+        "SCHEDULED_ON": 94
+      },
+      "threads": 70
+    },
+    "train": {
+      "ambiguous": {
+        "ASSIGNED_TO|False": 620,
+        "DEPENDS_ON|True": 4,
+        "DUE_ON|False": 33,
+        "SCHEDULED_ON|False": 212,
+        "SCHEDULED_ON|True": 320
+      },
+      "dropped_for_unsupported_endpoints_or_missing": {
+        "ASSIGNED_TO:TASK->GROUP": 41,
+        "DEPENDS_ON:TASK->EVENT": 4
+      },
+      "entity_offset_mismatches": 0,
+      "entity_types": {
+        "ARTIFACT": 412,
+        "EVENT": 4,
+        "GROUP": 35,
+        "PERSON": 463,
+        "TASK": 1770,
+        "TEMPORAL": 532
+      },
+      "evidence_not_in_text": 0,
+      "explicit_vs_inferred": {
+        "ASSIGNED_TO|EXPLICIT": 620,
+        "DEPENDS_ON|EXPLICIT": 4,
+        "DUE_ON|EXPLICIT": 33,
+        "SCHEDULED_ON|EXPLICIT": 532
+      },
+      "records": 450,
+      "relations_by_type": {
+        "ASSIGNED_TO": 620,
+        "DEPENDS_ON": 4,
+        "DUE_ON": 33,
+        "SCHEDULED_ON": 532
+      },
+      "threads": 364
+    },
+    "validation": {
+      "ambiguous": {
+        "ASSIGNED_TO|False": 90,
+        "DUE_ON|False": 10,
+        "SCHEDULED_ON|False": 42,
+        "SCHEDULED_ON|True": 29
+      },
+      "dropped_for_unsupported_endpoints_or_missing": {
+        "ASSIGNED_TO:TASK->GROUP": 11
+      },
+      "entity_offset_mismatches": 0,
+      "entity_types": {
+        "ARTIFACT": 59,
+        "GROUP": 11,
+        "PERSON": 63,
+        "TASK": 283,
+        "TEMPORAL": 74
+      },
+      "evidence_not_in_text": 0,
+      "explicit_vs_inferred": {
+        "ASSIGNED_TO|EXPLICIT": 90,
+        "DUE_ON|EXPLICIT": 10,
+        "SCHEDULED_ON|EXPLICIT": 71
+      },
+      "records": 60,
+      "relations_by_type": {
+        "ASSIGNED_TO": 90,
+        "DUE_ON": 10,
+        "SCHEDULED_ON": 71
+      },
+      "threads": 51
+    }
+  }
+}

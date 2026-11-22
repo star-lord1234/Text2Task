@@ -1,0 +1,152 @@
+{
+  "best_checkpoint": "models/text2task-distilbert/entity_v2_three_class/epoch3_sqrt_weighted/checkpoints/checkpoint-87",
+  "best_metric": 0.12702078521939955,
+  "class_weighting": "sqrt_inverse",
+  "class_weights": {
+    "B-PERSON": 10.302095785328996,
+    "B-TASK": 8.302421169068019,
+    "B-TEMPORAL": 9.71795603193745,
+    "I-PERSON": 11.592820671616565,
+    "I-TASK": 2.868912290023738,
+    "I-TEMPORAL": 5.5457108289659764,
+    "O": 1.0
+  },
+  "config": {
+    "class_weighting": "sqrt_inverse",
+    "data_dir": "data/model_ready/entities_v2_three_class",
+    "data_seed": 20261101,
+    "entity_types": [
+      "TASK",
+      "PERSON",
+      "TEMPORAL"
+    ],
+    "epochs": 3,
+    "epochs_executed": 3,
+    "eval_batch_size": 4,
+    "evaluation_provenance": {
+      "annotation_tier": "SILVER",
+      "description": "Training uses SILVER-v2; validation is the untouched SILVER-v1 dev split transformed to a deterministic three-class view.",
+      "human_verified": false,
+      "is_final_research_metric": false
+    },
+    "gradient_accumulation_steps": 4,
+    "learning_rate": 2e-05,
+    "metric_for_best_model": "silver_v2_provisional_f1",
+    "model_dir": "models/text2task-distilbert/entity_v2_three_class",
+    "model_name": "distilbert/distilbert-base-uncased",
+    "results_dir": "results/entity_extraction/entity_v2_three_class",
+    "run_name": "epoch3_sqrt_weighted",
+    "seed": 20261101,
+    "train_batch_size": 4,
+    "version": "entity-v2.0.0",
+    "weight_decay": 0.01
+  },
+  "data_hashes": {
+    "train": "bf567ee63767081999a14a3a77b5b0e7920b24d9a4bece501426b812df66dea8",
+    "validation": "d52f57f2b9e3c89f1737f34376a19ad0bbf1bfb5af3b360725bfe6d4979c410f"
+  },
+  "device": "mps",
+  "duration_seconds": 93.210351,
+  "epochs": 3,
+  "evaluation_provenance": {
+    "annotation_tier": "SILVER",
+    "description": "Training uses SILVER-v2; validation is the untouched SILVER-v1 dev split transformed to a deterministic three-class view.",
+    "human_verified": false,
+    "is_final_research_metric": false
+  },
+  "f1_absolute_change_from_v1": 0.11925379492813741,
+  "finished_at": "2026-11-02T08:00:14.846880Z",
+  "human_gold_metrics": null,
+  "optimizer_steps": 87,
+  "predicted_b_labels": 327,
+  "predicted_label_distribution": {
+    "B-PERSON": 129,
+    "B-TASK": 100,
+    "B-TEMPORAL": 98,
+    "I-TASK": 182,
+    "I-TEMPORAL": 227,
+    "O": 6231
+  },
+  "prediction_metrics": {
+    "silver_v2_provisional_validation_loss": 1.3015083074569702,
+    "silver_v2_provisional_validation_runtime": 1.4276,
+    "silver_v2_provisional_validation_samples_per_second": 42.03,
+    "silver_v2_provisional_validation_silver_v2_provisional_accuracy": 0.638581886034161,
+    "silver_v2_provisional_validation_silver_v2_provisional_f1": 0.12702078521939955,
+    "silver_v2_provisional_validation_silver_v2_provisional_precision": 0.12008733624454149,
+    "silver_v2_provisional_validation_silver_v2_provisional_recall": 0.13480392156862744,
+    "silver_v2_provisional_validation_steps_per_second": 10.507
+  },
+  "reference_b_labels": 408,
+  "reference_label_distribution": {
+    "B-PERSON": 63,
+    "B-TASK": 272,
+    "B-TEMPORAL": 73,
+    "I-PERSON": 53,
+    "I-TASK": 1886,
+    "I-TEMPORAL": 195,
+    "O": 4425
+  },
+  "run_name": "epoch3_sqrt_weighted",
+  "silver_v2_provisional_overall": {
+    "accuracy": 0.638581886034161,
+    "f1": 0.12702078521939955,
+    "precision": 0.12008733624454149,
+    "recall": 0.13480392156862744
+  },
+  "silver_v2_provisional_per_entity": {
+    "PERSON": {
+      "f1-score": 0.33333333333333337,
+      "precision": 0.24806201550387597,
+      "recall": 0.5079365079365079,
+      "support": 63
+    },
+    "TASK": {
+      "f1-score": 0.0042194092827004225,
+      "precision": 0.0049504950495049506,
+      "recall": 0.003676470588235294,
+      "support": 272
+    },
+    "TEMPORAL": {
+      "f1-score": 0.22,
+      "precision": 0.1732283464566929,
+      "recall": 0.3013698630136986,
+      "support": 73
+    },
+    "macro avg": {
+      "f1-score": 0.1858509142053446,
+      "precision": 0.14208028567002462,
+      "recall": 0.27099428051281393,
+      "support": 408
+    },
+    "micro avg": {
+      "f1-score": 0.12702078521939955,
+      "precision": 0.12008733624454149,
+      "recall": 0.13480392156862744,
+      "support": 408
+    },
+    "weighted avg": {
+      "f1-score": 0.0936462728551336,
+      "precision": 0.07259831108222578,
+      "recall": 0.13480392156862744,
+      "support": 408
+    }
+  },
+  "started_at": "2026-11-02T07:58:41.636529Z",
+  "status": "COMPLETED",
+  "train_metrics": {
+    "epoch": 3.0,
+    "total_flos": 77022627065142.0,
+    "train_loss": 4.671501707756656,
+    "train_runtime": 92.8758,
+    "train_samples_per_second": 14.503,
+    "train_steps_per_second": 0.937
+  },
+  "v1_baseline": {
+    "accuracy": 0.7317949536889172,
+    "f1": 0.0077669902912621365,
+    "precision": 0.08,
+    "recall": 0.004081632653061225
+  },
+  "version": "entity-v2.0.0"
+}

@@ -1,0 +1,215 @@
+section,metric,description,split,population_count,selected_count,selected_percent_of_population
+selection,records,Email-turn records,train,3117,450,14.44
+coverage_flag,explicit_actionable_request,Request-like MailEx event or explicit request language.,train,1692,341,20.15
+coverage_flag,commitment_or_planned_action,Future commitment/planning language or planned-action event.,train,1486,347,23.35
+coverage_flag,multiple_tasks,At least two potential task event instances or multiple distinct request/action cues.,train,1428,380,26.61
+coverage_flag,task_ownership,MailEx member/owner argument evidence or explicit ownership language.,train,1821,364,19.99
+coverage_flag,explicit_deadline,Date/time event argument or deterministic deadline expression.,train,820,294,35.85
+coverage_flag,scheduled_activity,Meeting/schedule event or explicit scheduling language.,train,662,226,34.14
+coverage_flag,temporal_expression,"Deterministic date, time, relative-time, or ordering expression.",train,1360,354,26.03
+coverage_flag,possible_prerequisite,Action-conditioned dependency expression; connector alone is insufficient.,train,111,86,77.48
+coverage_flag,action_update_across_thread,Multi-turn thread with repeated action/update evidence.,train,2251,422,18.75
+coverage_flag,negated_canceled_or_completed,"Negated, canceled, completed, or status-update action language.",train,478,196,41.0
+coverage_flag,ambiguous_ownership_or_deadline,Action candidate with missing or vague owner/deadline evidence.,train,219,54,24.66
+coverage_flag,no_actionable_tasks,No relevant MailEx event and no deterministic action/request cue.,train,691,68,9.84
+coverage_flag,multi_email_scenario,Record belongs to a multi-turn thread with repeated action or update evidence.,train,2251,422,18.75
+complexity,low,Provisional candidate complexity band,train,547,0,0.0
+complexity,medium,Provisional candidate complexity band,train,817,68,8.32
+complexity,high,Provisional candidate complexity band,train,1753,382,21.79
+event_frequency,Amend_Action_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,2,2,100.0
+event_frequency,Amend_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,148,49,33.11
+event_frequency,Amend_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,41,13,31.71
+event_frequency,Deliver_Action_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,2482,721,29.05
+event_frequency,Deliver_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,1474,272,18.45
+event_frequency,Deliver_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,373,166,44.5
+event_frequency,O,"MailEx event instances (selection signal, not Text2Task gold)",train,636,49,7.7
+event_frequency,Request_Action,"MailEx event instances (selection signal, not Text2Task gold)",train,1080,302,27.96
+event_frequency,Request_Action_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,177,31,17.51
+event_frequency,Request_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,555,100,18.02
+event_frequency,Request_Meeting,"MailEx event instances (selection signal, not Text2Task gold)",train,200,78,39.0
+event_frequency,Request_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",train,39,14,35.9
+mailbox_source,bass-e,Source mailbox inferred from original filename,train,44,4,9.09
+mailbox_source,beck-s,Source mailbox inferred from original filename,train,48,8,16.67
+mailbox_source,blair-l,Source mailbox inferred from original filename,train,86,18,20.93
+mailbox_source,buy-r,Source mailbox inferred from original filename,train,90,16,17.78
+mailbox_source,campbell-l,Source mailbox inferred from original filename,train,40,4,10.0
+mailbox_source,cash-m,Source mailbox inferred from original filename,train,82,16,19.51
+mailbox_source,corman-s,Source mailbox inferred from original filename,train,29,3,10.34
+mailbox_source,crandell-s,Source mailbox inferred from original filename,train,36,2,5.56
+mailbox_source,dasovich-j,Source mailbox inferred from original filename,train,37,5,13.51
+mailbox_source,derrick-j,Source mailbox inferred from original filename,train,81,12,14.81
+mailbox_source,donoho-l,Source mailbox inferred from original filename,train,88,17,19.32
+mailbox_source,geaccone-t,Source mailbox inferred from original filename,train,45,4,8.89
+mailbox_source,germany-c,Source mailbox inferred from original filename,train,80,7,8.75
+mailbox_source,giron-d,Source mailbox inferred from original filename,train,44,4,9.09
+mailbox_source,haedicke-m,Source mailbox inferred from original filename,train,36,5,13.89
+mailbox_source,hayslett-r,Source mailbox inferred from original filename,train,39,2,5.13
+mailbox_source,heard-m,Source mailbox inferred from original filename,train,84,16,19.05
+mailbox_source,hernandez-j,Source mailbox inferred from original filename,train,47,7,14.89
+mailbox_source,hodge-j,Source mailbox inferred from original filename,train,39,2,5.13
+mailbox_source,jones-t,Source mailbox inferred from original filename,train,56,8,14.29
+mailbox_source,kaminski-v,Source mailbox inferred from original filename,train,92,7,7.61
+mailbox_source,keiser-k,Source mailbox inferred from original filename,train,41,6,14.63
+mailbox_source,lavorato-j,Source mailbox inferred from original filename,train,88,10,11.36
+mailbox_source,lay-k,Source mailbox inferred from original filename,train,78,14,17.95
+mailbox_source,lokey-t,Source mailbox inferred from original filename,train,81,9,11.11
+mailbox_source,mann-k,Source mailbox inferred from original filename,train,45,11,24.44
+mailbox_source,martin-t,Source mailbox inferred from original filename,train,86,13,15.12
+mailbox_source,mccarty-d,Source mailbox inferred from original filename,train,74,15,20.27
+mailbox_source,mclaughlin-e,Source mailbox inferred from original filename,train,79,18,22.78
+mailbox_source,mims-thurston-p,Source mailbox inferred from original filename,train,83,16,19.28
+mailbox_source,nemec-g,Source mailbox inferred from original filename,train,83,17,20.48
+mailbox_source,parks-j,Source mailbox inferred from original filename,train,29,6,20.69
+mailbox_source,rapp-b,Source mailbox inferred from original filename,train,85,5,5.88
+mailbox_source,reitmeyer-j,Source mailbox inferred from original filename,train,87,10,11.49
+mailbox_source,sager-e,Source mailbox inferred from original filename,train,76,5,6.58
+mailbox_source,salisbury-h,Source mailbox inferred from original filename,train,36,7,19.44
+mailbox_source,schoolcraft-d,Source mailbox inferred from original filename,train,80,10,12.5
+mailbox_source,scott-s,Source mailbox inferred from original filename,train,44,4,9.09
+mailbox_source,shackleton-s,Source mailbox inferred from original filename,train,43,8,18.6
+mailbox_source,skilling-j,Source mailbox inferred from original filename,train,81,10,12.35
+mailbox_source,smith-m,Source mailbox inferred from original filename,train,41,5,12.2
+mailbox_source,steffes-j,Source mailbox inferred from original filename,train,84,17,20.24
+mailbox_source,taylor-m,Source mailbox inferred from original filename,train,53,7,13.21
+mailbox_source,tycholiz-b,Source mailbox inferred from original filename,train,34,6,17.65
+mailbox_source,ward-k,Source mailbox inferred from original filename,train,38,4,10.53
+mailbox_source,watson-k,Source mailbox inferred from original filename,train,78,15,19.23
+mailbox_source,white-s,Source mailbox inferred from original filename,train,46,4,8.7
+mailbox_source,whitt-m,Source mailbox inferred from original filename,train,45,4,8.89
+mailbox_source,wolfe-j,Source mailbox inferred from original filename,train,96,15,15.62
+mailbox_source,ybarbo-p,Source mailbox inferred from original filename,train,80,12,15.0
+selection,records,Email-turn records,dev,414,60,14.49
+coverage_flag,explicit_actionable_request,Request-like MailEx event or explicit request language.,dev,236,47,19.92
+coverage_flag,commitment_or_planned_action,Future commitment/planning language or planned-action event.,dev,209,49,23.44
+coverage_flag,multiple_tasks,At least two potential task event instances or multiple distinct request/action cues.,dev,200,51,25.5
+coverage_flag,task_ownership,MailEx member/owner argument evidence or explicit ownership language.,dev,244,50,20.49
+coverage_flag,explicit_deadline,Date/time event argument or deterministic deadline expression.,dev,117,42,35.9
+coverage_flag,scheduled_activity,Meeting/schedule event or explicit scheduling language.,dev,89,31,34.83
+coverage_flag,temporal_expression,"Deterministic date, time, relative-time, or ordering expression.",dev,184,50,27.17
+coverage_flag,possible_prerequisite,Action-conditioned dependency expression; connector alone is insufficient.,dev,13,11,84.62
+coverage_flag,action_update_across_thread,Multi-turn thread with repeated action/update evidence.,dev,313,60,19.17
+coverage_flag,negated_canceled_or_completed,"Negated, canceled, completed, or status-update action language.",dev,72,23,31.94
+coverage_flag,ambiguous_ownership_or_deadline,Action candidate with missing or vague owner/deadline evidence.,dev,41,8,19.51
+coverage_flag,no_actionable_tasks,No relevant MailEx event and no deterministic action/request cue.,dev,78,9,11.54
+coverage_flag,multi_email_scenario,Record belongs to a multi-turn thread with repeated action or update evidence.,dev,313,60,19.17
+complexity,low,Provisional candidate complexity band,dev,68,0,0.0
+complexity,medium,Provisional candidate complexity band,dev,91,9,9.89
+complexity,high,Provisional candidate complexity band,dev,255,51,20.0
+event_frequency,Amend_Action_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,1,0,0.0
+event_frequency,Amend_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,24,8,33.33
+event_frequency,Amend_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,7,2,28.57
+event_frequency,Deliver_Action_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,385,116,30.13
+event_frequency,Deliver_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,172,33,19.19
+event_frequency,Deliver_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,57,26,45.61
+event_frequency,O,"MailEx event instances (selection signal, not Text2Task gold)",dev,70,8,11.43
+event_frequency,Request_Action,"MailEx event instances (selection signal, not Text2Task gold)",dev,147,46,31.29
+event_frequency,Request_Action_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,29,6,20.69
+event_frequency,Request_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,86,21,24.42
+event_frequency,Request_Meeting,"MailEx event instances (selection signal, not Text2Task gold)",dev,31,17,54.84
+event_frequency,Request_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",dev,7,3,42.86
+mailbox_source,bass-e,Source mailbox inferred from original filename,dev,3,2,66.67
+mailbox_source,blair-l,Source mailbox inferred from original filename,dev,8,4,50.0
+mailbox_source,buy-r,Source mailbox inferred from original filename,dev,12,2,16.67
+mailbox_source,campbell-l,Source mailbox inferred from original filename,dev,6,1,16.67
+mailbox_source,cash-m,Source mailbox inferred from original filename,dev,5,2,40.0
+mailbox_source,corman-s,Source mailbox inferred from original filename,dev,14,2,14.29
+mailbox_source,crandell-s,Source mailbox inferred from original filename,dev,12,1,8.33
+mailbox_source,dasovich-j,Source mailbox inferred from original filename,dev,4,1,25.0
+mailbox_source,donoho-l,Source mailbox inferred from original filename,dev,9,1,11.11
+mailbox_source,germany-c,Source mailbox inferred from original filename,dev,12,1,8.33
+mailbox_source,giron-d,Source mailbox inferred from original filename,dev,3,1,33.33
+mailbox_source,haedicke-m,Source mailbox inferred from original filename,dev,8,3,37.5
+mailbox_source,heard-m,Source mailbox inferred from original filename,dev,18,5,27.78
+mailbox_source,kaminski-v,Source mailbox inferred from original filename,dev,14,4,28.57
+mailbox_source,lavorato-j,Source mailbox inferred from original filename,dev,11,2,18.18
+mailbox_source,lay-k,Source mailbox inferred from original filename,dev,6,2,33.33
+mailbox_source,martin-t,Source mailbox inferred from original filename,dev,14,1,7.14
+mailbox_source,mccarty-d,Source mailbox inferred from original filename,dev,12,2,16.67
+mailbox_source,mims-thurston-p,Source mailbox inferred from original filename,dev,9,1,11.11
+mailbox_source,nemec-g,Source mailbox inferred from original filename,dev,15,1,6.67
+mailbox_source,parks-j,Source mailbox inferred from original filename,dev,15,1,6.67
+mailbox_source,rapp-b,Source mailbox inferred from original filename,dev,20,2,10.0
+mailbox_source,sager-e,Source mailbox inferred from original filename,dev,14,1,7.14
+mailbox_source,salisbury-h,Source mailbox inferred from original filename,dev,6,2,33.33
+mailbox_source,schoolcraft-d,Source mailbox inferred from original filename,dev,11,1,9.09
+mailbox_source,skilling-j,Source mailbox inferred from original filename,dev,8,1,12.5
+mailbox_source,taylor-m,Source mailbox inferred from original filename,dev,6,1,16.67
+mailbox_source,tycholiz-b,Source mailbox inferred from original filename,dev,5,1,20.0
+mailbox_source,ward-k,Source mailbox inferred from original filename,dev,11,3,27.27
+mailbox_source,watson-k,Source mailbox inferred from original filename,dev,17,3,17.65
+mailbox_source,wolfe-j,Source mailbox inferred from original filename,dev,15,4,26.67
+mailbox_source,ybarbo-p,Source mailbox inferred from original filename,dev,12,1,8.33
+selection,records,Email-turn records,test,405,90,22.22
+coverage_flag,explicit_actionable_request,Request-like MailEx event or explicit request language.,test,235,67,28.51
+coverage_flag,commitment_or_planned_action,Future commitment/planning language or planned-action event.,test,211,72,34.12
+coverage_flag,multiple_tasks,At least two potential task event instances or multiple distinct request/action cues.,test,194,76,39.18
+coverage_flag,task_ownership,MailEx member/owner argument evidence or explicit ownership language.,test,256,74,28.91
+coverage_flag,explicit_deadline,Date/time event argument or deterministic deadline expression.,test,118,59,50.0
+coverage_flag,scheduled_activity,Meeting/schedule event or explicit scheduling language.,test,87,46,52.87
+coverage_flag,temporal_expression,"Deterministic date, time, relative-time, or ordering expression.",test,186,71,38.17
+coverage_flag,possible_prerequisite,Action-conditioned dependency expression; connector alone is insufficient.,test,14,14,100.0
+coverage_flag,action_update_across_thread,Multi-turn thread with repeated action/update evidence.,test,316,84,26.58
+coverage_flag,negated_canceled_or_completed,"Negated, canceled, completed, or status-update action language.",test,62,31,50.0
+coverage_flag,ambiguous_ownership_or_deadline,Action candidate with missing or vague owner/deadline evidence.,test,33,11,33.33
+coverage_flag,no_actionable_tasks,No relevant MailEx event and no deterministic action/request cue.,test,76,14,18.42
+coverage_flag,multi_email_scenario,Record belongs to a multi-turn thread with repeated action or update evidence.,test,316,84,26.58
+complexity,low,Provisional candidate complexity band,test,51,0,0.0
+complexity,medium,Provisional candidate complexity band,test,105,14,13.33
+complexity,high,Provisional candidate complexity band,test,249,76,30.52
+event_frequency,Amend_Data,"MailEx event instances (selection signal, not Text2Task gold)",test,21,9,42.86
+event_frequency,Amend_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",test,7,2,28.57
+event_frequency,Deliver_Action_Data,"MailEx event instances (selection signal, not Text2Task gold)",test,328,135,41.16
+event_frequency,Deliver_Data,"MailEx event instances (selection signal, not Text2Task gold)",test,174,45,25.86
+event_frequency,Deliver_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",test,57,34,59.65
+event_frequency,O,"MailEx event instances (selection signal, not Text2Task gold)",test,70,9,12.86
+event_frequency,Request_Action,"MailEx event instances (selection signal, not Text2Task gold)",test,149,63,42.28
+event_frequency,Request_Action_Data,"MailEx event instances (selection signal, not Text2Task gold)",test,27,7,25.93
+event_frequency,Request_Data,"MailEx event instances (selection signal, not Text2Task gold)",test,80,21,26.25
+event_frequency,Request_Meeting,"MailEx event instances (selection signal, not Text2Task gold)",test,28,20,71.43
+event_frequency,Request_Meeting_Data,"MailEx event instances (selection signal, not Text2Task gold)",test,4,1,25.0
+mailbox_source,bass-e,Source mailbox inferred from original filename,test,12,1,8.33
+mailbox_source,beck-s,Source mailbox inferred from original filename,test,8,1,12.5
+mailbox_source,blair-l,Source mailbox inferred from original filename,test,8,4,50.0
+mailbox_source,buy-r,Source mailbox inferred from original filename,test,3,3,100.0
+mailbox_source,campbell-l,Source mailbox inferred from original filename,test,3,2,66.67
+mailbox_source,cash-m,Source mailbox inferred from original filename,test,17,6,35.29
+mailbox_source,corman-s,Source mailbox inferred from original filename,test,11,3,27.27
+mailbox_source,crandell-s,Source mailbox inferred from original filename,test,3,1,33.33
+mailbox_source,dasovich-j,Source mailbox inferred from original filename,test,10,3,30.0
+mailbox_source,donoho-l,Source mailbox inferred from original filename,test,10,5,50.0
+mailbox_source,geaccone-t,Source mailbox inferred from original filename,test,4,2,50.0
+mailbox_source,giron-d,Source mailbox inferred from original filename,test,6,1,16.67
+mailbox_source,hayslett-r,Source mailbox inferred from original filename,test,11,4,36.36
+mailbox_source,heard-m,Source mailbox inferred from original filename,test,10,3,30.0
+mailbox_source,keiser-k,Source mailbox inferred from original filename,test,10,3,30.0
+mailbox_source,lokey-t,Source mailbox inferred from original filename,test,17,1,5.88
+mailbox_source,martin-t,Source mailbox inferred from original filename,test,7,4,57.14
+mailbox_source,mccarty-d,Source mailbox inferred from original filename,test,11,3,27.27
+mailbox_source,mclaughlin-e,Source mailbox inferred from original filename,test,11,1,9.09
+mailbox_source,mims-thurston-p,Source mailbox inferred from original filename,test,9,3,33.33
+mailbox_source,nemec-g,Source mailbox inferred from original filename,test,10,3,30.0
+mailbox_source,parks-j,Source mailbox inferred from original filename,test,13,2,15.38
+mailbox_source,rapp-b,Source mailbox inferred from original filename,test,10,2,20.0
+mailbox_source,schoolcraft-d,Source mailbox inferred from original filename,test,8,2,25.0
+mailbox_source,scott-s,Source mailbox inferred from original filename,test,11,4,36.36
+mailbox_source,skilling-j,Source mailbox inferred from original filename,test,6,1,16.67
+mailbox_source,steffes-j,Source mailbox inferred from original filename,test,21,9,42.86
+mailbox_source,taylor-m,Source mailbox inferred from original filename,test,5,1,20.0
+mailbox_source,tycholiz-b,Source mailbox inferred from original filename,test,10,3,30.0
+mailbox_source,watson-k,Source mailbox inferred from original filename,test,8,3,37.5
+mailbox_source,white-s,Source mailbox inferred from original filename,test,12,4,33.33
+mailbox_source,whitt-m,Source mailbox inferred from original filename,test,4,1,25.0
+mailbox_source,ybarbo-p,Source mailbox inferred from original filename,test,8,1,12.5
+coverage_flag,explicit_actionable_request,Request-like MailEx event or explicit request language.,all,2163,455,21.04
+coverage_flag,commitment_or_planned_action,Future commitment/planning language or planned-action event.,all,1906,468,24.55
+coverage_flag,multiple_tasks,At least two potential task event instances or multiple distinct request/action cues.,all,1822,507,27.83
+coverage_flag,task_ownership,MailEx member/owner argument evidence or explicit ownership language.,all,2321,488,21.03
+coverage_flag,explicit_deadline,Date/time event argument or deterministic deadline expression.,all,1055,395,37.44
+coverage_flag,scheduled_activity,Meeting/schedule event or explicit scheduling language.,all,838,303,36.16
+coverage_flag,temporal_expression,"Deterministic date, time, relative-time, or ordering expression.",all,1730,475,27.46
+coverage_flag,possible_prerequisite,Action-conditioned dependency expression; connector alone is insufficient.,all,138,111,80.43
+coverage_flag,action_update_across_thread,Multi-turn thread with repeated action/update evidence.,all,2880,566,19.65
+coverage_flag,negated_canceled_or_completed,"Negated, canceled, completed, or status-update action language.",all,612,250,40.85
+coverage_flag,ambiguous_ownership_or_deadline,Action candidate with missing or vague owner/deadline evidence.,all,293,73,24.91
+coverage_flag,no_actionable_tasks,No relevant MailEx event and no deterministic action/request cue.,all,845,91,10.77
+coverage_flag,multi_email_scenario,Record belongs to a multi-turn thread with repeated action or update evidence.,all,2880,566,19.65

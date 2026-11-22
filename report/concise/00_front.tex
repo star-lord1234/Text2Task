@@ -1,0 +1,11 @@
+\chapter*{Abstract}
+Requests, commitments and deadlines in workplace email and chat are rarely written as explicit to-do items. They appear as polite questions, promises, relative dates (\emph{``by Friday''}) and references to earlier work (\emph{``once the dataset is cleaned''}). Text2Task reads such messages and proposes structured, reviewable tasks: who should do what, by when, and after which other task.
+
+The system combines two fine-tuned DistilBERT models with a deterministic layer. The entity model tags TASK, PERSON and TEMPORAL spans; the relation model links tasks to owners and dates (ASSIGNED\_TO, DUE\_ON, SCHEDULED\_ON) using typed entity markers. Around them, rules repair fragmented spans, normalise dates, resolve owners, flag uncertainty, reconcile messages with existing tasks and keep a dependency graph free of cycles. A local web application shows every output as a suggestion that only the affected person may accept.
+
+All models were trained on labels derived from the MailEx email corpus; no human-verified gold labels exist, so every number is agreement with provisional labels or the outcome of developer-written checks. On a deduplicated development set the best entity model reaches a lenient F1 of 0.555 (rule baseline 0.401); the relation model reaches a micro F1 of 0.764 on reference spans (rules 0.527). On 30 held-out chat scenarios the hybrid pipeline passes 23 cases strictly against 7 for the raw models and 22 for rules alone. The main lesson is that, at this data scale and label quality, deterministic components carry most of the load on short chat while the neural models matter most on email names and dates.
+\vspace{1em}
+
+\noindent{\sffamily\small\bfseries\color{navy}Keywords:} {\small task extraction, email mining, named entity recognition, relation extraction, DistilBERT, hybrid NLP, MailEx}
+
+\tableofcontents

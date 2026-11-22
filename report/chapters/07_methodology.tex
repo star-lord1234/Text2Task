@@ -1,0 +1,77 @@
+\chapter{Methodology and Implementation Pipeline}
+\label{ch:methodology}
+
+This chapter follows one message through the system, from the moment it is posted to the moment a person accepts the resulting task. \Cref{fig:sequence} shows the interactions between components.
+
+\begin{figure}[t]
+\centering
+\diagram{sequence_diagram}
+\caption[Application sequence diagram]{Sequence of calls for one live message and its review. Solid arrows are requests, dashed arrows responses. The accept request is refused with HTTP 403 unless the reviewer is the person the suggestion affects.}
+\label{fig:sequence}
+\end{figure}
+
+\section{Input}
+A message arrives as \code{POST /api/messages} with a sender, a list of recipients, the text, a mode (\code{scripted} or \code{live}) and an optional simulated sending time. The service stores the message first and analyses it second, so a failed analysis never loses the message. It builds a \code{MessageEnvelope} holding the text, sender, recipients, timestamp and workspace time zone, which every later component reads.
+
+\section{Conditional execution}
+The path a message takes depends on three settings.
+\begin{itemize}
+  \item \textbf{Mode.} In \emph{scripted} mode, used by the demonstration scenarios, entities and links come from the scenario fixture and are labelled \code{scripted}; everything after extraction is the real code. In \emph{live} mode the trained models run.
+  \item \textbf{Model availability.} If a model failed to load, a live message is stored with status \code{analysis\_failed} and a retry button. Scripted output is never substituted, and a rule fallback exists but is off by default.
+  \item \textbf{Pipeline preset.} The refinement preset (\code{neural\_only}, \code{neural\_plus\_linker}, \code{refined}, \code{hybrid}, \code{rule\_only}) selects which rule stages surround the models (\cref{ch:evolution}). The default is \code{hybrid}.
+\end{itemize}
+
+\section{Stages and intermediate representations}
+\begin{enumerate}
+  \item \textbf{Entity extraction.} The text is tokenised and passed through the entity model. The predicted BIO tags are decoded into character spans with a type and a confidence (the mean probability of the predicted labels over the span's pieces).
+  \item \textbf{Refinement.} In the refined and hybrid presets, rule stages repair and complement the raw spans: snapping to word boundaries, removing function-word fragments, merging adjacent pieces, detecting and merging dates, recovering action phrases and names, and extracting clause-level dependencies. The raw spans are kept, and every span records its origin (\code{neural}, \code{refined} or \code{rule}).
+  \item \textbf{Relation extraction.} Every type-valid pair of refined spans is classified by the relation model. Rules then scope owner links to their clause and add explicit dependency links.
+  \item \textbf{Task fields.} For each TASK span a \code{TaskCandidate} is built: a title derived from the span, an owner (an \code{AssigneeResolution} with a status and a basis), due and scheduled values (\code{TemporalValue}s with status, granularity and recorded assumptions) and a list of flags.
+  \item \textbf{Reconciliation.} The reconciler splits the message into sentences, detects intent cues, matches references to existing tasks, and emits \code{ProposedOperation}s (create, assign, date proposal or confirmation, status change, completion, cancellation, dependency, or a no-action note), each with flags and the list of people allowed to review it.
+  \item \textbf{Storage and response.} Proposals are stored as \code{pending}; the response returns the analysis record, which the Inspector displays.
+  \item \textbf{Review.} A person accepts, edits or dismisses each proposal. Accepting applies it under version checks and appends history events; the dependency graph and derived states are recomputed from the store.
+\end{enumerate}
+
+\section{Worked example from the running application}
+\label{sec:walkthrough}
+The following example was captured from the application running the real checkpoints with the default hybrid preset (\cref{fig:exlive}; screenshots in \cref{ch:application}). Riya sends to both colleagues, at 10:00 on Wednesday 11 November 2026 (America/Chicago):
+\begin{center}
+\emph{``Bianca please prepare the quarterly report by Friday.''}
+\end{center}
+\Cref{lst:liveexample} reproduces the analysis record, abbreviated only by removing fields not discussed here.
+
+\begin{lstlisting}[language=json, caption={Analysis record of the worked example (\code{report/data/live\_example\_analysis.json}, captured from the real models).}, label={lst:liveexample}]
+"raw_entities": [ {"type": "TASK", "text": "please prepare the", "start": 7,  "end": 25, "confidence": 0.40},
+                  {"type": "TASK", "text": "report",             "start": 36, "end": 42, "confidence": 0.43},
+                  {"type": "TEMPORAL", "text": "by Friday",      "start": 43, "end": 52, "confidence": 0.39} ],
+"entities":     [ {"type": "TASK", "text": "please prepare the quarterly report", "start": 7, "end": 42, "origin": "refined"},
+                  {"type": "TEMPORAL", "text": "by Friday", "start": 43, "end": 52, "origin": "neural"} ],
+"relations":    [ {"source": "please prepare the quarterly report", "label": "SCHEDULED_ON",
+                   "target": "by Friday", "score": 0.969, "provenance": "neural"} ],
+"candidate":    [ {"title": "prepare the quarterly report",
+                   "assignee": {"participant_id": "bianca", "status": "RESOLVED", "basis": "named_addressee"},
+                   "due": {"raw": "by Friday", "status": "RESOLVED", "value": "2026-11-13", "granularity": "DATE"},
+                   "flags": ["DATE_RELATION_CONFLICT"]} ],
+"proposal":     [ {"operation": "CREATE_TASK", "status": "pending", "reviewer_ids": ["bianca"], "source_kind": "neural"} ],
+"duration_ms": 207.9
+\end{lstlisting}
+
+The record shows each stage at work, including its imperfections.
+\begin{itemize}
+  \item The entity model found the action but fragmented it: \emph{please prepare the} and \emph{report} are separate TASK spans with low confidence (about 0.4), and \emph{quarterly} was labelled \lab{O}. It found no PERSON span for \emph{Bianca}, which is not followed by a comma.
+  \item The \code{grammar\_recovery} stage recognised \emph{prepare} as an action verb at the start of a clause and completed the two fragments into one action phrase, recorded as a \emph{refined} span with the original fragments kept.
+  \item The relation model linked the task to \emph{by Friday} as \lab{SCHEDULED\_ON} with score 0.969. Because the phrase contains the deadline cue \emph{by}, the task-field stage stored it as a due date and raised \lab{DATE\_RELATION\_CONFLICT}, keeping the model's label in the provenance. The card shows this as the question ``Is `by Friday' a deadline or a scheduled time?''.
+  \item The temporal normaliser resolved \emph{by Friday} against the message time to 13 November 2026.
+  \item With no linked PERSON span, owner resolution used the request cue \emph{please} together with the only participant named before the action, \emph{Bianca} (basis \code{named\_addressee}). The message went to two people, so the older single-recipient rule alone would have left the task unassigned.
+  \item The reconciler proposed \code{CREATE\_TASK}. Its only reviewer is Bianca: Riya, who wrote the message, sees it under ``Waiting on teammates'' and may dismiss it if it misreads her, but cannot accept it on Bianca's behalf.
+\end{itemize}
+
+\begin{figure}[t]
+\centering
+\diagram{ex_live_refinement}
+\caption[Raw neural and refined output for one live message]{The worked example: raw neural spans, refined spans and the decisions of the rule stages that turned them into a task card.}
+\label{fig:exlive}
+\end{figure}
+
+\section{Output}
+The visible output is a card under ``Needs you'' for the affected person, together with explanatory chips under the message in the channel. Accepting the card creates the task (version 1), writes a \code{CREATE\_TASK} history event attributed to the reviewer and to the source message, and recomputes the graph. Editing before accepting records the edited fields with source kind \code{human}. Dismissing records who dismissed it and why, and changes nothing else.

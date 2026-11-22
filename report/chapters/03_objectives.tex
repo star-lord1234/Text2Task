@@ -1,0 +1,81 @@
+\chapter{Project Objectives and Scope}
+\label{ch:objectives}
+
+\section{Primary objectives}
+The project set out to build a system that converts unstructured messages into a consistent, reviewable task list. Concretely, it should:
+\begin{enumerate}
+  \item identify task phrases, the people involved and temporal expressions in a message;
+  \item link each task to its owner and to its due or scheduled date;
+  \item normalise dates against the time the message was written;
+  \item recognise when a message refers to an existing task (acknowledgement, completion, reassignment, rescheduling, cancellation) rather than creating a new one;
+  \item record dependencies between tasks and keep the dependency graph valid;
+  \item present every result as an explained suggestion that a person accepts, edits or dismisses.
+\end{enumerate}
+
+\section{Functional requirements}
+\begin{table}[h]
+\centering
+\caption{Functional requirements and where they are realised.}
+\label{tab:requirements}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{8mm}Lp{55mm}@{}}
+\toprule
+ID & Requirement & Realised by \\
+\midrule
+F1 & Extract TASK, PERSON and TEMPORAL spans from a message & Entity model + refinement (\cref{ch:extraction,ch:rules}) \\
+F2 & Link tasks to owners and dates & Relation model, owner resolution, deadline-cue check \\
+F3 & Resolve relative dates with an anchor and time zone; never guess & Temporal normaliser with explicit unresolved statuses \\
+F4 & Update existing tasks instead of duplicating them & Cue-based reconciler with referent matching \\
+F5 & Keep the dependency graph acyclic; derive ready/blocked states & Graph editor and workflow state (NetworkX) \\
+F6 & Review mode: nothing changes until a person accepts & Proposal store; accept/dismiss endpoints \\
+F7 & Only the affected person approves a suggestion & Reviewer rule and \code{403 NOT\_YOUR\_REVIEW} (\cref{sec:reviewer}) \\
+F8 & Explain every suggestion and keep an audit trail & AI Inspector; append-only history with provenance \\
+F9 & Report model availability honestly; never substitute scripted output & Model registry, capability endpoint, failure states \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Research objectives}
+Beyond building a working system, the project asked three research questions:
+\begin{description}[style=nextline, leftmargin=1.6em, font=\normalfont\sffamily\bfseries\color{navy}]
+  \item[RQ1] How well can a compact pre-trained encoder extract task-related spans and relations from email when trained on labels derived from an existing event-extraction corpus?
+  \item[RQ2] How much do label quality, data size and training recipe matter relative to model choice?
+  \item[RQ3] In an end-to-end setting, what is the relative contribution of the neural models and of deterministic rules, and can a hybrid outperform both?
+\end{description}
+
+\section{Design constraints}
+\begin{itemize}
+  \item \textbf{Local execution.} Training and inference run on a single Apple M5 laptop with 16\,GB of memory using the PyTorch MPS backend. This favoured DistilBERT over larger encoders and limited the number of runs and seeds.
+  \item \textbf{No annotation budget.} No human annotators were available to produce gold labels. All training and evaluation labels are SILVER or MailEx-derived; a strict ``GOLD evaluation'' mode exists in the code and correctly refuses to run (0 of 60 validation emails are human-verified).
+  \item \textbf{Safety over coverage.} Wrong state changes are worse than missed suggestions. Components are designed to flag or decline rather than guess.
+  \item \textbf{Test split discipline.} The MailEx test split was never used for model selection; for the MailEx-derived workflow it was not even built.
+\end{itemize}
+
+\section{Intended versus implemented scope}
+The initial schema was broader than what was finally modelled. \Cref{tab:scope} records the status of each element. The status labels are used consistently throughout the report: \status{implemented} (built and functionally tested), \status{evaluated} (built and measured against labels), \status{partial} (built with known gaps) and \status{proposed} (designed but not built).
+
+\begin{table}[h]
+\centering
+\caption{Intended scope versus what was implemented.}
+\label{tab:scope}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{36mm}p{22mm}L@{}}
+\toprule
+Element & Status & Notes \\
+\midrule
+TASK, PERSON, TEMPORAL entities & \status{evaluated} & Three-class models; SILVER and MailEx-derived references \\
+GROUP, EVENT, ARTIFACT entities & \status{proposed} & In the six-class schema and SILVER-v1 data; deferred after the first model scored 0 on GROUP and ARTIFACT (EVENT had no validation examples) and the repaired data had too little coverage (\cref{ch:evolution}) \\
+ASSIGNED\_TO, DUE\_ON, SCHEDULED\_ON & \status{evaluated} & Neural relation model, reference spans only \\
+DEPENDS\_ON & \status{implemented} & Rule-based only (clause cues and explicit statements); 4 training examples made a neural class impossible \\
+Temporal normalisation & \status{implemented} & 102/102 developer fixtures; real corpus lacks timestamps \\
+Reconciliation (updates, lifecycle) & \status{implemented} & 91/91 scenarios, fuzzing; no labelled data \\
+Dependency graph & \status{implemented} & Cycle refusal, derived states, what-if; no labelled dependency data \\
+Hybrid refinement & \status{evaluated} & On developer-written chat fixtures and on 60 SILVER emails \\
+Email client integration & \status{proposed} & The application works on a chat-style channel; emails are pasted as messages \\
+Best entity model in the application & \status{partial} & The app loads the SILVER-v2 checkpoint; the stronger MailEx-derived checkpoint is not wired in \\
+Human-verified evaluation & \status{proposed} & Blocked by the absence of gold labels \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The most important gap is the last pair of rows. The entity checkpoint used by the running application is not the best one trained, and no result in this report is measured against human-verified labels. Both points are revisited in \cref{ch:errors,ch:future}.

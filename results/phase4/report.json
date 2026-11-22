@@ -1,0 +1,476 @@
+{
+  "provenance": "SILVER/MailEx-derived, provisional; functional checks, not human-grounded accuracy",
+  "split_used": "train+validation (test never read)",
+  "relation_model": "relations-markers_sqrt",
+  "fixtures": {
+    "cases": 102,
+    "passed": 102
+  },
+  "corpus_temporal_coverage": {
+    "n_spans": 606,
+    "n_distinct": 459,
+    "no_anchor": {
+      "UNRESOLVED_NO_ANCHOR": {
+        "n": 197,
+        "pct": 32.5
+      },
+      "UNPARSEABLE": {
+        "n": 169,
+        "pct": 27.9
+      },
+      "PARTIAL": {
+        "n": 118,
+        "pct": 19.5
+      },
+      "UNRESOLVED_EVENT_CONDITION": {
+        "n": 107,
+        "pct": 17.7
+      },
+      "RESOLVED": {
+        "n": 8,
+        "pct": 1.3
+      },
+      "VAGUE": {
+        "n": 7,
+        "pct": 1.2
+      }
+    },
+    "illustrative_anchor": {
+      "RESOLVED": {
+        "n": 243,
+        "pct": 40.1
+      },
+      "UNPARSEABLE": {
+        "n": 165,
+        "pct": 27.2
+      },
+      "UNRESOLVED_EVENT_CONDITION": {
+        "n": 107,
+        "pct": 17.7
+      },
+      "PARTIAL": {
+        "n": 62,
+        "pct": 10.2
+      },
+      "AMBIGUOUS": {
+        "n": 22,
+        "pct": 3.6
+      },
+      "VAGUE": {
+        "n": 7,
+        "pct": 1.2
+      }
+    },
+    "unparseable_distinct": 163,
+    "unparseable_top": [
+      [
+        "the",
+        2
+      ],
+      [
+        "the week of the 25th",
+        2
+      ],
+      [
+        "proposals",
+        1
+      ],
+      [
+        "this may be the time",
+        1
+      ],
+      [
+        "during these periods",
+        1
+      ],
+      [
+        "for approximately 8 hours",
+        1
+      ],
+      [
+        "on an annual basis",
+        1
+      ],
+      [
+        "from 12:00 noon",
+        1
+      ],
+      [
+        "to approximately 5:00 p.m.",
+        1
+      ],
+      [
+        "earlier",
+        1
+      ],
+      [
+        "in",
+        1
+      ],
+      [
+        "process",
+        1
+      ],
+      [
+        "until",
+        1
+      ],
+      [
+        "the midle",
+        1
+      ],
+      [
+        "of feb.",
+        1
+      ],
+      [
+        "earlier this year",
+        1
+      ],
+      [
+        "all day",
+        1
+      ],
+      [
+        "1 hr",
+        1
+      ],
+      [
+        "night after practice",
+        1
+      ],
+      [
+        "22nd",
+        1
+      ],
+      [
+        "over the weekend",
+        1
+      ],
+      [
+        "15-20 minutes",
+        1
+      ],
+      [
+        "at the time of the merger of quicksilver and mercury exploration",
+        1
+      ],
+      [
+        "that time or any other time that is convenient",
+        1
+      ],
+      [
+        "during break",
+        1
+      ],
+      [
+        "towards the end of the year",
+        1
+      ],
+      [
+        "over a month ago",
+        1
+      ],
+      [
+        "during the timely cycle",
+        1
+      ],
+      [
+        "14th",
+        1
+      ],
+      [
+        "on the 14th",
+        1
+      ],
+      [
+        "the next 2 tuesdays",
+        1
+      ],
+      [
+        "novemer 6",
+        1
+      ],
+      [
+        "afternoon or a late morning (10:30 a.m. or after",
+        1
+      ],
+      [
+        "on or before thanksgiving",
+        1
+      ],
+      [
+        "prior to the meeting",
+        1
+      ],
+      [
+        "the sooner i get everyones response",
+        1
+      ],
+      [
+        "christmas than thanksgiving",
+        1
+      ],
+      [
+        "thanksgiving",
+        1
+      ],
+      [
+        "the weekend of oct. 27",
+        1
+      ],
+      [
+        "at the time",
+        1
+      ]
+    ],
+    "share_needing_anchor_or_year_pct": 52.0
+  },
+  "candidates_no_anchor": {
+    "tasks": 249,
+    "assignee": {
+      "UNASSIGNED": 141,
+      "RESOLVED": 25,
+      "UNKNOWN_PERSON": 25,
+      "RESOLVED_SENDER": 22,
+      "AMBIGUOUS": 19,
+      "RESOLVED_RECIPIENT": 17
+    },
+    "assignee_basis": {
+      "no_assignee_evidence": 119,
+      "no_participant_match": 25,
+      "exact_alias": 22,
+      "first_person_commitment": 22,
+      "multiple_assignees": 19,
+      "first_person_plural": 17,
+      "single_addressee": 17,
+      "multiple_recipients": 5,
+      "unique_name_token": 3
+    },
+    "flags": {
+      "NO_ASSIGNEE": 136,
+      "MODEL_DISAGREEMENT": 88,
+      "WEAK_RELATION_SCORE": 52,
+      "DATE_UNRESOLVED_NO_ANCHOR": 25,
+      "UNKNOWN_PERSON": 25,
+      "MULTIPLE_ASSIGNEES": 19,
+      "DATE_UNPARSEABLE": 19,
+      "DATE_EVENT_CONDITION": 11,
+      "DATE_RELATION_CONFLICT": 9,
+      "COMPETING_DATES": 8,
+      "DATE_PARTIAL": 7,
+      "AMBIGUOUS_ASSIGNEE": 5,
+      "ASSIGNEE_BY_NAME_MATCH": 3,
+      "DATE_ASSUMPTION": 1
+    },
+    "review_required": 225,
+    "due": {
+      "UNRESOLVED_EVENT_CONDITION": 5,
+      "PARTIAL": 4,
+      "UNRESOLVED_NO_ANCHOR": 3,
+      "UNPARSEABLE": 2,
+      "RESOLVED": 1
+    },
+    "scheduled": {
+      "UNRESOLVED_NO_ANCHOR": 22,
+      "UNPARSEABLE": 16,
+      "UNRESOLVED_EVENT_CONDITION": 6,
+      "PARTIAL": 3,
+      "RESOLVED": 1
+    },
+    "has_due": 15,
+    "has_scheduled": 48,
+    "reinterpreted": 9,
+    "disagreement": 88,
+    "with_any_flag": 225,
+    "review_rate_pct": 90.4,
+    "disagreement_rate_pct": 35.3
+  },
+  "candidates_illustrative_anchor": {
+    "tasks": 249,
+    "assignee": {
+      "UNASSIGNED": 141,
+      "RESOLVED": 25,
+      "UNKNOWN_PERSON": 25,
+      "RESOLVED_SENDER": 22,
+      "AMBIGUOUS": 19,
+      "RESOLVED_RECIPIENT": 17
+    },
+    "assignee_basis": {
+      "no_assignee_evidence": 119,
+      "no_participant_match": 25,
+      "exact_alias": 22,
+      "first_person_commitment": 22,
+      "multiple_assignees": 19,
+      "first_person_plural": 17,
+      "single_addressee": 17,
+      "multiple_recipients": 5,
+      "unique_name_token": 3
+    },
+    "flags": {
+      "NO_ASSIGNEE": 136,
+      "MODEL_DISAGREEMENT": 88,
+      "WEAK_RELATION_SCORE": 52,
+      "TZ_ASSUMED": 31,
+      "UNKNOWN_PERSON": 25,
+      "MULTIPLE_ASSIGNEES": 19,
+      "DATE_UNPARSEABLE": 19,
+      "DATE_EVENT_CONDITION": 11,
+      "DATE_RELATION_CONFLICT": 9,
+      "COMPETING_DATES": 8,
+      "DATE_ASSUMPTION": 8,
+      "AMBIGUOUS_ASSIGNEE": 5,
+      "PAST_DATE": 4,
+      "ASSIGNEE_BY_NAME_MATCH": 3,
+      "DATE_AMBIGUOUS": 1,
+      "DATE_PARTIAL": 1
+    },
+    "review_required": 224,
+    "due": {
+      "RESOLVED": 8,
+      "UNRESOLVED_EVENT_CONDITION": 5,
+      "UNPARSEABLE": 2
+    },
+    "scheduled": {
+      "RESOLVED": 24,
+      "UNPARSEABLE": 16,
+      "UNRESOLVED_EVENT_CONDITION": 6,
+      "AMBIGUOUS": 1,
+      "PARTIAL": 1
+    },
+    "has_due": 15,
+    "has_scheduled": 48,
+    "reinterpreted": 9,
+    "disagreement": 88,
+    "with_any_flag": 225,
+    "review_rate_pct": 90.0,
+    "disagreement_rate_pct": 35.3
+  },
+  "selective_prediction_validation": {
+    "n_pairs": 922,
+    "gold_positives": 160,
+    "predicted_positives": 162,
+    "table": [
+      {
+        "min_score": 0.0,
+        "predicted_links_kept": 162,
+        "share_of_predicted_links_kept": 1.0,
+        "precision": 0.7592592592592593,
+        "precision_ci95": [
+          0.6853146853146853,
+          0.8467741935483871
+        ],
+        "recall": 0.76875,
+        "recall_ci95": [
+          0.6728395061728395,
+          0.8592592592592593
+        ]
+      },
+      {
+        "min_score": 0.5,
+        "predicted_links_kept": 161,
+        "share_of_predicted_links_kept": 0.994,
+        "precision": 0.7639751552795031,
+        "precision_ci95": [
+          0.6902654867256637,
+          0.8490566037735849
+        ],
+        "recall": 0.76875,
+        "recall_ci95": [
+          0.672316384180791,
+          0.8652482269503546
+        ]
+      },
+      {
+        "min_score": 0.6,
+        "predicted_links_kept": 146,
+        "share_of_predicted_links_kept": 0.901,
+        "precision": 0.7945205479452054,
+        "precision_ci95": [
+          0.7028571428571428,
+          0.8846153846153846
+        ],
+        "recall": 0.725,
+        "recall_ci95": [
+          0.639751552795031,
+          0.8228571428571428
+        ]
+      },
+      {
+        "min_score": 0.7,
+        "predicted_links_kept": 133,
+        "share_of_predicted_links_kept": 0.821,
+        "precision": 0.8421052631578947,
+        "precision_ci95": [
+          0.7703703703703704,
+          0.9136690647482014
+        ],
+        "recall": 0.7,
+        "recall_ci95": [
+          0.6083916083916084,
+          0.7880794701986755
+        ]
+      },
+      {
+        "min_score": 0.8,
+        "predicted_links_kept": 125,
+        "share_of_predicted_links_kept": 0.772,
+        "precision": 0.872,
+        "precision_ci95": [
+          0.807909604519774,
+          0.9285714285714286
+        ],
+        "recall": 0.68125,
+        "recall_ci95": [
+          0.5838509316770186,
+          0.7702702702702703
+        ]
+      },
+      {
+        "min_score": 0.9,
+        "predicted_links_kept": 110,
+        "share_of_predicted_links_kept": 0.679,
+        "precision": 0.9454545454545454,
+        "precision_ci95": [
+          0.9047619047619048,
+          0.9857142857142858
+        ],
+        "recall": 0.65,
+        "recall_ci95": [
+          0.5722543352601156,
+          0.7522123893805309
+        ]
+      },
+      {
+        "min_score": 0.95,
+        "predicted_links_kept": 107,
+        "share_of_predicted_links_kept": 0.66,
+        "precision": 0.9439252336448598,
+        "precision_ci95": [
+          0.9097222222222222,
+          0.9795918367346939
+        ],
+        "recall": 0.63125,
+        "recall_ci95": [
+          0.5329949238578681,
+          0.7338129496402878
+        ]
+      },
+      {
+        "min_score": 0.99,
+        "predicted_links_kept": 67,
+        "share_of_predicted_links_kept": 0.414,
+        "precision": 0.9552238805970149,
+        "precision_ci95": [
+          0.9,
+          1.0
+        ],
+        "recall": 0.4,
+        "recall_ci95": [
+          0.3106060606060606,
+          0.5
+        ]
+      }
+    ]
+  }
+}

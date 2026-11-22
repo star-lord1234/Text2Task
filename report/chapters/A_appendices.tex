@@ -1,0 +1,162 @@
+\chapter{Dataset Schemas}
+\label{app:schemas}
+
+\Cref{lst:schema} is the JSON Schema used to validate SILVER-v2 entity annotations (\code{configs/\allowbreak text2task\_entity\_schema\_v2.json}), reproduced verbatim. The six-class SILVER-v1 schema additionally allowed GROUP, EVENT and ARTIFACT entities and four relation types (ASSIGNED\_TO, DUE\_ON, SCHEDULED\_ON, DEPENDS\_ON) with type constraints: ASSIGNED\_TO from TASK to PERSON or GROUP, DUE\_ON and SCHEDULED\_ON from TASK to TEMPORAL, DEPENDS\_ON from TASK to TASK or EVENT.
+
+\lstinputlisting[language=json, basicstyle=\ttfamily\scriptsize, caption={Entity annotation schema (SILVER-v2).}, label={lst:schema}]{data/text2task_entity_schema_v2.json}
+
+\Cref{lst:relrow} shows the fields of one relation-classification row.
+
+\begin{lstlisting}[language=json, basicstyle=\ttfamily\scriptsize, caption={Fields of a relation-classification row (\code{data/model\_ready/relations\_v2\_three\_class}), abbreviated.}, label={lst:relrow}]
+{"id": "mailex:dev:bass-e_inbox152:turn_0000::relation_pair_cb120d364f274314",
+ "thread_id": "bass-e_inbox152", "annotation_tier": "SILVER", "entity_source": "annotated",
+ "text": "Hi Eric, Sorry but Dad can't make it Thursday night. ...",
+ "marked_text": "Hi [E2_PERSON]Eric[/E2_PERSON], Sorry but ... [E1_TASK]Let me know[/E1_TASK]. ...",
+ "source_entity": {"id": "e2", "type": "TASK", "start": 252, "end": 263, "text": "Let me know"},
+ "target_entity": {"id": "e1", "type": "PERSON", "start": 3, "end": 7, "text": "Eric"},
+ "candidate_relation_types": ["ASSIGNED_TO"], "label": "ASSIGNED_TO", "label_id": 1,
+ "explicit_vs_inferred": "EXPLICIT", "ambiguous": false}
+\end{lstlisting}
+
+\chapter{Hyperparameter Configurations}
+\label{app:hyper}
+\Cref{lst:relconfig} is the configuration stored with the deployed relation checkpoint (\code{models/\allowbreak text2task-relations/\allowbreak ACTIVE/\allowbreak relation\_config.json}), selected fields. The entity-run configurations are summarised in \cref{tab:hyper}; the complete files are \code{results/\allowbreak entity\_extraction/\allowbreak */\allowbreak metrics.json}.
+
+\begin{lstlisting}[language=json, caption={Stored configuration of the relation model (selected fields).}, label={lst:relconfig}]
+{"base_model": "distilbert/distilbert-base-uncased",
+ "best_epoch": 3, "best_val_macro_positive_f1": 0.7188090050835149,
+ "class_weights": [0.7071067811865476, 0.9939367132683694, 4.163331998932265, 1.0369127108512135],
+ "config": {"class_weight": "sqrt", "epochs": 5, "grad_accum": 2, "learning_rate": 3e-05,
+            "max_length": 512, "pooling": "markers", "seed": 20261102, "train_batch_size": 8,
+            "warmup_ratio": 0.1, "weight_decay": 0.01,
+            "evaluation_provenance": {"annotation_tier": "SILVER", "human_verified": false,
+                                      "is_final_research_metric": false}},
+ "device": "mps"}
+\end{lstlisting}
+
+\chapter{Representative Outputs: Scenario F}
+\label{app:scenariof}
+Scenario F is the 17-message demonstration used for \cref{ch:application}. \Cref{tab:scenariof} lists each message and the operations it produces. All 17 match their expectations in the automated API test, and the final graph contains six accepted edges and one held edge. A step-by-step presenter guide is in \code{docs/demo\_walkthrough.md}.
+
+\begin{table}[h]
+\centering
+\caption{Scenario F messages and resulting operations.}
+\label{tab:scenariof}
+\scriptsize
+\begin{tabularx}{\linewidth}{@{}rp{13mm}Lp{40mm}@{}}
+\toprule
+\# & Sender & Message & Operations \\
+\midrule
+1 & Riya & Anushree, please collect the customer reviews by Monday. & CREATE\_TASK \\
+2 & Anushree & Sure, I'll collect the customer reviews. & NO\_ACTION (restates T-1) \\
+3 & Riya & Anushree, please clean the review dataset by Tuesday once you collect the customer reviews. & CREATE\_TASK, ADD\_DEPENDENCY \\
+4 & Riya & Bianca, please train the sentiment model by November 18 once the review dataset is cleaned. & CREATE\_TASK, ADD\_DEPENDENCY \\
+5 & Riya & Bianca, please write the evaluation script by Thursday. & CREATE\_TASK \\
+6 & Riya & Can someone set up the demo server? & CREATE\_TASK (no owner) \\
+7 & Anushree & I can set up the demo server. & UPDATE\_ASSIGNEE \\
+8 & Riya & Bianca, please build the demo dashboard by November 20 after you train the sentiment model. & CREATE\_TASK, ADD\_DEPENDENCY \\
+9 & Riya & The demo dashboard is waiting on the demo server. The demo dashboard is blocked by the evaluation script. & ADD\_DEPENDENCY $\times$2 \\
+10 & Riya & Bianca, please share the results report after you write the evaluation script. & CREATE\_TASK, ADD\_DEPENDENCY \\
+11 & Anushree & The office wifi went down yesterday. & NO\_ACTION (historical) \\
+12 & Bianca & Could we move the evaluation script deadline to Friday? & \lab{PROPOSE\_DUE\_DATE\_CHANGE} \\
+13 & Riya & Friday is fine. & \lab{CONFIRM\_DUE\_DATE\_CHANGE} \\
+14 & Anushree & I've finished collecting the customer reviews. & COMPLETE\_TASK \\
+15 & Anushree & I'm working on the review dataset now. & UPDATE\_STATUS \\
+16 & Riya & The sentiment model is waiting on the demo dashboard. & ADD\_DEPENDENCY (held: cycle) \\
+17 & Riya & We no longer need the evaluation script. & CANCEL\_TASK \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\chapter{Implementation Snippets}
+\label{app:snippets}
+
+\begin{lstlisting}[language=Python, caption={Greedy one-to-one span matching used by the lenient metric (\code{src/model\_training/span\_metrics.py}).}]
+def _iou(a: Span, b: Span) -> float:
+    overlap = min(a[2], b[2]) - max(a[1], b[1])
+    if overlap <= 0:
+        return 0.0
+    union = (a[2] - a[1]) + (b[2] - b[1]) - overlap
+    return overlap / union
+
+def _match_count(predicted, reference, score, threshold: float) -> int:
+    """Greedy one-to-one matching, best score first, same type only."""
+    candidates = []
+    for pi, p in enumerate(predicted):
+        for ri, r in enumerate(reference):
+            if p[0] != r[0]:
+                continue
+            value = score(p, r)
+            if value >= threshold and value > 0:
+                candidates.append((value, pi, ri))
+    candidates.sort(key=lambda item: (-item[0], item[1], item[2]))
+    used_p, used_r = set(), set()
+    for _, pi, ri in candidates:
+        if pi in used_p or ri in used_r:
+            continue
+        used_p.add(pi); used_r.add(ri)
+    return len(used_p)
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption={Marker pooling in the relation classifier (\code{src/model\_training/relation\_classifier.py}).}]
+def forward(self, input_ids, attention_mask, label_mask):
+    h = self.encoder(input_ids=input_ids, attention_mask=attention_mask).last_hidden_state
+    cls = h[:, 0]
+    if self.pooling == "cls":
+        feats = cls
+    else:
+        idx = torch.arange(h.size(0), device=h.device)
+        p1 = (input_ids == self.e1_id).int().argmax(1)              # position of [E1_TASK]
+        p2 = torch.isin(input_ids, self.e2_ids).int().argmax(1)     # position of [E2_PERSON] / [E2_TEMPORAL]
+        feats = torch.cat([cls, h[idx, p1], h[idx, p2]], dim=-1)
+    logits = self.head(self.dropout(feats))
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption={Square-root inverse-frequency class weights for the entity model (\code{scripts/train\_entity\_model.py}).}]
+if args.class_weighting == "sqrt_inverse":
+    class_weights = [math.sqrt(counts["O"] / max(1, counts[lab])) for lab in labels]
+\end{lstlisting}
+
+\begin{lstlisting}[language=Python, caption={Who may accept a suggestion (\code{src/api/views.py}, abbreviated; elided branches marked \code{...}).}]
+def reviewers(p, tasks, proposals_by_id) -> list[str]:
+    op, pl = p.operation, p.payload
+    t = tasks.get(p.task_id) if p.task_id else None
+    owner = t.owner_id if t else None
+    if op == "CREATE_TASK":           out = [pl.get("owner_id")]
+    elif op == "UPDATE_ASSIGNEE":     out = [p.after if isinstance(p.after, str) else None]
+    elif op in ("COMPLETE_TASK", "UPDATE_STATUS"): out = [owner]
+    elif op == "CANCEL_TASK":         out = [owner, t.created_by if t else None]
+    elif op == "ADD_DEPENDENCY":      ...   # owner of the waiting task (existing, or its pending creation)
+    ...                               # date proposals and confirmations: see the source
+    return sorted({x for x in out if x})   # empty: any teammate may decide
+\end{lstlisting}
+
+\chapter{Reproducibility}
+\label{app:repro}
+All commands run from the repository root with the project virtual environment (\code{.venv}, Python 3.12).
+
+\begin{lstlisting}[language=bash, numbers=none, caption={Reproducing data, models and evaluations.}]
+# data
+python scripts/convert_mailex.py && python scripts/clean_mailex.py
+python scripts/build_mailex_dataset.py                       # MailEx-derived labels, mapping v1.2.0
+python scripts/build_entity_dataset_v2.py                    # SILVER-v2 three-class dataset
+python scripts/prepare_relation_classification.py            # typed-marker relation rows
+# models
+python scripts/train_entity_model.py --run-name mailex_v1_lr5e-5 --learning-rate 5e-5 --epochs 10
+python scripts/train_distilbert_v2.py --class-weighting sqrt_inverse     # deployed entity checkpoint
+python scripts/train_relation_classifier.py                              # deployed relation checkpoint
+# evaluation
+python scripts/score_predictions.py results/entity_extraction/phase2/mailex_v1_lr5e-5/validation_predictions.jsonl
+python scripts/compare_runs.py && python scripts/audit_leakage.py
+python scripts/run_live_battery.py --fixtures live_battery_v1 live_scenarios_new live_scenarios_holdout
+python scripts/summarize_phase7_5.py
+# tests
+python -m unittest discover -s tests            # 362 tests
+cd frontend && pnpm test && pnpm exec playwright test
+# application
+scripts/run_app.sh                              # http://127.0.0.1:8000
+# this report (see report/README.md)
+python report/scripts/extract_stats.py && python report/scripts/make_charts.py
+node report/scripts/capture_screenshots.mjs http://127.0.0.1:8799
+cd report && tectonic main.tex
+\end{lstlisting}

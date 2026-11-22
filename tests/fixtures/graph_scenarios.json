@@ -1,0 +1,1197 @@
+{
+ "description": "Developer-authored functional graph scenarios (Phase 6). Not an independent benchmark. Tasks T-1.. are created in order.",
+ "scenarios": [
+  {
+   "name": "G01_three_person_chain_unblocks_in_order",
+   "description": "completing a prerequisite unblocks exactly the next task",
+   "tasks": [
+    {
+     "owner": "bianca",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "dev",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "riya",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted",
+      "code": "OK"
+     }
+    },
+    {
+     "add": [
+      "T-2",
+      "T-3"
+     ],
+     "expect": {
+      "status": "accepted",
+      "code": "OK"
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-1": "ready",
+       "T-2": "blocked",
+       "T-3": "blocked"
+      },
+      "order": [
+       "T-1",
+       "T-2",
+       "T-3"
+      ],
+      "layers": {
+       "T-1": 0,
+       "T-2": 1,
+       "T-3": 2
+      },
+      "root_blockers": {
+       "T-3": [
+        "T-1"
+       ],
+       "T-2": [
+        "T-1"
+       ]
+      },
+      "blocked_by": {
+       "T-3": [
+        "T-2"
+       ]
+      },
+      "longest_chain": [
+       "T-1",
+       "T-2",
+       "T-3"
+      ]
+     }
+    },
+    {
+     "impact": [
+      "T-1",
+      "completed"
+     ],
+     "expect_diff": {
+      "became_ready": [
+       "T-2"
+      ],
+      "became_done": [
+       "T-1"
+      ],
+      "became_blocked": []
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-1": "ready",
+       "T-2": "blocked"
+      }
+     }
+    },
+    {
+     "status": [
+      "T-1",
+      "completed"
+     ],
+     "expect_diff": {
+      "became_ready": [
+       "T-2"
+      ],
+      "became_done": [
+       "T-1"
+      ]
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-1": "done",
+       "T-2": "ready",
+       "T-3": "blocked"
+      },
+      "root_blockers": {
+       "T-3": [
+        "T-2"
+       ]
+      }
+     }
+    },
+    {
+     "status": [
+      "T-2",
+      "in_progress"
+     ],
+     "expect_diff": {
+      "became_ready": []
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "ready",
+       "T-3": "blocked"
+      }
+     }
+    },
+    {
+     "status": [
+      "T-2",
+      "completed"
+     ],
+     "expect_diff": {
+      "became_ready": [
+       "T-3"
+      ]
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-3": "ready"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G02_cycle_is_held_with_its_path_and_changes_nothing",
+   "description": "a cycle-forming edge is refused, kept as held, and does not block",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "c",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-2",
+      "T-3"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-3",
+      "T-1"
+     ],
+     "expect": {
+      "status": "rejected",
+      "code": "CYCLE",
+      "cycle_path": [
+       "T-3",
+       "T-1",
+       "T-2",
+       "T-3"
+      ]
+     }
+    },
+    {
+     "check": {
+      "acyclic": true,
+      "kinds": {
+       "accepted": 2,
+       "held": 1,
+       "proposed": 0
+      },
+      "states": {
+       "T-1": "ready",
+       "T-2": "blocked",
+       "T-3": "blocked"
+      },
+      "edge_reason_prefix": {
+       "T-3>T-1": "CYCLE:"
+      },
+      "order": [
+       "T-1",
+       "T-2",
+       "T-3"
+      ]
+     }
+    },
+    {
+     "remove": [
+      "T-2",
+      "T-3"
+     ],
+     "expect": {
+      "applied": true
+     }
+    },
+    {
+     "reconsider": [
+      "T-3",
+      "T-1"
+     ],
+     "expect": {
+      "status": "accepted",
+      "code": "OK"
+     }
+    },
+    {
+     "check": {
+      "acyclic": true,
+      "kinds": {
+       "accepted": 2,
+       "held": 1
+      },
+      "order": [
+       "T-3",
+       "T-1",
+       "T-2"
+      ],
+      "states": {
+       "T-3": "ready",
+       "T-1": "blocked",
+       "T-2": "blocked"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G03_self_unknown_and_duplicate_edges",
+   "description": "structural problems are refused with a code; duplicates are not re-applied",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-1"
+     ],
+     "expect": {
+      "status": "rejected",
+      "code": "SELF"
+     }
+    },
+    {
+     "add": [
+      "T-1",
+      "T-9"
+     ],
+     "expect": {
+      "status": "rejected",
+      "code": "UNKNOWN_ENDPOINT"
+     }
+    },
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted",
+      "code": "OK",
+      "applied": true
+     }
+    },
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted",
+      "code": "DUPLICATE",
+      "applied": false
+     }
+    },
+    {
+     "check": {
+      "kinds": {
+       "accepted": 1,
+       "held": 2
+      },
+      "acyclic": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "G04_cancelled_prerequisite_needs_review_never_auto_unblocks",
+   "description": "cancellation does not satisfy a dependency",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "cancelled",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "c",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "d",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted",
+      "warnings": [
+       "PREREQUISITE_CANCELLED"
+      ]
+     }
+    },
+    {
+     "add": [
+      "T-2",
+      "T-3"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "blocked_cancelled_prereq",
+       "T-3": "blocked"
+      },
+      "cancelled_prereqs": {
+       "T-2": [
+        "T-1"
+       ]
+      }
+     }
+    },
+    {
+     "add": [
+      "T-4",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "blocked"
+      },
+      "blocked_by": {
+       "T-2": [
+        "T-4"
+       ]
+      },
+      "cancelled_prereqs": {
+       "T-2": [
+        "T-1"
+       ]
+      }
+     }
+    },
+    {
+     "status": [
+      "T-4",
+      "completed"
+     ],
+     "expect_diff": {
+      "became_review": [
+       "T-2"
+      ],
+      "became_ready": []
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "blocked_cancelled_prereq",
+       "T-3": "blocked"
+      },
+      "root_blockers": {
+       "T-3": [
+        "T-2"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G05_removing_an_edge_unblocks_and_keeps_the_evidence",
+   "description": "removal marks the edge held with a REMOVED reason, never deletes it",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "blocked"
+      }
+     }
+    },
+    {
+     "remove": [
+      "T-1",
+      "T-2"
+     ],
+     "reason": "not actually required",
+     "expect": {
+      "applied": true
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "ready"
+      },
+      "kinds": {
+       "accepted": 0,
+       "held": 1
+      },
+      "edge_reason_prefix": {
+       "T-1>T-2": "REMOVED: by riya"
+      }
+     }
+    },
+    {
+     "remove": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "applied": false
+     }
+    }
+   ]
+  },
+  {
+   "name": "G06_redundant_edge_is_accepted_and_flagged",
+   "description": "an edge implied by a longer chain is kept with a warning",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "c",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-2",
+      "T-3"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-1",
+      "T-3"
+     ],
+     "expect": {
+      "status": "accepted",
+      "warnings": [
+       "REDUNDANT_TRANSITIVE"
+      ]
+     }
+    },
+    {
+     "check": {
+      "edge_warnings": {
+       "T-1>T-3": [
+        "REDUNDANT_TRANSITIVE"
+       ],
+       "T-1>T-2": [],
+       "T-2>T-3": []
+      },
+      "order": [
+       "T-1",
+       "T-2",
+       "T-3"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "G07_timing_conflict_warns_but_dates_never_create_edges",
+   "description": "only resolved dates are compared, and only on an explicit edge",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1",
+     "due": "2026-11-20"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1",
+     "due": "2026-11-13"
+    },
+    {
+     "owner": "c",
+     "status": "open",
+     "thread": "th1",
+     "due": "~after approval"
+    },
+    {
+     "owner": "d",
+     "status": "open",
+     "thread": "th1",
+     "due": "2026-11-25"
+    }
+   ],
+   "steps": [
+    {
+     "check": {
+      "kinds": {
+       "accepted": 0,
+       "held": 0,
+       "proposed": 0
+      },
+      "states": {
+       "T-1": "ready",
+       "T-2": "ready",
+       "T-3": "ready",
+       "T-4": "ready"
+      }
+     }
+    },
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted",
+      "warnings": [
+       "PREREQUISITE_DUE_AFTER_DEPENDENT"
+      ]
+     }
+    },
+    {
+     "add": [
+      "T-3",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted",
+      "warnings": []
+     }
+    },
+    {
+     "add": [
+      "T-2",
+      "T-4"
+     ],
+     "expect": {
+      "status": "accepted",
+      "warnings": []
+     }
+    },
+    {
+     "check": {
+      "kinds": {
+       "accepted": 3
+      },
+      "acyclic": true
+     }
+    }
+   ]
+  },
+  {
+   "name": "G08_dependent_completed_before_prerequisite_is_flagged",
+   "description": "inconsistent completion is accepted with a warning",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "completed",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted",
+      "warnings": [
+       "INCONSISTENT_COMPLETION"
+      ]
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-1": "ready",
+       "T-2": "done"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G09_completed_prerequisite_added_later_does_not_block",
+   "description": "adding an edge from an already-completed prerequisite",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "completed",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "ready",
+       "T-1": "done"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G10_diamond_needs_both_branches",
+   "description": "a join task stays blocked until every prerequisite is done",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "c",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "d",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-1",
+      "T-3"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-2",
+      "T-4"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-3",
+      "T-4"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-4": "blocked"
+      },
+      "root_blockers": {
+       "T-4": [
+        "T-1"
+       ]
+      },
+      "layers": {
+       "T-1": 0,
+       "T-2": 1,
+       "T-3": 1,
+       "T-4": 2
+      },
+      "kinds": {
+       "accepted": 4
+      }
+     }
+    },
+    {
+     "status": [
+      "T-1",
+      "completed"
+     ],
+     "expect_diff": {
+      "became_ready": [
+       "T-2",
+       "T-3"
+      ]
+     }
+    },
+    {
+     "status": [
+      "T-2",
+      "completed"
+     ],
+     "expect_diff": {
+      "became_ready": []
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-4": "blocked"
+      },
+      "blocked_by": {
+       "T-4": [
+        "T-3"
+       ]
+      }
+     }
+    },
+    {
+     "status": [
+      "T-3",
+      "completed"
+     ],
+     "expect_diff": {
+      "became_ready": [
+       "T-4"
+      ]
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-4": "ready"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G11_idempotent_add",
+   "description": "the same keyed add twice writes once",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "key": "k1",
+     "expect": {
+      "status": "accepted",
+      "applied": true
+     }
+    },
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "key": "k1",
+     "expect": {
+      "status": "accepted",
+      "replayed": true
+     }
+    },
+    {
+     "check": {
+      "kinds": {
+       "accepted": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G12_cross_thread_edges_are_allowed",
+   "description": "dependencies may span threads inside one workspace",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th2"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "blocked"
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G13_long_chain_layers",
+   "description": "layers follow the chain",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-2",
+      "T-3"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-3",
+      "T-4"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-4",
+      "T-5"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "check": {
+      "layers": {
+       "T-1": 0,
+       "T-2": 1,
+       "T-3": 2,
+       "T-4": 3,
+       "T-5": 4
+      },
+      "longest_chain": [
+       "T-1",
+       "T-2",
+       "T-3",
+       "T-4",
+       "T-5"
+      ],
+      "root_blockers": {
+       "T-5": [
+        "T-1"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G14_reconsidering_a_still_cyclic_edge_stays_held",
+   "description": "reconsider re-validates; it does not force acceptance",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-2",
+      "T-1"
+     ],
+     "expect": {
+      "status": "rejected",
+      "code": "CYCLE"
+     }
+    },
+    {
+     "reconsider": [
+      "T-2",
+      "T-1"
+     ],
+     "expect": {
+      "status": "rejected",
+      "code": "CYCLE"
+     }
+    },
+    {
+     "check": {
+      "acyclic": true,
+      "kinds": {
+       "accepted": 1,
+       "held": 1
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "G15_two_independent_chains",
+   "description": "chains do not affect each other",
+   "tasks": [
+    {
+     "owner": "a",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "b",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "c",
+     "status": "open",
+     "thread": "th1"
+    },
+    {
+     "owner": "d",
+     "status": "open",
+     "thread": "th1"
+    }
+   ],
+   "steps": [
+    {
+     "add": [
+      "T-1",
+      "T-2"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "add": [
+      "T-3",
+      "T-4"
+     ],
+     "expect": {
+      "status": "accepted"
+     }
+    },
+    {
+     "status": [
+      "T-1",
+      "completed"
+     ],
+     "expect_diff": {
+      "became_ready": [
+       "T-2"
+      ]
+     }
+    },
+    {
+     "check": {
+      "states": {
+       "T-2": "ready",
+       "T-4": "blocked"
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

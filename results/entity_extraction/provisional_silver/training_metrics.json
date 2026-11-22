@@ -1,0 +1,177 @@
+{
+  "annotation_inputs_unchanged": true,
+  "best_checkpoint": "models/text2task-distilbert/provisional_silver/checkpoints/checkpoint-132",
+  "best_metric": 0.0077669902912621365,
+  "data_fingerprints_after": {
+    "final/test.jsonl": "516cd5fac02f318679dc114635c8a6f7aa339f2f61324f3345a8577046a6c85b",
+    "final/train.jsonl": "8c2f07104be856b7a0e711ac45d8982e93ed621906dbfa906e7d90eef58aca53",
+    "final/validation.jsonl": "184bd076c7b91a143bae7a2a4f168bc8d67b59efee6cde9101cb60618cdc2b2c",
+    "model_ready/test.jsonl": "bb5ca65f736b320af8ec04aa1f8610e7e18ba4eab39fbfc76757addf5c97d8bf",
+    "model_ready/train.jsonl": "cae92b4faf4d80e95d063b099f63f68b26f6a49354cbe5adbb1317fd10028856",
+    "model_ready/validation.jsonl": "a5166b2a0c14b01c9f6dc678976a1ed6f71e14c387862f1ce95c3e7b00503416",
+    "schema": "e05c677ee4b8efa5e416486fed366c3fb4968fa41be4ed4ffc56bc7ae1264cd9"
+  },
+  "data_fingerprints_before": {
+    "final/test.jsonl": "516cd5fac02f318679dc114635c8a6f7aa339f2f61324f3345a8577046a6c85b",
+    "final/train.jsonl": "8c2f07104be856b7a0e711ac45d8982e93ed621906dbfa906e7d90eef58aca53",
+    "final/validation.jsonl": "184bd076c7b91a143bae7a2a4f168bc8d67b59efee6cde9101cb60618cdc2b2c",
+    "model_ready/test.jsonl": "bb5ca65f736b320af8ec04aa1f8610e7e18ba4eab39fbfc76757addf5c97d8bf",
+    "model_ready/train.jsonl": "cae92b4faf4d80e95d063b099f63f68b26f6a49354cbe5adbb1317fd10028856",
+    "model_ready/validation.jsonl": "a5166b2a0c14b01c9f6dc678976a1ed6f71e14c387862f1ce95c3e7b00503416",
+    "schema": "e05c677ee4b8efa5e416486fed366c3fb4968fa41be4ed4ffc56bc7ae1264cd9"
+  },
+  "device": "mps",
+  "duration_seconds": 78.86434,
+  "evaluation_provenance": {
+    "annotation_tier": "SILVER",
+    "disclaimer": "SILVER validation metrics are provisional development signals, not human-grounded research results.",
+    "is_final_research_metric": false,
+    "metric_prefix": "silver_provisional",
+    "mode": "provisional_silver"
+  },
+  "experiment_mode": "provisional_silver",
+  "finished_at": "2026-10-31T23:01:46.997667Z",
+  "hyperparameters": {
+    "data": {
+      "max_length": 512,
+      "overlap_strategy": "inject [unusedN] after [CLS] to identify deterministic BIO overlap layer N",
+      "stride": 64,
+      "train_annotation_tiers": [
+        "GOLD",
+        "SILVER"
+      ],
+      "validation_annotation_tiers_by_mode": {
+        "gold_evaluation": [
+          "GOLD"
+        ],
+        "provisional_silver": [
+          "SILVER"
+        ]
+      },
+      "windowing": "source preprocessing uses overlapping WordPiece windows and assigns each complete entity to one containing window"
+    },
+    "evaluation": {
+      "disclaimer": "SILVER validation metrics are provisional development signals, not human-grounded research results.",
+      "gold_metric_prefix": "gold",
+      "mode": "provisional_silver",
+      "provisional_metric_prefix": "silver_provisional"
+    },
+    "experiment_name": "text2task-distilbert-entities-v1",
+    "model": {
+      "architecture": "AutoModelForTokenClassification",
+      "name": "distilbert/distilbert-base-uncased"
+    },
+    "paths": {
+      "entity_data": "data/model_ready/entities",
+      "final_data": "data/final",
+      "model_output": "models/text2task-distilbert",
+      "results": "results/entity_extraction",
+      "schema": "configs/text2task_schema_v1.json",
+      "vocab": "configs/tokenizers/distilbert-base-uncased-vocab.txt"
+    },
+    "training": {
+      "data_seed": 20261101,
+      "evaluation_strategy": "epoch",
+      "gradient_accumulation_steps": 4,
+      "greater_is_better": true,
+      "learning_rate": 2e-05,
+      "load_best_model_at_end": true,
+      "logging_steps": 10,
+      "logging_strategy": "steps",
+      "metric_for_best_model": "f1",
+      "num_train_epochs": 3,
+      "per_device_eval_batch_size": 4,
+      "per_device_train_batch_size": 4,
+      "save_strategy": "epoch",
+      "save_total_limit": 3,
+      "seed": 20261101,
+      "warmup_ratio": 0.0,
+      "weight_decay": 0.01
+    }
+  },
+  "max_overlap_layers": 8,
+  "model_name": "distilbert/distilbert-base-uncased",
+  "silver_provisional_overall": {
+    "accuracy": 0.7317949536889172,
+    "f1": 0.0077669902912621365,
+    "precision": 0.08,
+    "recall": 0.004081632653061225
+  },
+  "silver_provisional_per_entity": {
+    "ARTIFACT": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 59
+    },
+    "GROUP": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 11
+    },
+    "PERSON": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 63
+    },
+    "TASK": {
+      "f1-score": 0.0,
+      "precision": 0.0,
+      "recall": 0.0,
+      "support": 283
+    },
+    "TEMPORAL": {
+      "f1-score": 0.047619047619047616,
+      "precision": 0.2,
+      "recall": 0.02702702702702703,
+      "support": 74
+    },
+    "macro avg": {
+      "f1-score": 0.009523809523809523,
+      "precision": 0.04,
+      "recall": 0.005405405405405406,
+      "support": 490
+    },
+    "micro avg": {
+      "f1-score": 0.0077669902912621365,
+      "precision": 0.08,
+      "recall": 0.004081632653061225,
+      "support": 490
+    },
+    "weighted avg": {
+      "f1-score": 0.007191448007774538,
+      "precision": 0.030204081632653063,
+      "recall": 0.004081632653061225,
+      "support": 490
+    }
+  },
+  "started_at": "2026-10-31T23:00:28.133327Z",
+  "status": "COMPLETED",
+  "trainer_train_metrics": {
+    "epoch": 3.0,
+    "total_flos": 127085411212800.0,
+    "train_loss": 3.7660349282351406,
+    "train_runtime": 78.6247,
+    "train_samples_per_second": 26.862,
+    "train_steps_per_second": 1.679
+  },
+  "trainer_validation_metrics": {
+    "silver_provisional_validation_loss": 0.8511966466903687,
+    "silver_provisional_validation_runtime": 0.8385,
+    "silver_provisional_validation_samples_per_second": 120.46,
+    "silver_provisional_validation_silver_provisional_accuracy": 0.7317949536889172,
+    "silver_provisional_validation_silver_provisional_f1": 0.0077669902912621365,
+    "silver_provisional_validation_silver_provisional_precision": 0.08,
+    "silver_provisional_validation_silver_provisional_recall": 0.004081632653061225,
+    "silver_provisional_validation_steps_per_second": 31.009
+  },
+  "versions": {
+    "numpy": "2.5.4",
+    "python": "3.12.13",
+    "seqeval": "unknown",
+    "torch": "2.15.0",
+    "transformers": "5.22.1"
+  }
+}

@@ -1,0 +1,1080 @@
+{
+ "name": "live_scenarios_new",
+ "description": "Phase 7.5 functional scenarios written BEFORE the refinement code, never used to tune it. Run once per configuration; results are reported as they are.",
+ "now": "2026-11-11T09:30:00-06:00 (a Wednesday)",
+ "cases": [
+  {
+   "id": "N1",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, could you update the budget spreadsheet by Friday?",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "update",
+       "budget"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-13"
+     }
+    ]
+   }
+  },
+  {
+   "id": "N2",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, I need you to draft the release notes by Monday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "draft",
+       "release notes"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-16"
+     }
+    ]
+   }
+  },
+  {
+   "id": "N3",
+   "group": "independent",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Riya, please schedule the retro for Thursday morning.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "schedule",
+       "retro"
+      ],
+      "owner": "riya",
+      "due": "2026-11-12"
+     }
+    ]
+   }
+  },
+  {
+   "id": "N4",
+   "group": "independent",
+   "messages": [
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "I will review the pull request tomorrow.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "review",
+       "pull request"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-12"
+     }
+    ]
+   }
+  },
+  {
+   "id": "N5",
+   "group": "independent",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Let me fix the login bug by Friday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "fix",
+       "login bug"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-13"
+     }
+    ]
+   }
+  },
+  {
+   "id": "N6",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Could you send the agenda to the team?",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "send",
+       "agenda"
+      ],
+      "owner": "bianca"
+     }
+    ]
+   }
+  },
+  {
+   "id": "N7",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Someone should back up the database before Friday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "back up",
+       "database"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "N8",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, finish the slides and email them to Riya by Thursday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "finish",
+       "slides"
+      ],
+      "owner": "bianca"
+     },
+     {
+      "has": [
+       "email"
+      ],
+      "owner": "bianca"
+     }
+    ]
+   }
+  },
+  {
+   "id": "D1",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please collect the survey responses by Monday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, analyse the results after Anushree has collected the responses.",
+     "09:35"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "collect",
+       "responses"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-16"
+     },
+     {
+      "has": [
+       "analyse",
+       "results"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "analyse",
+       "results"
+      ],
+      [
+       "collect",
+       "responses"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "D2",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please draft the proposal by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Riya, review the proposal once Bianca finishes the draft.",
+     "09:35"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "draft",
+       "proposal"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-12"
+     },
+     {
+      "has": [
+       "review",
+       "proposal"
+      ],
+      "owner": "riya"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "review",
+       "proposal"
+      ],
+      [
+       "draft",
+       "proposal"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "D3",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, set up the test server.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, deploy the build.",
+     "09:32"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Deployment can't start until the test server is set up.",
+     "09:35"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "set up",
+       "server"
+      ],
+      "owner": "anushree"
+     },
+     {
+      "has": [
+       "deploy",
+       "build"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "deploy",
+       "build"
+      ],
+      [
+       "set up",
+       "server"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "D4",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "First export the data, then clean it, and then train the model.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "export",
+       "data"
+      ]
+     },
+     {
+      "has": [
+       "clean"
+      ]
+     },
+     {
+      "has": [
+       "train",
+       "model"
+      ]
+     }
+    ],
+    "edges": [
+     [
+      [
+       "clean"
+      ],
+      [
+       "export",
+       "data"
+      ]
+     ],
+     [
+      [
+       "train",
+       "model"
+      ],
+      [
+       "clean"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "D5",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Once the design is approved, Bianca should start the implementation.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "start",
+       "implementation"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "D6",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please write the report by Friday.",
+     "09:33"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-12"
+     },
+     {
+      "has": [
+       "write",
+       "report"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-13"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "D7",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, review the design by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, write the tests after the review.",
+     "09:34"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "review",
+       "design"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-12"
+     },
+     {
+      "has": [
+       "write",
+       "tests"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "write",
+       "tests"
+      ],
+      [
+       "review",
+       "design"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "D8",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Please finalize the budget before sending it to finance.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "finalize",
+       "budget"
+      ]
+     },
+     {
+      "has": [
+       "send"
+      ]
+     }
+    ],
+    "edges": [
+     [
+      [
+       "send"
+      ],
+      [
+       "finalize",
+       "budget"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "D9",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please send the report to Bianca after lunch.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "send",
+       "report"
+      ],
+      "owner": "anushree"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "D10",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, update the wiki when you get a chance.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "update",
+       "wiki"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "D11",
+   "group": "negative_dependency",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, call me after the meeting.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "call"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "L1",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the quarterly report by Friday.",
+     "09:30"
+    ],
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "The quarterly report is done.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "quarterly",
+       "report"
+      ],
+      "owner": "bianca",
+      "status": "completed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "L2",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the quarterly report by Friday.",
+     "09:30"
+    ],
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "I finished the quarterly report.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "quarterly",
+       "report"
+      ],
+      "owner": "bianca",
+      "status": "completed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "L3",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the quarterly report by Friday.",
+     "09:30"
+    ],
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "I'm starting on the quarterly report now.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "quarterly",
+       "report"
+      ],
+      "owner": "bianca",
+      "status": "in_progress"
+     }
+    ]
+   }
+  },
+  {
+   "id": "L4",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the quarterly report by Friday.",
+     "09:30"
+    ],
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "Can we push the quarterly report to Monday?",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "quarterly",
+       "report"
+      ],
+      "owner": "bianca",
+      "status": "open"
+     }
+    ],
+    "last_ops": [
+     "PROPOSE_DUE_DATE_CHANGE"
+    ]
+   }
+  },
+  {
+   "id": "L5",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the quarterly report by Friday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Never mind, we don't need the quarterly report anymore.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "quarterly",
+       "report"
+      ],
+      "owner": "bianca",
+      "status": "cancelled"
+     }
+    ]
+   }
+  },
+  {
+   "id": "L6",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the quarterly report by Friday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Thanks Bianca!",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "quarterly",
+       "report"
+      ],
+      "owner": "bianca",
+      "status": "open"
+     }
+    ],
+    "max_creates": 1
+   }
+  },
+  {
+   "id": "L7",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the quarterly report by Friday.",
+     "09:30"
+    ],
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "I finished the budget review.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "quarterly",
+       "report"
+      ],
+      "owner": "bianca",
+      "status": "open"
+     }
+    ],
+    "max_creates": 1
+   }
+  },
+  {
+   "id": "L8",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the quarterly report by Friday.",
+     "09:30"
+    ],
+    [
+     "bianca",
+     [
+      "riya"
+     ],
+     "The quarterly report has been completed.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "quarterly",
+       "report"
+      ],
+      "owner": "bianca",
+      "status": "completed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "X1",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Great job on the launch, everyone!",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "X2",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "The meeting went well and we agreed on the plan.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "X3",
+   "group": "negative",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I was out sick on Monday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "X4",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Lunch is at noon in the kitchen.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "X5",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Did you see the report?",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "X6",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "We shipped the release yesterday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "X7",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Thanks for sending the invoice.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  }
+ ]
+}

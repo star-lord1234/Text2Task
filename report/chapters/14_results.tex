@@ -1,0 +1,227 @@
+\chapter{Results and Comparative Analysis}
+\label{ch:results}
+
+This chapter reports every result set that exists in the repository, including the unfavourable ones. Results come from two different kinds of comparison. \emph{Development history} results (\cref{sec:resentsilver,sec:resphase2}) compare iterations in which several factors changed at once; they show where the project went, not why. \emph{Controlled comparisons} (\cref{sec:ablations,sec:resrel,sec:reshybrid}) change one factor at a time on the same data. All numbers are agreement with provisional labels or outcomes on developer-written fixtures (\cref{ch:evalsetup}).
+
+\section{Entity extraction: SILVER lineage}
+\label{sec:resentsilver}
+\Cref{tab:ressilver} shows the SILVER-v2 runs on the 60-email SILVER-v1 validation set. Class weighting made the decisive difference: without it the model learned to predict almost only \lab{O}. The weighted model, which the application uses, finds people and dates moderately well but has an exact-match TASK F1 of 0.004. Its TASK overlap-any F1 of 0.325 shows that it often marks part of a task, but rarely the right extent.
+
+\begin{table}[h]
+\centering
+\caption[Entity results, SILVER lineage]{Entity results of the SILVER-v2 runs on the SILVER-v1 validation set (408 reference spans), from \code{results/entity\_extraction/baseline/phase0\_baseline.json}.}
+\label{tab:ressilver}
+\footnotesize
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+Run & Scope & Strict F1 & Lenient F1 & Overlap-any F1 & Token F1 \\
+\midrule
+v2 ep3, unweighted & overall & 0.019 & 0.024 & 0.029 & 0.011 \\
+v2 ep6, unweighted & overall & 0.046 & 0.164 & 0.288 & 0.151 \\
+\textbf{v2 ep3, sqrt weights (app)} & overall & \textbf{0.127} & \textbf{0.226} & \textbf{0.411} & \textbf{0.220} \\
+ & TASK (272) & 0.004 & 0.068 & 0.325 & 0.131 \\
+ & PERSON (63) & 0.333 & 0.396 & 0.458 & 0.392 \\
+ & TEMPORAL (73) & 0.220 & 0.440 & 0.570 & 0.516 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Entity extraction: MailEx-derived lineage}
+\label{sec:resphase2}
+\Cref{tab:resphase2} reports the Phase 2 runs on the deduplicated development set, with the scores on the original set for reference. Run 1 is best on every type. On the clean set its lenient precision is 0.510 and recall 0.609, so it over-predicts somewhat (580 predicted spans against 486 references), which is partly explained by unlabelled true entities (\cref{ch:errors}). Removing the 39 leaked emails lowered every neural score by 0.02 to 0.03 lenient and 0.03 to 0.04 strict, while the rule baseline was essentially unchanged (0.402 to 0.401).
+
+\begin{table}[h]
+\centering
+\caption[Entity results, MailEx-derived lineage]{Phase 2 entity results. ``Clean'' is the deduplicated development set (349 emails); ``original'' includes the 39 emails copied from training. Run 3 is scored on its own requests-only labels. Source: \code{results/entity\_extraction/phase2/dedup\_rescore.json}.}
+\label{tab:resphase2}
+\footnotesize
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+ & \multicolumn{2}{c}{Original dev} & \multicolumn{4}{c}{Clean dev (349 emails)} \\
+\cmidrule(lr){2-3}\cmidrule(l){4-7}
+Model & Lenient & Strict & Lenient & Strict & TASK len. & PER / TEMP len. \\
+\midrule
+\textbf{Run 1}: lr 5e-5, +commitments & 0.575 & 0.420 & \textbf{0.555} & \textbf{0.390} & \textbf{0.482} & \textbf{0.594} / \textbf{0.645} \\
+Run 2: lr 3e-5, +commitments & 0.556 & 0.409 & 0.534 & 0.383 & 0.479 & 0.566 / 0.605 \\
+Run 3: lr 5e-5, requests only & 0.572 & 0.398 & 0.544 & 0.357 & 0.456 & 0.558 / 0.639 \\
+Rule baseline & 0.402 & 0.259 & 0.401 & 0.260 & 0.399 & 0.300 / 0.474 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Against the plan's targets (lenient F1 of at least 0.50 for TASK and 0.70 for PERSON and TEMPORAL), Run 1 meets none after deduplication. TASK, at 0.482, is just below its target. Before deduplication it appeared to meet it (0.508), which illustrates how much a small leakage can change a decision.
+
+\section{Hyperparameter comparison and ablations}
+\label{sec:ablations}
+\Cref{fig:runcompare} shows the validation curves of the three Phase 2 runs, and \cref{tab:ablation} the bootstrap comparisons. None of the differences is distinguishable from zero. A learning rate of $5\times10^{-5}$ is ahead of $3\times10^{-5}$ by 0.019 lenient F1, but the interval includes zero. Training with or without commitment TASKs, each evaluated on its own label definition, changes overall lenient F1 by $-0.003$. The commitment rule was kept because the annotation guidelines count commitments as tasks, not because it helped.
+
+\begin{figure}[t]
+\centering
+\chart[0.72\linewidth]{phase2_run_comparison}
+\caption[Learning rate and label-set comparison]{Overall lenient F1 on the original development set per epoch for the three Phase 2 runs. Run 3 is scored on its own requests-only labels.}
+\label{fig:runcompare}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\caption[Ablations with bootstrap intervals]{Paired bootstrap comparisons of Phase 2 runs (1,000 resamples of development rows; \code{phase2/comparison.json}). ``Controlled'' types use identical labels in both runs.}
+\label{tab:ablation}
+\footnotesize
+\begin{tabular}{@{}llrr@{}}
+\toprule
+Comparison & Scope & Median difference & 95\% interval \\
+\midrule
+Run 1 $-$ Run 2 (learning rate) & overall lenient & $+0.019$ & $[-0.006, +0.045]$ \\
+Run 3 $-$ Run 1 (requests only) & overall, own labels & $-0.003$ & $[-0.030, +0.026]$ \\
+ & TASK, own labels & $-0.013$ & $[-0.063, +0.039]$ \\
+ & PERSON (controlled) & $-0.030$ & $[-0.067, +0.005]$ \\
+ & TEMPORAL (controlled) & $+0.005$ & $[-0.035, +0.054]$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Two further ablations were planned but not run because of wall-clock cost: \code{[CLS]} pooling instead of marker pooling, and an unweighted relation model. Their absence means the choice of marker pooling, although well motivated by the literature \citep{baldinisoares2019mtb,zhong2021pure}, is untested here.
+
+\section{Relation extraction}
+\label{sec:resrel}
+\Cref{tab:resrel} compares the neural relation model with the rule linker on reference spans, and \cref{fig:relconf} shows both confusion matrices. The neural model is better overall (micro F1 0.764 against 0.527; paired difference between +0.16 and +0.32), driven by \lab{ASSIGNED\_TO}, where the rule linker almost never fires (recall 0.15). The rule linker is competitive on \lab{DUE\_ON}, where its explicit deadline cues give high recall (0.90) on the 10 available examples. The neural model's main error is linking tasks to people where the reference has no link (32 \lab{NONE}$\to$\lab{ASSIGNED\_TO}), several of which are plausibly correct links that MailEx did not annotate. Three of its five \lab{DUE\_ON} misses are predicted as \lab{SCHEDULED\_ON}, the deadline/schedule confusion seen in the worked example.
+
+\begin{table}[h]
+\centering
+\caption[Relation extraction results]{Relation extraction on the validation set with reference spans (922 pairs; \code{results/relation\_extraction/evaluation/validation\_markers\_sqrt.json}). Intervals are thread-level bootstrap.}
+\label{tab:resrel}
+\footnotesize
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+ & & \multicolumn{3}{c}{Neural (markers, sqrt)} & \multicolumn{3}{c}{Rule linker} \\
+\cmidrule(lr){3-5}\cmidrule(l){6-8}
+Label & Support & P & R & F1 & P & R & F1 \\
+\midrule
+ASSIGNED\_TO & 79 & 0.65 & 0.75 & 0.69 & 0.92 & 0.15 & 0.26 \\
+DUE\_ON & 10 & 0.71 & 0.50 & 0.59 & 0.45 & 0.90 & 0.60 \\
+SCHEDULED\_ON & 71 & 0.92 & 0.83 & 0.87 & 0.72 & 0.66 & 0.69 \\
+\midrule
+Micro F1 (positives) & 160 & \multicolumn{3}{r}{\textbf{0.764} [0.70, 0.84]} & \multicolumn{3}{r}{0.527 [0.45, 0.60]} \\
+Macro F1 & & \multicolumn{3}{r}{\textbf{0.719} [0.62, 0.82]} & \multicolumn{3}{r}{0.517 [0.39, 0.60]} \\
+False-link rate on NONE & 762 & \multicolumn{3}{r}{4.6\%} & \multicolumn{3}{r}{2.9\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[t]
+\centering
+\chart{relation_confusion}
+\caption[Relation confusion matrices]{Confusion matrices on the 922 validation pairs with reference spans. Cells show counts; shading is normalised per reference row.}
+\label{fig:relconf}
+\end{figure}
+
+With predicted spans (Mode B) the picture collapses (\cref{tab:modeb}). As explained in \cref{ch:evolution}, this reflects a mismatch between the span definitions of the relation references and the deployed entity model rather than the quality of relation classification. It does mean, however, that no end-to-end relation accuracy on email can be claimed.
+
+\begin{table}[h]
+\centering
+\caption{Relation micro F1 with spans predicted by the deployed entity checkpoint (Mode B).}
+\label{tab:modeb}
+\footnotesize
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Span matching & Neural micro F1 & Rule micro F1 & Candidate recall \\
+\midrule
+Strict & 0.000 & 0.000 & 0.000 \\
+Lenient (IoU $\ge$ 0.5) & 0.024 & 0.009 & 0.025 \\
+Any overlap & 0.195 & 0.103 & 0.263 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Score threshold}
+Relation scores are uncalibrated softmax values, but they rank links usefully. \Cref{tab:threshold} shows the trade-off that led to the 0.9 review threshold. Above 0.9, 94.5\% of kept links agree with the reference, against 75.9\% for all links. The threshold only flags weaker links; it never removes them.
+
+\begin{table}[h]
+\centering
+\caption{Effect of a minimum relation score on validation links (\code{results/\allowbreak phase4/\allowbreak report.json}).}
+\label{tab:threshold}
+\footnotesize
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Minimum score & Links kept & Precision & Recall \\
+\midrule
+none & 100\% & 0.759 & 0.769 \\
+0.7 & 82\% & 0.842 & 0.700 \\
+0.8 & 77\% & 0.872 & 0.681 \\
+\textbf{0.9 (chosen)} & \textbf{68\%} & \textbf{0.945} & \textbf{0.650} \\
+0.95 & 66\% & 0.944 & 0.631 \\
+0.99 & 41\% & 0.955 & 0.400 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Neural-only versus hybrid}
+\label{sec:reshybrid}
+\Cref{fig:phase75pass,fig:phase75beh} and \cref{tab:phase75} compare the five presets on the live chat cases, using the real checkpoints and the final code. The hybrid preset passes 23 of 24 development cases, 28 of 34 new cases and 23 of 30 holdout cases, against 2, 7 and 7 for the raw models. The improvement comes almost entirely from finding the tasks at all: neural-only task recall is 0.26, 0.17 and 0.09 on the three sets. It also comes from no longer producing false tasks from fragments (29, 40 and 27 false tasks for neural-only, against 0, 1 and 3). Dependency edges are recovered only by rules: 14 of the 20 expected edges for hybrid, none for neural-only, with one false edge in total.
+
+\begin{figure}[t]
+\centering
+\chart{phase75_strict_pass}
+\caption[Strict pass rate by pipeline preset]{Share of live chat cases passed strictly by each preset; numbers above bars are passed cases. Final code; real checkpoints; simulated reviewer accepting every actionable proposal.}
+\label{fig:phase75pass}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\chart{phase75_behaviour}
+\caption[Behaviour of neural-only versus hybrid]{Task recall, false tasks (an accept-everything reviewer would receive them) and dependency-edge recall, neural-only versus hybrid, on the three chat case sets.}
+\label{fig:phase75beh}
+\end{figure}
+
+\begin{table}[h]
+\centering
+\caption[Pipeline preset comparison on the holdout set]{Preset comparison on the 30 holdout chat cases, final code (\code{results/phase7\_5/COMPARISON.md}).}
+\label{tab:phase75}
+\footnotesize
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Preset & Strict pass & Task recall & Owner & Due & Status & Edges & False tasks \\
+\midrule
+\code{neural\_only} & 7/30 & 0.09 & 1.00 & 1.00 & n/a & 0/6 & 27 \\
+\code{neural\_plus\_linker} & 7/30 & 0.09 & 1.00 & 1.00 & n/a & 0/6 & 27 \\
+\code{refined} & 7/30 & 0.12 & 0.75 & 1.00 & n/a & 0/6 & 20 \\
+\textbf{\code{hybrid}} & \textbf{23/30} & \textbf{0.91} & 1.00 & 1.00 & 0.86 & 2/6 & 3 \\
+\code{rule\_only} & 22/30 & 0.88 & 1.00 & 0.88 & 0.86 & 2/6 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These results must be read together with three facts. First, hybrid and rule-only are almost equal on chat (28 and 28 on the new set, 23 and 22 on the holdout), so on short messages the rules do most of the work. Second, the first run of the new set, before generic bugs in the new stages were fixed, gave hybrid only 14 of 34, against 25 for rule-only. This run was saved unchanged in \code{results/phase7\_5/first\_run/}, and the new set is therefore a development set, not a held-out one. Third, the holdout set was written before those fixes and executed only after them; it is the fairest of the three, and there hybrid exceeds rule-only by one case.
+
+On real emails the comparison looks different (\cref{fig:silverref}). Against the 60 SILVER validation emails, refinement raises overall lenient entity F1 from 0.203 (neural) to 0.232 (refined) and 0.255 (hybrid). TASK precision rises from 0.064 to 0.162, but TASK F1 remains only 0.114. The rules make the weak TASK output less noisy; they do not make it good. The neural PERSON and TEMPORAL spans carry most of the value here. Hybrid also reduces review load on email, from 143 creation proposals (2.42 per email) for neural-only to 96 creations and 3 dependencies (1.68 per email).
+
+\begin{figure}[t]
+\centering
+\chart[0.72\linewidth]{silver_refinement}
+\caption[Refinement on real emails]{Lenient (IoU $\ge 0.5$) entity F1 against SILVER labels on 60 validation emails analysed through the live pipeline, by preset and type.}
+\label{fig:silverref}
+\end{figure}
+
+\section{Rule-based components}
+The deterministic components were evaluated functionally (\cref{tab:functional}). These results show that the components behave as specified and maintain their invariants; they are not accuracy estimates.
+
+\begin{table}[h]
+\centering
+\caption{Functional evaluation of the deterministic components.}
+\label{tab:functional}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{34mm}L@{}}
+\toprule
+Component & Result \\
+\midrule
+Temporal normaliser & 102/102 developer fixtures; 1.3\% of real corpus spans resolve without timestamps \\
+Reconciliation & 91/91 scenarios; 0 duplicates and 0 incorrect overwrites in targeted scenarios; 12,000 fuzz steps with 0 invariant violations \\
+Dependency graph & 15/15 graph and 3/3 chat scenarios; 12,000 edit decisions and 72,120 derived-state checks against an oracle, 0 disagreements; an injected cycle-check bug caught in 28 of 30 seeds \\
+Optional E5 edge selection & On 300 synthetic graphs, removes 74.8\% of wrong edges (greedy: 73.3\%) while losing 8.7\% of correct ones (greedy: 9.8\%); off by default \\
+Scenario F (17 messages) & Every message produces its expected operations; the final graph has the expected 6 accepted edges and 1 held cycle edge (API test) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Comparison with the literature}
+A direct numerical comparison with published systems is not methodologically valid, for the reasons given in \cref{sec:litcompare}: MailEx's own results \citep{srivastava2023mailex} measure event-trigger and argument extraction over a 76-role schema on the test split, while ours measure three collapsed entity types on a deduplicated development split with lenient matching against incomplete derived labels. Smart To-Do \citep{mukherjee2020smarttodo} evaluates generated text with BLEU and ROUGE. What can be compared is the qualitative pattern. MailEx reports that non-named-entity arguments are the hardest; here TASK spans are consistently the weakest type, while names and dates are learned more easily. The relation results are consistent with the finding that typed entity markers make a simple pipelined classifier effective \citep{zhong2021pure}, although we did not run the pooling ablation that would test this on our data.

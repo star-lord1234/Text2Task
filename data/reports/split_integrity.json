@@ -1,0 +1,1210 @@
+{
+  "blocking_issues": [],
+  "final_duplicate_audit": {
+    "exact_cross_split_groups": [],
+    "near_candidate_pairs_compared": 2194,
+    "near_cross_split_pairs": [],
+    "records_scanned": 600
+  },
+  "full_data_records_in_final": 0,
+  "generated_at": "2026-10-30T12:09:33.442930Z",
+  "human_verified_evaluation_counts": {
+    "test": 0,
+    "validation": 0
+  },
+  "quality_warnings": [
+    "Validation and test annotations are AI-generated SILVER, not human-verified GOLD; reported metrics measure agreement with silver labels only."
+  ],
+  "quarantined_annotations": [],
+  "ready_for_ml": true,
+  "rejected_ids_count": 0,
+  "report_version": "1.0.0",
+  "silver_evaluation_override": true,
+  "small_test_classes": [
+    {
+      "class_family": "entity",
+      "count": 3,
+      "label": "EVENT",
+      "threshold": 5
+    },
+    {
+      "class_family": "entity",
+      "count": 3,
+      "label": "GROUP",
+      "threshold": 5
+    },
+    {
+      "class_family": "relation",
+      "count": 3,
+      "label": "DEPENDS_ON",
+      "threshold": 5
+    }
+  ],
+  "source_cleaned_counts": {
+    "dev": 414,
+    "test": 405,
+    "train": 3117
+  },
+  "source_duplicate_audit": {
+    "exact_cross_split_groups": [
+      {
+        "record_ids": [
+          "mailex:dev:crandell-s_inbox189:turn_0002",
+          "mailex:dev:derrick-j_inbox_148:turn_0001",
+          "mailex:dev:donoho-l_inbox221:turn_0001",
+          "mailex:dev:germany-c_inbox27:turn_0007",
+          "mailex:dev:haedicke-m_inbox287:turn_0001",
+          "mailex:dev:lavorato-j_inbox204:turn_0002",
+          "mailex:dev:lavorato-j_inbox224:turn_0000",
+          "mailex:dev:lokey-t_inbox_214:turn_0000",
+          "mailex:dev:lokey-t_inbox_214:turn_0001",
+          "mailex:dev:martin-t_inbox24:turn_0002",
+          "mailex:dev:mims-thurston-p_inbox_142:turn_0002",
+          "mailex:dev:nemec-g_inbox1111:turn_0001",
+          "mailex:dev:nemec-g_inbox60:turn_0001",
+          "mailex:dev:parks-j_inbox241:turn_0000",
+          "mailex:dev:parks-j_inbox404:turn_0001",
+          "mailex:dev:parks-j_inbox428:turn_0000",
+          "mailex:dev:parks-j_inbox679:turn_0000",
+          "mailex:dev:reitmeyer-j_inbox51:turn_0001",
+          "mailex:dev:schoolcraft-d_inbox17:turn_0001",
+          "mailex:dev:smith-m_inbox202:turn_0003",
+          "mailex:dev:taylor-m_inbox_methanol_plant15:turn_0001",
+          "mailex:dev:tycholiz-b_inbox326:turn_0001",
+          "mailex:dev:wolfe-j_inbox101:turn_0002",
+          "mailex:dev:wolfe-j_inbox35:turn_0006",
+          "mailex:dev:wolfe-j_inbox89:turn_0001",
+          "mailex:test:beck-s_inbox232:turn_0001",
+          "mailex:test:derrick-j_inbox117:turn_0001",
+          "mailex:test:derrick-j_inbox_47:turn_0001",
+          "mailex:test:derrick-j_inbox_91:turn_0001",
+          "mailex:test:donoho-l_inbox173:turn_0001",
+          "mailex:test:germany-c_inbox224:turn_0001",
+          "mailex:test:heard-m_inbox284:turn_0003",
+          "mailex:test:heard-m_inbox284:turn_0004",
+          "mailex:test:heard-m_inbox300:turn_0000",
+          "mailex:test:heard-m_inbox_104:turn_0001",
+          "mailex:test:lavorato-j_inbox289:turn_0001",
+          "mailex:test:lay-k_inbox746:turn_0001",
+          "mailex:test:lay-k_inbox746:turn_0002",
+          "mailex:test:lokey-t_inbox267:turn_0001",
+          "mailex:test:lokey-t_inbox267:turn_0005",
+          "mailex:test:lokey-t_inbox_129:turn_0001",
+          "mailex:test:mclaughlin-e_inbox410:turn_0001",
+          "mailex:test:rapp-b_inbox_199:turn_0001",
+          "mailex:test:reitmeyer-j_inbox143:turn_0001",
+          "mailex:test:reitmeyer-j_inbox38:turn_0001",
+          "mailex:test:reitmeyer-j_inbox390:turn_0001",
+          "mailex:test:sager-e_inbox826:turn_0001",
+          "mailex:test:sager-e_inbox996:turn_0001",
+          "mailex:test:sager-e_inbox996:turn_0002",
+          "mailex:test:schoolcraft-d_inbox_junk508:turn_0001",
+          "mailex:test:skilling-j_inbox169:turn_0001",
+          "mailex:test:tycholiz-b_inbox258:turn_0001",
+          "mailex:test:watson-k_inbox330:turn_0001",
+          "mailex:test:white-s_inbox112:turn_0000",
+          "mailex:test:white-s_inbox112:turn_0001",
+          "mailex:train:bass-e_inbox195:turn_0002",
+          "mailex:train:bass-e_inbox290:turn_0001",
+          "mailex:train:bass-e_inbox39:turn_0004",
+          "mailex:train:bass-e_inbox88:turn_0001",
+          "mailex:train:bass-e_inbox89:turn_0001",
+          "mailex:train:bass-e_inbox89:turn_0002",
+          "mailex:train:beck-s_inbox272:turn_0002",
+          "mailex:train:beck-s_inbox5:turn_0002",
+          "mailex:train:blair-l_inbox268:turn_0001",
+          "mailex:train:blair-l_inbox_284:turn_0003",
+          "mailex:train:blair-l_inbox_30:turn_0000",
+          "mailex:train:blair-l_inbox_30:turn_0001",
+          "mailex:train:buy-r_inbox1023:turn_0002",
+          "mailex:train:buy-r_inbox1074:turn_0001",
+          "mailex:train:buy-r_inbox1202:turn_0001",
+          "mailex:train:buy-r_inbox265:turn_0000",
+          "mailex:train:buy-r_inbox265:turn_0002",
+          "mailex:train:buy-r_inbox598:turn_0003",
+          "mailex:train:buy-r_inbox785:turn_0001",
+          "mailex:train:buy-r_inbox891:turn_0002",
+          "mailex:train:campbell-l_inbox1109:turn_0001",
+          "mailex:train:campbell-l_inbox26:turn_0001",
+          "mailex:train:campbell-l_inbox26:turn_0002",
+          "mailex:train:campbell-l_inbox26:turn_0003",
+          "mailex:train:campbell-l_inbox438:turn_0001",
+          "mailex:train:campbell-l_inbox592:turn_0001",
+          "mailex:train:campbell-l_inbox832:turn_0001",
+          "mailex:train:campbell-l_inbox_146:turn_0002",
+          "mailex:train:campbell-l_inbox_146:turn_0003",
+          "mailex:train:campbell-l_inbox_146:turn_0004",
+          "mailex:train:cash-m_inbox146:turn_0004",
+          "mailex:train:cash-m_inbox147:turn_0001",
+          "mailex:train:cash-m_inbox165:turn_0001",
+          "mailex:train:cash-m_inbox286:turn_0001",
+          "mailex:train:cash-m_inbox38:turn_0002",
+          "mailex:train:cash-m_inbox38:turn_0003",
+          "mailex:train:cash-m_inbox39:turn_0002",
+          "mailex:train:corman-s_inbox_archives215:turn_0001",
+          "mailex:train:corman-s_inbox_archives445:turn_0002",
+          "mailex:train:crandell-s_inbox171:turn_0001",
+          "mailex:train:crandell-s_inbox171:turn_0002",
+          "mailex:train:crandell-s_inbox196:turn_0001",
+          "mailex:train:crandell-s_inbox197:turn_0002",
+          "mailex:train:crandell-s_inbox24:turn_0001",
+          "mailex:train:crandell-s_inbox_rto_west8:turn_0001",
+          "mailex:train:dasovich-j_inbox1570:turn_0002",
+          "mailex:train:dasovich-j_inbox1646:turn_0000",
+          "mailex:train:dasovich-j_inbox548:turn_0002",
+          "mailex:train:dasovich-j_inbox798:turn_0002",
+          "mailex:train:dasovich-j_inbox_direct_access_battle4:turn_0002",
+          "mailex:train:derrick-j_inbox104:turn_0004",
+          "mailex:train:derrick-j_inbox132:turn_0001",
+          "mailex:train:derrick-j_inbox19:turn_0001",
+          "mailex:train:derrick-j_inbox32:turn_0001",
+          "mailex:train:derrick-j_inbox99:turn_0001",
+          "mailex:train:derrick-j_inbox_105:turn_0003",
+          "mailex:train:derrick-j_inbox_152:turn_0001",
+          "mailex:train:derrick-j_inbox_18:turn_0001",
+          "mailex:train:derrick-j_inbox_26:turn_0001",
+          "mailex:train:derrick-j_inbox_44:turn_0002",
+          "mailex:train:donoho-l_inbox143:turn_0002",
+          "mailex:train:donoho-l_inbox176:turn_0002",
+          "mailex:train:donoho-l_inbox176:turn_0004",
+          "mailex:train:donoho-l_inbox176:turn_0005",
+          "mailex:train:donoho-l_inbox_218:turn_0001",
+          "mailex:train:geaccone-t_inbox339:turn_0001",
+          "mailex:train:germany-c_inbox185:turn_0001",
+          "mailex:train:germany-c_inbox211:turn_0000",
+          "mailex:train:germany-c_inbox28:turn_0004",
+          "mailex:train:germany-c_inbox299:turn_0002",
+          "mailex:train:germany-c_inbox43:turn_0000",
+          "mailex:train:germany-c_inbox43:turn_0002",
+          "mailex:train:giron-d_inbox136:turn_0001",
+          "mailex:train:giron-d_inbox33:turn_0001",
+          "mailex:train:giron-d_inbox444:turn_0001",
+          "mailex:train:giron-d_inbox76:turn_0001",
+          "mailex:train:giron-d_inbox9:turn_0003",
+          "mailex:train:haedicke-m_inbox454:turn_0002",
+          "mailex:train:haedicke-m_inbox582:turn_0002",
+          "mailex:train:haedicke-m_inbox658:turn_0001",
+          "mailex:train:haedicke-m_inbox685:turn_0001",
+          "mailex:train:hayslett-r_inbox83:turn_0001",
+          "mailex:train:hayslett-r_inbox98:turn_0000",
+          "mailex:train:hayslett-r_inbox_22:turn_0001",
+          "mailex:train:heard-m_inbox102:turn_0001",
+          "mailex:train:heard-m_inbox_190:turn_0001",
+          "mailex:train:heard-m_inbox_190:turn_0002",
+          "mailex:train:heard-m_inbox_289:turn_0002",
+          "mailex:train:hernandez-j_inbox20:turn_0001",
+          "mailex:train:hernandez-j_inbox294:turn_0002",
+          "mailex:train:hernandez-j_inbox31:turn_0001",
+          "mailex:train:hernandez-j_inbox341:turn_0001",
+          "mailex:train:hodge-j_inbox217:turn_0001",
+          "mailex:train:hodge-j_inbox260:turn_0001",
+          "mailex:train:hodge-j_inbox532:turn_0001",
+          "mailex:train:hodge-j_inbox546:turn_0001",
+          "mailex:train:jones-t_inbox350:turn_0001",
+          "mailex:train:jones-t_inbox852:turn_0001",
+          "mailex:train:jones-t_inbox941:turn_0003",
+          "mailex:train:kaminski-v_inbox116:turn_0001",
+          "mailex:train:kaminski-v_inbox139:turn_0002",
+          "mailex:train:kaminski-v_inbox188:turn_0000",
+          "mailex:train:kaminski-v_inbox426:turn_0001",
+          "mailex:train:kaminski-v_inbox_111:turn_0001",
+          "mailex:train:kaminski-v_inbox_234:turn_0002",
+          "mailex:train:kaminski-v_inbox_68:turn_0002",
+          "mailex:train:keiser-k_inbox13:turn_0001",
+          "mailex:train:lavorato-j_inbox114:turn_0001",
+          "mailex:train:lavorato-j_inbox203:turn_0001",
+          "mailex:train:lavorato-j_inbox205:turn_0001",
+          "mailex:train:lavorato-j_inbox220:turn_0001",
+          "mailex:train:lavorato-j_inbox221:turn_0001",
+          "mailex:train:lavorato-j_inbox233:turn_0001",
+          "mailex:train:lavorato-j_inbox235:turn_0001",
+          "mailex:train:lavorato-j_inbox349:turn_0000",
+          "mailex:train:lay-k_inbox532:turn_0001",
+          "mailex:train:lay-k_inbox644:turn_0001",
+          "mailex:train:lay-k_inbox_1054:turn_0001",
+          "mailex:train:lay-k_inbox_1715:turn_0001",
+          "mailex:train:lay-k_inbox_217:turn_0001",
+          "mailex:train:lay-k_inbox_317:turn_0001",
+          "mailex:train:lay-k_inbox_827:turn_0001",
+          "mailex:train:lokey-t_inbox193:turn_0001",
+          "mailex:train:lokey-t_inbox612:turn_0001",
+          "mailex:train:lokey-t_inbox761:turn_0002",
+          "mailex:train:lokey-t_inbox791:turn_0001",
+          "mailex:train:lokey-t_inbox_145:turn_0001",
+          "mailex:train:lokey-t_inbox_282:turn_0002",
+          "mailex:train:mann-k_inbox309:turn_0000",
+          "mailex:train:mann-k_inbox32:turn_0002",
+          "mailex:train:mann-k_inbox97:turn_0002",
+          "mailex:train:martin-t_inbox10:turn_0003",
+          "mailex:train:martin-t_inbox138:turn_0001",
+          "mailex:train:martin-t_inbox299:turn_0002",
+          "mailex:train:martin-t_inbox_208:turn_0002",
+          "mailex:train:martin-t_inbox_37:turn_0000",
+          "mailex:train:martin-t_inbox_37:turn_0002",
+          "mailex:train:martin-t_inbox_474:turn_0001",
+          "mailex:train:martin-t_inbox_485:turn_0002",
+          "mailex:train:mccarty-d_inbox3:turn_0000",
+          "mailex:train:mccarty-d_inbox3:turn_0002",
+          "mailex:train:mccarty-d_inbox_stupid_things1:turn_0001",
+          "mailex:train:mclaughlin-e_inbox117:turn_0001",
+          "mailex:train:mclaughlin-e_inbox159:turn_0001",
+          "mailex:train:mclaughlin-e_inbox184:turn_0002",
+          "mailex:train:mclaughlin-e_inbox220:turn_0001",
+          "mailex:train:mclaughlin-e_inbox221:turn_0001",
+          "mailex:train:mclaughlin-e_inbox423:turn_0001",
+          "mailex:train:mclaughlin-e_inbox423:turn_0005",
+          "mailex:train:mims-thurston-p_inbox133:turn_0001",
+          "mailex:train:mims-thurston-p_inbox155:turn_0000",
+          "mailex:train:mims-thurston-p_inbox155:turn_0001",
+          "mailex:train:mims-thurston-p_inbox18:turn_0001",
+          "mailex:train:mims-thurston-p_inbox222:turn_0003",
+          "mailex:train:mims-thurston-p_inbox48:turn_0000",
+          "mailex:train:mims-thurston-p_inbox59:turn_0000",
+          "mailex:train:mims-thurston-p_inbox_103:turn_0001",
+          "mailex:train:mims-thurston-p_inbox_122:turn_0002",
+          "mailex:train:mims-thurston-p_inbox_20:turn_0001",
+          "mailex:train:mims-thurston-p_inbox_280:turn_0001",
+          "mailex:train:mims-thurston-p_inbox_283:turn_0000",
+          "mailex:train:mims-thurston-p_inbox_283:turn_0001",
+          "mailex:train:mims-thurston-p_inbox_307:turn_0001",
+          "mailex:train:mims-thurston-p_inbox_325:turn_0002",
+          "mailex:train:mims-thurston-p_inbox_345:turn_0001",
+          "mailex:train:mims-thurston-p_inbox_71:turn_0001",
+          "mailex:train:nemec-g_inbox133:turn_0000",
+          "mailex:train:nemec-g_inbox133:turn_0002",
+          "mailex:train:nemec-g_inbox1344:turn_0001",
+          "mailex:train:nemec-g_inbox1742:turn_0002",
+          "mailex:train:parks-j_inbox454:turn_0001",
+          "mailex:train:reitmeyer-j_inbox128:turn_0000",
+          "mailex:train:reitmeyer-j_inbox132:turn_0001",
+          "mailex:train:reitmeyer-j_inbox216:turn_0001",
+          "mailex:train:reitmeyer-j_inbox216:turn_0006",
+          "mailex:train:reitmeyer-j_inbox322:turn_0001",
+          "mailex:train:reitmeyer-j_inbox382:turn_0002",
+          "mailex:train:reitmeyer-j_inbox48:turn_0001",
+          "mailex:train:reitmeyer-j_inbox71:turn_0001",
+          "mailex:train:reitmeyer-j_inbox82:turn_0001",
+          "mailex:train:sager-e_inbox16:turn_0001",
+          "mailex:train:sager-e_inbox409:turn_0001",
+          "mailex:train:sager-e_inbox747:turn_0001",
+          "mailex:train:sager-e_inbox775:turn_0000",
+          "mailex:train:sager-e_inbox775:turn_0002",
+          "mailex:train:salisbury-h_inbox1024:turn_0001",
+          "mailex:train:salisbury-h_inbox1056:turn_0001",
+          "mailex:train:salisbury-h_inbox170:turn_0001",
+          "mailex:train:salisbury-h_inbox_132:turn_0001",
+          "mailex:train:schoolcraft-d_inbox35:turn_0002",
+          "mailex:train:schoolcraft-d_inbox54:turn_0001",
+          "mailex:train:schoolcraft-d_inbox89:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_199:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_49:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_53:turn_0002",
+          "mailex:train:schoolcraft-d_inbox_61:turn_0000",
+          "mailex:train:schoolcraft-d_inbox_61:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_61:turn_0002",
+          "mailex:train:schoolcraft-d_inbox_61:turn_0003",
+          "mailex:train:schoolcraft-d_inbox_92:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_junk280:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_junk366:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_junk541:turn_0000",
+          "mailex:train:schoolcraft-d_inbox_junk541:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_junk76:turn_0000",
+          "mailex:train:scott-s_inbox126:turn_0001",
+          "mailex:train:scott-s_inbox126:turn_0003",
+          "mailex:train:scott-s_inbox_101:turn_0001",
+          "mailex:train:scott-s_inbox_124:turn_0001",
+          "mailex:train:scott-s_inbox_129:turn_0001",
+          "mailex:train:scott-s_inbox_153:turn_0001",
+          "mailex:train:scott-s_inbox_153:turn_0002",
+          "mailex:train:scott-s_inbox_298:turn_0001",
+          "mailex:train:scott-s_inbox_298:turn_0002",
+          "mailex:train:scott-s_inbox_384:turn_0000",
+          "mailex:train:scott-s_inbox_384:turn_0003",
+          "mailex:train:scott-s_inbox_39:turn_0002",
+          "mailex:train:scott-s_inbox_409:turn_0002",
+          "mailex:train:shackleton-s_inbox532:turn_0000",
+          "mailex:train:shackleton-s_inbox617:turn_0002",
+          "mailex:train:shackleton-s_inbox619:turn_0001",
+          "mailex:train:skilling-j_inbox1096:turn_0001",
+          "mailex:train:skilling-j_inbox1158:turn_0001",
+          "mailex:train:skilling-j_inbox183:turn_0001",
+          "mailex:train:skilling-j_inbox_1249:turn_0002",
+          "mailex:train:skilling-j_inbox_1482:turn_0000",
+          "mailex:train:skilling-j_inbox_1482:turn_0002",
+          "mailex:train:skilling-j_inbox_1496:turn_0001",
+          "mailex:train:skilling-j_inbox_1592:turn_0001",
+          "mailex:train:skilling-j_inbox_2536:turn_0001",
+          "mailex:train:smith-m_inbox333:turn_0001",
+          "mailex:train:smith-m_inbox333:turn_0002",
+          "mailex:train:smith-m_inbox6:turn_0001",
+          "mailex:train:smith-m_inbox6:turn_0002",
+          "mailex:train:steffes-j_inbox150:turn_0002",
+          "mailex:train:steffes-j_inbox181:turn_0000",
+          "mailex:train:steffes-j_inbox214:turn_0000",
+          "mailex:train:steffes-j_inbox278:turn_0001",
+          "mailex:train:steffes-j_inbox426:turn_0002",
+          "mailex:train:taylor-m_inbox1:turn_0001",
+          "mailex:train:taylor-m_inbox252:turn_0001",
+          "mailex:train:taylor-m_inbox252:turn_0002",
+          "mailex:train:taylor-m_inbox305:turn_0001",
+          "mailex:train:taylor-m_inbox362:turn_0001",
+          "mailex:train:taylor-m_inbox_noxtech2:turn_0001",
+          "mailex:train:taylor-m_inbox_social54:turn_0003",
+          "mailex:train:taylor-m_inbox_trevor10:turn_0002",
+          "mailex:train:taylor-m_inbox_trevor13:turn_0007",
+          "mailex:train:taylor-m_inbox_trevor13:turn_0009",
+          "mailex:train:taylor-m_inbox_trevor13:turn_0010",
+          "mailex:train:ward-k_inbox165:turn_0001",
+          "mailex:train:ward-k_inbox165:turn_0002",
+          "mailex:train:ward-k_inbox165:turn_0003",
+          "mailex:train:ward-k_inbox321:turn_0001",
+          "mailex:train:ward-k_inbox40:turn_0001",
+          "mailex:train:watson-k_inbox254:turn_0001",
+          "mailex:train:watson-k_inbox33:turn_0001",
+          "mailex:train:watson-k_inbox40:turn_0001",
+          "mailex:train:watson-k_inbox40:turn_0004",
+          "mailex:train:watson-k_inbox74:turn_0000",
+          "mailex:train:white-s_inbox_56:turn_0003",
+          "mailex:train:whitt-m_inbox134:turn_0001",
+          "mailex:train:whitt-m_inbox134:turn_0002",
+          "mailex:train:whitt-m_inbox148:turn_0001",
+          "mailex:train:whitt-m_inbox312:turn_0001",
+          "mailex:train:whitt-m_inbox347:turn_0001",
+          "mailex:train:whitt-m_inbox384:turn_0001",
+          "mailex:train:wolfe-j_inbox180:turn_0002",
+          "mailex:train:wolfe-j_inbox182:turn_0002",
+          "mailex:train:wolfe-j_inbox209:turn_0001",
+          "mailex:train:wolfe-j_inbox309:turn_0001",
+          "mailex:train:wolfe-j_inbox84:turn_0001",
+          "mailex:train:ybarbo-p_inbox_364:turn_0002"
+        ],
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "splits": [
+          "dev",
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:bass-e_inbox65:turn_0000",
+          "mailex:train:bass-e_inbox26:turn_0000"
+        ],
+        "sha256": "bee356e50cbb0fec34f66f3c58521e8993134c3a127e0eac2ad4b694650f2839",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:bass-e_inbox65:turn_0001",
+          "mailex:train:bass-e_inbox26:turn_0001"
+        ],
+        "sha256": "c8844534f36982c8705f86df64399b8b93caa09f93d2b65805dacd2fbfb46f65",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:heard-m_inbox_212:turn_0003",
+          "mailex:dev:keiser-k_inbox102:turn_0003",
+          "mailex:dev:mccarty-d_inbox101:turn_0002",
+          "mailex:dev:schoolcraft-d_inbox64:turn_0001",
+          "mailex:test:haedicke-m_inbox469:turn_0001",
+          "mailex:test:hayslett-r_inbox160:turn_0001",
+          "mailex:test:mccarty-d_inbox90:turn_0001",
+          "mailex:test:mccarty-d_inbox90:turn_0002",
+          "mailex:test:watson-k_inbox466:turn_0001",
+          "mailex:train:blair-l_inbox204:turn_0002",
+          "mailex:train:blair-l_inbox_199:turn_0001",
+          "mailex:train:crandell-s_inbox193:turn_0001",
+          "mailex:train:derrick-j_inbox21:turn_0001",
+          "mailex:train:derrick-j_inbox_112:turn_0002",
+          "mailex:train:donoho-l_inbox_junk_file212:turn_0002",
+          "mailex:train:donoho-l_inbox_junk_file212:turn_0003",
+          "mailex:train:geaccone-t_inbox152:turn_0001",
+          "mailex:train:geaccone-t_inbox223:turn_0001",
+          "mailex:train:geaccone-t_inbox572:turn_0001",
+          "mailex:train:germany-c_inbox105:turn_0001",
+          "mailex:train:giron-d_inbox256:turn_0003",
+          "mailex:train:haedicke-m_inbox178:turn_0003",
+          "mailex:train:hernandez-j_inbox272:turn_0004",
+          "mailex:train:hernandez-j_inbox341:turn_0002",
+          "mailex:train:lavorato-j_inbox103:turn_0001",
+          "mailex:train:lavorato-j_inbox229:turn_0001",
+          "mailex:train:lay-k_inbox594:turn_0001",
+          "mailex:train:lokey-t_inbox114:turn_0001",
+          "mailex:train:mccarty-d_inbox_alaska_gas_25:turn_0001",
+          "mailex:train:nemec-g_inbox62:turn_0001",
+          "mailex:train:rapp-b_inbox_293:turn_0002",
+          "mailex:train:rapp-b_inbox_304:turn_0001",
+          "mailex:train:sager-e_inbox457:turn_0001",
+          "mailex:train:schoolcraft-d_inbox68:turn_0002",
+          "mailex:train:schoolcraft-d_inbox_10:turn_0002",
+          "mailex:train:schoolcraft-d_inbox_junk648:turn_0004",
+          "mailex:train:steffes-j_inbox402:turn_0002",
+          "mailex:train:watson-k_inbox160:turn_0001",
+          "mailex:train:white-s_inbox175:turn_0004"
+        ],
+        "sha256": "71ee0a013e35d79fbe831b968c4c981ceb55c9fbeec6de4c4dd0cc8a54630b3f",
+        "splits": [
+          "dev",
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:campbell-l_inbox429:turn_0001",
+          "mailex:train:blair-l_inbox95:turn_0001",
+          "mailex:train:reitmeyer-j_inbox117:turn_0001"
+        ],
+        "sha256": "c45d306afebeb2197b9273c281031bdcdacd8b4643082321b1732825e4528c94",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:buy-r_inbox706:turn_0000",
+          "mailex:train:buy-r_inbox678:turn_0000"
+        ],
+        "sha256": "0f7c03bad76fa7dc68449b9094659a4698a745882a44176d803c0766e72a23fc",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:buy-r_inbox706:turn_0001",
+          "mailex:train:buy-r_inbox678:turn_0001"
+        ],
+        "sha256": "7712862727fdb178980124115a319a4e2e4cc22145badb3b0a50e61e40f2013d",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:taylor-m_inbox_trevor6:turn_0001",
+          "mailex:train:derrick-j_inbox138:turn_0001",
+          "mailex:train:geaccone-t_inbox237:turn_0005"
+        ],
+        "sha256": "d03075c0750a10355bfd0b6ba6f6c42de575006d5342303532801de6d9a288fc",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:donoho-l_inbox169:turn_0000",
+          "mailex:train:donoho-l_inbox165:turn_0000"
+        ],
+        "sha256": "5824cfb7490d670a1a74a497b5d906817dcd9bcc3ab12f95d70c31da6dfc9143",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:donoho-l_inbox169:turn_0001",
+          "mailex:train:donoho-l_inbox165:turn_0001"
+        ],
+        "sha256": "148727b39c2453fb8b57499755bf71db6e29a5fe23d2f1019313bfb7798025e3",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:hayslett-r_inbox177:turn_0000",
+          "mailex:train:donoho-l_inbox174:turn_0000"
+        ],
+        "sha256": "cd63fc8ebc316345bc3481858011f3066154f8ddfa85d6c9150ad8337b10cc79",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:hayslett-r_inbox177:turn_0001",
+          "mailex:train:donoho-l_inbox174:turn_0001"
+        ],
+        "sha256": "c6cf6243a618213c820d4d98d488a464d78429db3797b3ccabb299d080ce35c8",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:hayslett-r_inbox177:turn_0002",
+          "mailex:train:donoho-l_inbox174:turn_0002"
+        ],
+        "sha256": "45d420a123d8f748ef4416b7a22d3667321c7e21b431a9ab230174d816b2766a",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:mclaughlin-e_inbox155:turn_0003",
+          "mailex:train:donoho-l_inbox_junk_file198:turn_0001",
+          "mailex:train:rapp-b_inbox166:turn_0001",
+          "mailex:train:salisbury-h_inbox_656:turn_0001",
+          "mailex:train:ybarbo-p_inbox101:turn_0002"
+        ],
+        "sha256": "3cd8c0df0552d21d51ba18a3ea2661481adb22a159cc2e8eb3887f0fd550b066",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:corman-s_inbox_archives235:turn_0001",
+          "mailex:dev:dasovich-j_inbox576:turn_0001",
+          "mailex:train:donoho-l_inbox_junk_file235:turn_0001",
+          "mailex:train:donoho-l_inbox_junk_file237:turn_0001",
+          "mailex:train:jones-t_inbox268:turn_0005"
+        ],
+        "sha256": "3eeeafa202a0a9406c194333f07b1fa3f279bb1054a034c60b70158dee777212",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:donoho-l_inbox_junk_file332:turn_0000",
+          "mailex:train:donoho-l_inbox_junk_file331:turn_0000"
+        ],
+        "sha256": "5aa0217fc550af68ee5d235642f8150ffc37bb32edb899b15fa4868cab9f24ba",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:donoho-l_inbox_junk_file332:turn_0001",
+          "mailex:train:donoho-l_inbox_junk_file331:turn_0001"
+        ],
+        "sha256": "027cb7242cf6f7839a92bf01629f24ca0f7daa4c6c4618111be22c14837b5f51",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:keiser-k_inbox81:turn_0003",
+          "mailex:train:germany-c_inbox319:turn_0003",
+          "mailex:train:kaminski-v_inbox399:turn_0001"
+        ],
+        "sha256": "8a798890fe93817163b10b5f7bd2ca4d25d84c52739a645a889c173eee7d9d3d",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:mclaughlin-e_inbox12:turn_0000",
+          "mailex:train:giron-d_inbox8:turn_0000"
+        ],
+        "sha256": "698018a1f1d094484ebfdca0f0a684d145a42efc7d52bbe7a90c78f394599942",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:haedicke-m_inbox_ees_products1:turn_0002",
+          "mailex:test:heard-m_inbox284:turn_0001",
+          "mailex:train:heard-m_inbox_master_netting151:turn_0001"
+        ],
+        "sha256": "72073614411d81240a6dc083baabffea88c70c585bb9e43f1705f0e85c0edb7f",
+        "splits": [
+          "dev",
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:parks-j_inbox428:turn_0002",
+          "mailex:train:hodge-j_inbox492:turn_0001",
+          "mailex:train:steffes-j_inbox125:turn_0001"
+        ],
+        "sha256": "71a7550b8f7c497e72b7eed002117450a17b5b22d3cef73b0ff523d230efd0e4",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:kaminski-v_inbox_254:turn_0000",
+          "mailex:train:kaminski-v_inbox254:turn_0000"
+        ],
+        "sha256": "e0220bef00b65fad48c33b827304222675b97b8154db716a69850a08ed011c97",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:kaminski-v_inbox_254:turn_0001",
+          "mailex:train:kaminski-v_inbox254:turn_0001"
+        ],
+        "sha256": "559896971f5d07b4a50bf5124006aa4ce34d88c0cb78767ebc6c53c2ed1b2217",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:kaminski-v_inbox_254:turn_0002",
+          "mailex:train:kaminski-v_inbox254:turn_0002"
+        ],
+        "sha256": "5116fa54378a0119305ced6015c9abaa68cf111762923181ede32a2efdcf0d70",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:kaminski-v_inbox_254:turn_0003",
+          "mailex:train:kaminski-v_inbox254:turn_0003"
+        ],
+        "sha256": "29a2e75e28eb41a4dbb1b2417407e6f3790a9d7ce5a6ce2570a10a7b8d5cbbfc",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:kaminski-v_inbox_254:turn_0004",
+          "mailex:train:kaminski-v_inbox254:turn_0004"
+        ],
+        "sha256": "b049c18291e656f0f46aafcdcbd50631648bfd2c3d5e2464050e903fae8aa368",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:kaminski-v_inbox228:turn_0001",
+          "mailex:train:kaminski-v_inbox295:turn_0001"
+        ],
+        "sha256": "176137ff765af1bed891d5dc0a904062fe5c36255d7448e4fba40f1aa9f2665b",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:lay-k_inbox_1658:turn_0000",
+          "mailex:train:lay-k_inbox1656:turn_0000"
+        ],
+        "sha256": "d90b6f97247c113aaabcdae9ce85d8d332e00bb3704102f022fda7a9b24ba9ea",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:martin-t_inbox130:turn_0000",
+          "mailex:train:martin-t_inbox132:turn_0000"
+        ],
+        "sha256": "9a955dcb99e5991e630d50a0a78a2c30c2fd32cbf81fe2ef7859e81708fd7a40",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:martin-t_inbox130:turn_0001",
+          "mailex:train:martin-t_inbox132:turn_0001"
+        ],
+        "sha256": "7e61048b857d3ac5d69bd1d76e228ea97e7a144c07a946cfaeb55341d8e00090",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:mccarty-d_inbox75:turn_0001",
+          "mailex:train:mccarty-d_inbox74:turn_0001"
+        ],
+        "sha256": "82bece09b2344cc309867c719fee55f2ea4a3bd4146800d816923d4e62f754bb",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:mclaughlin-e_inbox155:turn_0000",
+          "mailex:train:mclaughlin-e_inbox156:turn_0000"
+        ],
+        "sha256": "0db1418cbd913c5f6a15bc3e28467ddcc5cad9f49f3b30c88fe728ffb21b9816",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:mclaughlin-e_inbox155:turn_0001",
+          "mailex:train:mclaughlin-e_inbox156:turn_0001"
+        ],
+        "sha256": "3607fc1cd5e427fb57f3f9982179cf4c6140b88929a632897f50be9e3381d973",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:mclaughlin-e_inbox205:turn_0000",
+          "mailex:train:mclaughlin-e_inbox202:turn_0000",
+          "mailex:train:mclaughlin-e_inbox204:turn_0000",
+          "mailex:train:mclaughlin-e_inbox209:turn_0000"
+        ],
+        "sha256": "713c7784666e9c5acfb464ced85968e2b3c3e52864072d500f821629193270ab",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:rapp-b_inbox_199:turn_0000",
+          "mailex:train:rapp-b_inbox187:turn_0000"
+        ],
+        "sha256": "0b9575725cc94f26986025282a88bb36f21b5197a1849a3940200fc6df3f2064",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:rapp-b_inbox_125:turn_0000",
+          "mailex:train:rapp-b_inbox_118:turn_0000"
+        ],
+        "sha256": "83b01ea2ac0c5390564cd606060fa5b2eda1e7a92a1b61cd637f591b18f9c4aa",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:schoolcraft-d_inbox_80:turn_0000",
+          "mailex:train:schoolcraft-d_inbox_82:turn_0000"
+        ],
+        "sha256": "fcc4719b7924c967642634731ec94032b91c6d6373a85b5497695ae05eb73e7f",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:schoolcraft-d_inbox_80:turn_0001",
+          "mailex:train:schoolcraft-d_inbox_82:turn_0001"
+        ],
+        "sha256": "2911d99e6df7276142b1f3c944af9197cd6e6e450036b0649b5dcebf73c4927e",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:smith-m_inbox202:turn_0000",
+          "mailex:train:smith-m_inbox199:turn_0000"
+        ],
+        "sha256": "6770dca01c1f876467b918413ad2983a6e8a765f5737292479b5ddcbdfcdcf85",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:smith-m_inbox202:turn_0001",
+          "mailex:train:smith-m_inbox199:turn_0001"
+        ],
+        "sha256": "1fbaa0ddea3fd2febdbcab9b323228a8350cbf6cd901f58b9c7cb2684e88682f",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:smith-m_inbox76:turn_0000",
+          "mailex:train:smith-m_inbox77:turn_0000"
+        ],
+        "sha256": "ddb19b8e8891ef3567f5119d270c29eada73da813dcf6f93f5155d3e5c3dd5e0",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:ward-k_inbox_82:turn_0000",
+          "mailex:train:ward-k_inbox53:turn_0000"
+        ],
+        "sha256": "94c04fbabdd7afebf45967b43dd6c7aadd6472076c97c5efdd2da2014ddfa662",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:ward-k_inbox_82:turn_0001",
+          "mailex:train:ward-k_inbox53:turn_0001"
+        ],
+        "sha256": "e8c5a277ae1e8eb40631eb26ea6cfa8c6f62722782d692b9203b12cd5f07afc4",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:whitt-m_inbox285:turn_0001",
+          "mailex:train:whitt-m_inbox283:turn_0001"
+        ],
+        "sha256": "4301841e8bd9672ea4e24bd47b2ba943ea2f312947019c951de377bfebdc2ca3",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:wolfe-j_inbox116:turn_0000",
+          "mailex:train:wolfe-j_inbox114:turn_0000"
+        ],
+        "sha256": "26051b85dc996d056f3e2d5be53421215b5602168d91e156a96fb03e97368703",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:wolfe-j_inbox116:turn_0001",
+          "mailex:train:wolfe-j_inbox114:turn_0001"
+        ],
+        "sha256": "8d3843ab01078024e705795eafc796f8c6bfc844a671895768291464deb371eb",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:wolfe-j_inbox116:turn_0002",
+          "mailex:train:wolfe-j_inbox114:turn_0002"
+        ],
+        "sha256": "268903c6562f7699431c19d8a3a8599592cd6c2199b5e1d2074115dbda86fed6",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:wolfe-j_inbox116:turn_0003",
+          "mailex:train:wolfe-j_inbox114:turn_0003"
+        ],
+        "sha256": "766dc939f7b392edadc6ac31555a151fcecd02174b10500015942278988c65e4",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:test:wolfe-j_inbox116:turn_0004",
+          "mailex:train:wolfe-j_inbox114:turn_0004"
+        ],
+        "sha256": "afad6b4bd5d4e5f50e2880d3fa1cca77ed9b92198ab717f1fb2db5b984ece689",
+        "splits": [
+          "test",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:ybarbo-p_inbox596:turn_0000",
+          "mailex:train:ybarbo-p_inbox614:turn_0000"
+        ],
+        "sha256": "ee86e64c11c7ed40d541b5925355a4facdcf26d44737b41661aebc0aace0866d",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:ybarbo-p_inbox596:turn_0001",
+          "mailex:train:ybarbo-p_inbox614:turn_0001"
+        ],
+        "sha256": "eebb42a06c1384d2f872e297180b7e59983420ae558720da3f18e2da10f0715d",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:ybarbo-p_inbox596:turn_0002",
+          "mailex:train:ybarbo-p_inbox614:turn_0002"
+        ],
+        "sha256": "89d346c16958db5a1bf17f9ba002df35b42332a5111ffd8b8fdc3c58cf6c75da",
+        "splits": [
+          "dev",
+          "train"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:mims-thurston-p_inbox_162:turn_0000",
+          "mailex:test:mims-thurston-p_inbox161:turn_0000"
+        ],
+        "sha256": "34330af844667ce9246d79460350feb6e3d1f0dee4457c8f31ead272a4950524",
+        "splits": [
+          "dev",
+          "test"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:mims-thurston-p_inbox_162:turn_0001",
+          "mailex:test:mims-thurston-p_inbox161:turn_0001"
+        ],
+        "sha256": "5a64c19ad70a3eb5814b0017c3496443bb0081a53944e189bb0325db076b4dfe",
+        "splits": [
+          "dev",
+          "test"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:mims-thurston-p_inbox_162:turn_0002",
+          "mailex:test:mims-thurston-p_inbox161:turn_0002"
+        ],
+        "sha256": "3a05df773b8325edd1d31c9b2f0c22d53e630c12731971a961d8360e6878b11b",
+        "splits": [
+          "dev",
+          "test"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:steffes-j_inbox255:turn_0000",
+          "mailex:test:steffes-j_inbox313:turn_0000"
+        ],
+        "sha256": "05323dc6f73957743cbd6d1e2ccf33efa8746006e7891de1a031d080dd271cab",
+        "splits": [
+          "dev",
+          "test"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:steffes-j_inbox255:turn_0001",
+          "mailex:test:steffes-j_inbox313:turn_0001"
+        ],
+        "sha256": "16e7f52fd15929fbf9f9553151cc65beb2db7977fe19d8c9e9c98441c9c0a2fd",
+        "splits": [
+          "dev",
+          "test"
+        ]
+      },
+      {
+        "record_ids": [
+          "mailex:dev:steffes-j_inbox255:turn_0002",
+          "mailex:test:steffes-j_inbox313:turn_0002"
+        ],
+        "sha256": "110d787aebe597d2d8ce9b7bd14af9d3dbbedab98e54d4e13efe020746e1da5c",
+        "splits": [
+          "dev",
+          "test"
+        ]
+      }
+    ],
+    "near_candidate_pairs_compared": 68647,
+    "near_cross_split_pairs": [
+      {
+        "left_id": "mailex:train:kaminski-v_inbox295:turn_0000",
+        "left_split": "train",
+        "right_id": "mailex:dev:kaminski-v_inbox228:turn_0000",
+        "right_split": "dev",
+        "sequence_ratio": 0.988581,
+        "shingle_jaccard": 0.982143
+      },
+      {
+        "left_id": "mailex:train:reitmeyer-j_inbox322:turn_0000",
+        "left_split": "train",
+        "right_id": "mailex:test:reitmeyer-j_inbox38:turn_0000",
+        "right_split": "test",
+        "sequence_ratio": 0.959783,
+        "shingle_jaccard": 0.957031
+      }
+    ],
+    "records_scanned": 3936
+  },
+  "source_id_split_conflicts": {},
+  "source_thread_split_conflicts": {},
+  "split_policy": {
+    "test": "valid AI SILVER from original MailEx test (explicit user override)",
+    "test_feedback_policy": "test labels and outcomes must not tune prompts, models, or training configurations",
+    "train": "human GOLD and valid silver from original MailEx train only",
+    "validation": "valid AI SILVER from original MailEx dev (explicit user override)"
+  },
+  "split_statistics": {
+    "test": {
+      "dependency_links": 3,
+      "emails": 90,
+      "entity_labels": {
+        "ARTIFACT": 75,
+        "EVENT": 3,
+        "GROUP": 3,
+        "PERSON": 102,
+        "TASK": 340,
+        "TEMPORAL": 95
+      },
+      "entity_spans": 618,
+      "gold_records": 0,
+      "multiple_task_messages": 77,
+      "relation_instances": 226,
+      "relation_labels": {
+        "ASSIGNED_TO": 122,
+        "DEPENDS_ON": 3,
+        "DUE_ON": 7,
+        "SCHEDULED_ON": 94
+      },
+      "silver_records": 90,
+      "task_operations": {
+        "COMPLETE": 20,
+        "CREATE": 112,
+        "UNKNOWN": 197,
+        "UPDATE": 11
+      },
+      "task_statuses": {
+        "COMPLETED": 20,
+        "PENDING": 123,
+        "UNKNOWN": 197
+      },
+      "tasks": 340,
+      "threads": 70
+    },
+    "train": {
+      "dependency_links": 4,
+      "emails": 450,
+      "entity_labels": {
+        "ARTIFACT": 412,
+        "EVENT": 4,
+        "GROUP": 35,
+        "PERSON": 463,
+        "TASK": 1770,
+        "TEMPORAL": 532
+      },
+      "entity_spans": 3216,
+      "gold_records": 0,
+      "multiple_task_messages": 380,
+      "relation_instances": 1189,
+      "relation_labels": {
+        "ASSIGNED_TO": 620,
+        "DEPENDS_ON": 4,
+        "DUE_ON": 33,
+        "SCHEDULED_ON": 532
+      },
+      "silver_records": 450,
+      "task_operations": {
+        "CANCEL": 9,
+        "COMPLETE": 89,
+        "CREATE": 533,
+        "UNKNOWN": 1073,
+        "UPDATE": 66
+      },
+      "task_statuses": {
+        "CANCELED": 9,
+        "COMPLETED": 89,
+        "PENDING": 599,
+        "UNKNOWN": 1073
+      },
+      "tasks": 1770,
+      "threads": 364
+    },
+    "validation": {
+      "dependency_links": 0,
+      "emails": 60,
+      "entity_labels": {
+        "ARTIFACT": 59,
+        "GROUP": 11,
+        "PERSON": 63,
+        "TASK": 283,
+        "TEMPORAL": 74
+      },
+      "entity_spans": 490,
+      "gold_records": 0,
+      "multiple_task_messages": 51,
+      "relation_instances": 171,
+      "relation_labels": {
+        "ASSIGNED_TO": 90,
+        "DUE_ON": 10,
+        "SCHEDULED_ON": 71
+      },
+      "silver_records": 60,
+      "task_operations": {
+        "CANCEL": 1,
+        "COMPLETE": 12,
+        "CREATE": 93,
+        "UNKNOWN": 167,
+        "UPDATE": 10
+      },
+      "task_statuses": {
+        "CANCELED": 1,
+        "COMPLETED": 12,
+        "PENDING": 103,
+        "UNKNOWN": 167
+      },
+      "tasks": 283,
+      "threads": 51
+    }
+  },
+  "status": "READY_SILVER_ONLY"
+}

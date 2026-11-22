@@ -1,0 +1,23 @@
+{
+  "version": "entity-v2.0.0",
+  "model_name": "distilbert/distilbert-base-uncased",
+  "entity_types": ["TASK", "PERSON", "TEMPORAL"],
+  "data_dir": "data/model_ready/entities_v2_three_class",
+  "model_dir": "models/text2task-distilbert/entity_v2_three_class",
+  "results_dir": "results/entity_extraction/entity_v2_three_class",
+  "learning_rate": 0.00002,
+  "epochs": 3,
+  "train_batch_size": 4,
+  "eval_batch_size": 4,
+  "gradient_accumulation_steps": 4,
+  "weight_decay": 0.01,
+  "seed": 20261101,
+  "data_seed": 20261101,
+  "metric_for_best_model": "silver_v2_provisional_f1",
+  "evaluation_provenance": {
+    "annotation_tier": "SILVER",
+    "human_verified": false,
+    "is_final_research_metric": false,
+    "description": "Training uses SILVER-v2; validation is the untouched SILVER-v1 dev split transformed to a deterministic three-class view."
+  }
+}

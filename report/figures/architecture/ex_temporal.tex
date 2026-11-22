@@ -1,0 +1,15 @@
+% Small figure: temporal normalisation decisions (anchor = message time, workspace time zone America/Chicago)
+\begin{tikzpicture}[node distance=2mm and 4mm, every node/.append style={minimum height=6.5mm}]
+\node[font=\sffamily\scriptsize\bfseries, text=navy, anchor=west] at (0,0) {Message sent Wed 11 Nov 2026, 09:00 CST};
+\foreach \y/\raw/\out/\sty/\why in {
+  -7/{``by Friday''}/{RESOLVED 2026-11-13 (due)}/rule/{deadline cue ``by''; next Friday after the anchor},
+  -15/{``tomorrow''}/{RESOLVED 2026-11-12 (scheduled)}/rule/{relative day; read as a planned time, not a deadline},
+  -23/{``by Wednesday''}/{AMBIGUOUS}/warn/{same weekday as the anchor: today or in 7 days? flagged DATE\_AMBIGUOUS},
+  -31/{``once the build is ready''}/{UNRESOLVED\_EVENT\_CONDITION}/warn/{an event, not a date; never guessed},
+  -39/{``yesterday''}/{RESOLVED 2026-11-10, in the past}/data/{resolved, but the historical cue gates the sentence: NO\_ACTION}} {
+  \node[data, minimum width=30mm, anchor=west] (r\y) at (0,\y mm) {\raw};
+  \node[\sty, minimum width=46mm, right=of r\y] (o\y) {\out};
+  \node[note, right=3mm of o\y, anchor=west, text width=56mm, align=left] {\why};
+  \draw[flow] (r\y) -- (o\y);
+}
+\end{tikzpicture}

@@ -1,0 +1,46 @@
+% Text2Task: Final Project Report, concise edition (about 30 pages)
+% Build:  tectonic main.tex           (full 94-page edition: tectonic main_full.tex)
+\documentclass[11pt,a4paper,oneside]{report}
+\input{preamble}
+
+% ---- concise layout: tighter page, chapters run on without forced page breaks
+\geometry{left=24mm,right=22mm,top=24mm,bottom=24mm,headheight=14pt}
+\setstretch{1.06}
+\setlength{\parskip}{0.25em}
+\titlespacing*{\chapter}{0pt}{4pt}{10pt}
+\titlespacing*{\section}{0pt}{1.0em}{0.35em}
+\titlespacing*{\subsection}{0pt}{0.8em}{0.25em}
+\titleformat{\chapter}[hang]{\normalfont\sffamily\color{navy}\Large\bfseries}{{\color{teal}\thechapter}\hspace{0.6em}}{0pt}{}[\vspace{2pt}{\color{teal}\titlerule[0.5pt]}]
+\makeatletter
+\renewcommand\chapter{\FloatBarrier\par\addvspace{1.2em}\global\@topnum\z@\@afterindentfalse\secdef\@chapter\@schapter}
+\makeatother
+\setcounter{tocdepth}{1}
+\renewcommand{\topfraction}{0.9}\renewcommand{\bottomfraction}{0.7}\renewcommand{\textfraction}{0.08}
+\renewcommand{\floatpagefraction}{0.75}\setcounter{topnumber}{3}\setcounter{bottomnumber}{2}\setcounter{totalnumber}{5}
+\setlength{\textfloatsep}{10pt plus 2pt minus 2pt}
+\setlength{\floatsep}{8pt plus 2pt minus 2pt}
+\setlength{\intextsep}{8pt plus 2pt minus 2pt}
+\captionsetup{font={footnotesize,sf}}
+
+\begin{document}
+\input{cover}
+\pagenumbering{roman}
+\input{concise/00_front}
+\clearpage
+\pagenumbering{arabic}
+\input{concise/01_introduction}
+\input{concise/02_background}
+\input{concise/03_data}
+\input{concise/04_architecture}
+\input{concise/05_models}
+\input{concise/06_rules}
+\input{concise/07_application}
+\input{concise/08_results}
+\input{concise/09_discussion}
+
+\FloatBarrier
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
+\renewcommand{\bibname}{References}
+{\small\bibliographystyle{plainnat}\bibliography{references}}
+\end{document}

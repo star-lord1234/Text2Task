@@ -1,0 +1,26 @@
+\chapter{Error Analysis, Limitations and Future Work}
+\label{ch:discussion}
+
+\section{Why the results are modest}
+\textbf{Labels are the main ceiling.} Audited major-error rates fell from 73\% (SILVER-v1) to 33\% (SILVER-v2) to about 9\% (MailEx-derived), and model quality followed. Even the cleanest set is incomplete: in a sample of Run 1's ``false positives'' many were real but unlabelled entities (\emph{check this out}, \emph{david}, \emph{today}), so measured precision is a lower bound. A quarter or more were genuine junk fragments (\emph{the}, \emph{chance to}). Relation references are noisy too, for example \emph{returned from a meeting} marked as a task.
+
+\textbf{Span boundaries.} Of 298 predicted TASK spans, only 76 match a reference exactly, 60 more overlap with IoU $\ge0.5$ and 111 overlap none (\cref{fig:anatomy}); near misses usually start too late (dropping \emph{Please}) and end too early. PERSON spans are the opposite: boundaries are almost always exact, but 39\% of names are never found; the uncased tokeniser removes capitalisation, the strongest cue. The app's SILVER-v2 model is worse: 12.5\% of its email spans are pure function words.
+
+\begin{figure}[htbp]
+\centering
+\chart[0.66\linewidth]{error_anatomy}
+\caption{Predicted spans of Phase 2 Run 1 by best match against references (original development set).}
+\label{fig:anatomy}
+\end{figure}
+
+\textbf{Small, imbalanced data.} With 91\% \lab{O} tokens, unweighted SILVER models predicted no entities; with 33 training pairs, \lab{DUE\_ON} is unstable, and deadline/schedule confusion persists (\emph{``Please RSVP by Friday''} predicted \lab{SCHEDULED\_ON}).
+
+\textbf{Rule failures are lexical.} \emph{``Bianca, call me after the meeting''} yields a false dependency because \emph{after} is read as a prerequisite cue and \emph{the meeting} as a task; \emph{``Deployment can't start until the test server is set up''} yields none because \emph{deployment} does not match a task titled \emph{deploy \ldots}; verbs outside the lexicon (\emph{fact-check}) are missed. Owner resolution abstains rather than guessing: 141 of 249 SILVER task candidates stayed unassigned. A failure found while testing the app (team-wide messages naming one person without a comma came out unassigned) led to the named-addressee rule.
+
+\textbf{Evaluation limits.} There are no human-verified labels; models were trained and selected with the 39 leaked emails present (only scoring is deduplicated); each configuration has one seed; there is no test-set result; the chat fixtures use the developer's own phrasing; scores are uncalibrated.
+
+\section{Future work}
+In order of expected value: a small human-verified development and test set (the GOLD mode exists and currently refuses to run); rebuilding the deduplicated splits and retraining; deploying the stronger Phase 2 checkpoint after re-checking relations on its spans; a cased encoder such as RoBERTa or DeBERTa \citep{liu2019roberta,he2021deberta} with several seeds and the missing pooling ablation; thread-level context and cross-message dependencies; and calibrated scores \citep{guo2017calibration}, which would allow carefully limited automation.
+
+\section{Conclusion}
+Text2Task turns requests, commitments and deadlines in email and chat into a reviewable task list. Two fine-tuned DistilBERT models extract and link task, person and date spans; a deterministic layer normalises dates, resolves owners, reconciles updates, keeps the dependency graph acyclic and enforces that only the affected person approves a change. The best entity model reaches lenient F1 0.555 against a 0.401 rule baseline, with task boundaries the dominant error; the relation model reaches micro F1 0.764 against 0.527. End to end, the hybrid passes 23 of 30 held-out chat cases against 7 for the raw models, but rules alone pass 22, while on email the neural names and dates matter more. The largest gain coincided with cleaner, larger data rather than any model change (RQ2). Within its limits (no gold labels, one seed, leakage corrected only in scoring) the project shows that a compact model, modest data, explicit rules and a review-first design yield an assistant that is useful and, above all, safe: it does not silently change work, invent owners, accept cycles or let one person approve another's task.

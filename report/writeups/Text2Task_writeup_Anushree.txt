@@ -1,0 +1,29 @@
+TEXT2TASK - Project Write-up (Anushree Upasham, 241071077)
+
+AIM / PROBLEM STATEMENT
+Teams hand out work inside conversations, and those requests are easily lost because no one copies them into a to-do tool. Our goal is a system that reads each message and suggests the matching task, who owns it, when it is due and what it depends on, leaving the final decision to a human.
+
+DATASET
+We used MailEx (EMNLP 2023), an annotated subset of the Enron email corpus: 1,200 / 150 / 150 threads containing 3,117 / 414 / 405 emails for training, validation and testing. Its event annotations were mapped to three entity types (TASK, PERSON, TEMPORAL) and three relation types (ASSIGNED_TO, DUE_ON, SCHEDULED_ON). The labels are automatically derived, not hand-verified.
+
+OBJECTIVES
+- Identify task phrases, people and time expressions.
+- Attach owners and deadlines to tasks and resolve relative dates.
+- Recognise follow-ups (completion, cancellation, reassignment) on existing tasks.
+- Maintain a cycle-free dependency graph between tasks.
+- Present suggestions for review, approved by the person they are assigned to.
+
+SOLUTION
+Neural + rule hybrid. A DistilBERT token classifier finds entities and a second DistilBERT model, using typed entity markers, classifies relations. Rule layers then normalise dates, resolve owners, reconcile updates and validate dependencies. Delivered as a FastAPI backend with a React, Slack-like interface (chat, tasks, dependency view, timeline, review).
+
+RESULTS AND METRICS (deduplicated validation set)
+- Entities: lenient F1 0.555, strict F1 0.390; per type TASK 0.482, PERSON 0.594, TEMPORAL 0.645 (rules alone: 0.401).
+- Relations: micro-F1 0.764 [0.70, 0.84], macro-F1 0.719 (rules alone: 0.527).
+- End-to-end chat tests: 23/30 hybrid vs 22/30 rule-only vs 7/30 neural-only.
+- Reconciliation and graph: all 91 scenarios pass; no violations across 12,000 fuzz steps.
+Caveat: measured against silver labels and developer tests, not human annotation.
+
+REFERENCE PAPERS
+1. S. Srivastava et al., MailEx: Email Event and Argument Extraction, EMNLP 2023.
+2. S. Mukherjee et al., Smart To-Do: Automatic Generation of To-Do Items from Emails, ACL 2020.
+3. Z. Zhong and D. Chen, A Frustratingly Easy Approach for Entity and Relation Extraction, NAACL 2021.

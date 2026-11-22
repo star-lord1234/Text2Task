@@ -1,0 +1,76 @@
+{
+ "id": "C",
+ "title": "Scenario C \u2014 Ambiguity",
+ "timezone": "America/Chicago",
+ "description": "A request for a volunteer, a second similar task, then a volunteer who could mean either: the app shows the options instead of guessing.",
+ "messages": [
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree",
+    "bianca"
+   ],
+   "text": "Can someone review the slides?",
+   "created_at": "2026-11-11T09:30:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "review the slides"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "An unassigned task: nobody is named, so no owner is invented."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree",
+    "bianca"
+   ],
+   "text": "Can someone review the slides for the client deck?",
+   "created_at": "2026-11-11T09:34:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "review the slides for the client deck"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "A second, similar unassigned task (flagged as a possible duplicate, not merged)."
+   }
+  },
+  {
+   "sender": "anushree",
+   "recipients": [
+    "riya"
+   ],
+   "text": "I can review the slides.",
+   "created_at": "2026-11-11T09:40:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "review the slides"
+     ]
+    },
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "UPDATE_ASSIGNEE"
+    ],
+    "note": "Two unassigned tasks could be meant: the options are shown and nothing changes until a person chooses."
+   }
+  }
+ ]
+}

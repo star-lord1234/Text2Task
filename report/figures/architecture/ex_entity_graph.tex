@@ -1,0 +1,11 @@
+% Small figure: directed entity-relation graph for Scenario F, message 3
+\begin{tikzpicture}[node distance=8mm and 26mm, every node/.append style={minimum height=8mm}]
+\node[nn, minimum width=36mm] (t) {TASK\\ ``clean the review dataset''};
+\node[data, minimum width=24mm, above right=3mm and 26mm of t] (p) {PERSON\\ ``Anushree''};
+\node[data, minimum width=24mm, right=26mm of t] (d) {TEMPORAL\\ ``Tuesday'' $\to$ 2026-11-17};
+\node[nn, minimum width=36mm, below right=3mm and 26mm of t] (t0) {existing TASK T-1\\ ``collect the customer reviews''};
+\draw[flow] (t) -- node[note, above, sloped]{ASSIGNED\_TO} (p);
+\draw[flow] (t) -- node[note, above]{DUE\_ON} (d);
+\draw[flow, teal] (t) -- node[note, below, sloped, text=teal, pos=0.45]{DEPENDS\_ON} (t0);
+\node[note, below=9mm of t, text width=46mm] {\emph{``Anushree, please clean the review dataset by Tuesday once you collect the customer reviews.''}};
+\end{tikzpicture}

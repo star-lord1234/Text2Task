@@ -1,0 +1,58 @@
+{
+ "model": "models/text2task-distilbert/entity_v2_three_class/epoch3_sqrt_weighted",
+ "validation_rows": 60,
+ "scope": "validation split read-only; test split never read",
+ "tokenizer_offsets": {
+  "rows_checked": 60,
+  "stored_ids_differ_from_fresh_tokenisation": 0,
+  "special_tokens_with_nonempty_offsets": 0,
+  "rows_where_offsets_do_not_cover_all_non_space_characters": 0,
+  "verdict": "offsets are exact char positions; pieces map back to the text without drift"
+ },
+ "gold_boundaries_validation": {
+  "starts_mid_word": 0,
+  "ends_mid_word": 0,
+  "mid_word_any": 0,
+  "one_or_two_chars": 3,
+  "stopword_only": 6,
+  "by_type_PERSON": 63,
+  "by_type_TASK": 272,
+  "by_type_TEMPORAL": 73,
+  "spans": 408
+ },
+ "gold_boundaries_train": {
+  "starts_mid_word": 0,
+  "ends_mid_word": 0,
+  "mid_word_any": 0,
+  "one_or_two_chars": 14,
+  "stopword_only": 4,
+  "by_type_TASK": 659,
+  "spans": 1568,
+  "by_type_PERSON": 428,
+  "by_type_TEMPORAL": 481
+ },
+ "predicted_boundaries": {
+  "texts": 60,
+  "starts_mid_word": 4,
+  "ends_mid_word": 4,
+  "mid_word_any": 8,
+  "one_or_two_chars": 26,
+  "stopword_only": 57,
+  "by_type_PERSON": 129,
+  "by_type_TEMPORAL": 127,
+  "by_type_TASK": 202,
+  "spans": 458,
+  "adjacent_same_type_spans_separated_only_by_whitespace": 57,
+  "orphan_I_tags_decoded_as_new_spans": 131,
+  "multi_piece_words": 347,
+  "multi_piece_words_whose_pieces_disagree_on_type": 4
+ },
+ "rates": {
+  "gold_validation_mid_word": 0.0,
+  "gold_train_mid_word": 0.0,
+  "predicted_mid_word": 0.0175,
+  "predicted_stopword_only": 0.1245,
+  "predicted_1_2_chars": 0.0568,
+  "gold_stopword_only": 0.0147
+ }
+}

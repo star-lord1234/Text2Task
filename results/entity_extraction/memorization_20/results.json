@@ -1,0 +1,132 @@
+{
+  "annotation_tier": "SILVER",
+  "bio_labels": [
+    "O",
+    "B-TASK",
+    "I-TASK",
+    "B-PERSON",
+    "I-PERSON",
+    "B-TEMPORAL",
+    "I-TEMPORAL"
+  ],
+  "device": "mps",
+  "disclaimer": "Same-example memorization result; not held-out accuracy and not a GOLD metric.",
+  "duration_seconds": 89.628156,
+  "entity_types": [
+    "TASK",
+    "PERSON",
+    "TEMPORAL"
+  ],
+  "finished_at": "2026-11-01T13:23:02.105365Z",
+  "full_retraining_gate_open": true,
+  "gradient_evidence": {
+    "classifier_weight_delta_norm": 0.15707223117351532,
+    "first_encoder_q_weight_delta_norm": 0.839206337928772,
+    "logged_grad_norm_count": 30,
+    "maximum_logged_grad_norm": 3.065659761428833,
+    "minimum_logged_grad_norm": 0.006992059759795666
+  },
+  "human_verified": false,
+  "hyperparameters": {
+    "batch_size": 4,
+    "epochs": 60,
+    "learning_rate": 0.0001,
+    "model": "distilbert/distilbert-base-uncased",
+    "pass_entity_f1": 0.95,
+    "seed": 20261101,
+    "weight_decay": 0.0
+  },
+  "is_held_out": false,
+  "optimizer_steps": 300,
+  "prediction_label_counts": {
+    "B-PERSON": 32,
+    "B-TASK": 50,
+    "B-TEMPORAL": 24,
+    "I-PERSON": 32,
+    "I-TASK": 378,
+    "I-TEMPORAL": 80,
+    "O": 1573
+  },
+  "prediction_metrics": {
+    "same_example_memorization_loss": 0.00045935175148770213,
+    "same_example_memorization_runtime": 0.2437,
+    "same_example_memorization_same_example_accuracy": 1.0,
+    "same_example_memorization_same_example_f1": 1.0,
+    "same_example_memorization_same_example_precision": 1.0,
+    "same_example_memorization_same_example_recall": 1.0,
+    "same_example_memorization_samples_per_second": 82.065,
+    "same_example_memorization_steps_per_second": 20.516
+  },
+  "records": 20,
+  "reference_label_counts": {
+    "B-PERSON": 32,
+    "B-TASK": 50,
+    "B-TEMPORAL": 24,
+    "I-PERSON": 32,
+    "I-TASK": 378,
+    "I-TEMPORAL": 80,
+    "O": 1573
+  },
+  "rows": 20,
+  "same_example_overall": {
+    "accuracy": 1.0,
+    "f1": 1.0,
+    "precision": 1.0,
+    "recall": 1.0
+  },
+  "same_example_per_entity": {
+    "PERSON": {
+      "f1-score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 32
+    },
+    "TASK": {
+      "f1-score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 50
+    },
+    "TEMPORAL": {
+      "f1-score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 24
+    },
+    "macro avg": {
+      "f1-score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 106
+    },
+    "micro avg": {
+      "f1-score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 106
+    },
+    "weighted avg": {
+      "f1-score": 1.0,
+      "precision": 1.0,
+      "recall": 1.0,
+      "support": 106
+    }
+  },
+  "single_layer": true,
+  "started_at": "2026-11-01T13:21:32.477209Z",
+  "status": "PASSED",
+  "train_metrics": {
+    "epoch": 60.0,
+    "total_flos": 55387631158992.0,
+    "train_loss": 0.07836021479374419,
+    "train_runtime": 89.4938,
+    "train_samples_per_second": 13.409,
+    "train_steps_per_second": 3.352
+  },
+  "versions": {
+    "numpy": "2.5.4",
+    "python": "3.12.13",
+    "torch": "2.15.0",
+    "transformers": "5.22.1"
+  }
+}

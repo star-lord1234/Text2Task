@@ -1,0 +1,16 @@
+% Figure: evaluation framework actually used across phases
+\begin{tikzpicture}[node distance=4mm and 6mm, every node/.append style={minimum height=8mm}]
+\node[data, minimum width=34mm] (ref1) {SILVER / MailEx-derived\\ \tiny entity and relation references};
+\node[data, minimum width=34mm, below=of ref1] (ref2) {Developer-written fixtures\\ \tiny temporal 102, reconciliation 91,\\ \tiny graph 15, live chat 88};
+\node[nn, minimum width=34mm, below=of ref2] (pred) {System output\\ \tiny spans, relations, proposals,\\ \tiny tasks, edges};
+\node[rule, minimum width=44mm, right=14mm of ref1] (span) {Span matching\\ \tiny strict (exact), lenient (IoU $\ge$ 0.5,\\ \tiny one-to-one), overlap-any, token};
+\node[rule, minimum width=44mm, below=of span] (relm) {Pair classification\\ \tiny per-label P/R/F1, micro/macro,\\ \tiny NONE false-link rate};
+\node[rule, minimum width=44mm, below=of relm] (scen) {Scenario oracle\\ \tiny strict pass, task recall, owner,\\ \tiny due, status, edges, false tasks};
+\node[nn, minimum width=34mm, right=14mm of relm] (stat) {Uncertainty\\ \tiny thread-level bootstrap 95\% CI\\ \tiny paired run differences};
+\node[ui, minimum width=34mm, below=of stat] (err) {Error analysis\\ \tiny boundary anatomy, confusion,\\ \tiny per-case failures, audits};
+\node[warn, minimum width=34mm, above=of stat] (prov) {Provenance tag\\ \tiny \code{is\_final\_research\_metric:}\\ \tiny \code{false}};
+\draw[flow] (ref1) -- (span); \draw[flow] (ref1.east) -- ++(4mm,0) |- (relm.west); \draw[flow] (ref2.east) -- ++(6mm,0) |- (scen.west);
+\draw[flow] (pred.east) -- ++(8mm,0) |- (span.west); \draw[flow] (pred.east) -- ++(8mm,0) |- (scen.west);
+\draw[flow] (span.east) -- ++(4mm,0) |- (stat.west); \draw[flow] (relm) -- (stat); \draw[flow] (scen.east) -- ++(4mm,0) |- (err.west);
+\draw[flow] (stat) -- (err); \draw[dflow] (stat) -- (prov);
+\end{tikzpicture}

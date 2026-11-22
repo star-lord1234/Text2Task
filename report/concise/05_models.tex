@@ -1,0 +1,80 @@
+\chapter{Models and Training}
+\label{ch:models}
+
+Both models fine-tune \code{distilbert-base-uncased} \citep{sanh2019distilbert}: six transformer layers, hidden size 768, 12 attention heads, about 66M parameters. Each WordPiece $x_i$ at position $i$ is embedded as $\mathbf{e}_i=\operatorname{LayerNorm}(\mathbf{W}_{\text{tok}}[x_i]+\mathbf{W}_{\text{pos}}[i])$, and every layer applies self-attention
+\begin{equation}
+\operatorname{Attention}(\mathbf{Q},\mathbf{K},\mathbf{V})=\operatorname{softmax}\!\left(\mathbf{Q}\mathbf{K}^{\top}/\sqrt{d_k}\right)\mathbf{V},\qquad d_k=64,
+\end{equation}
+followed by a feed-forward network, producing contextual vectors $\mathbf{h}_i$.
+
+\textbf{Entity model.} A linear head over $\mathbf{h}_i$ predicts one of seven BIO labels, $p(y_i=c\mid\mathbf{x})=\operatorname{softmax}(\mathbf{W}\mathbf{h}_i+\mathbf{b})_c$. Decoding opens a span at \lab{B-T} (or at an \lab{I-T} without an open span), extends it on \lab{I-T} and closes it on \lab{O}; a span's confidence is the mean per-piece maximum probability.
+
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.82\linewidth]{entity_model}
+\caption{Entity model: WordPiece tokenisation with offsets, DistilBERT encoder, per-token classification head and BIO decoding into character spans.}
+\label{fig:entitymodel}
+\end{figure}
+
+\textbf{Relation model.} After marker insertion, the head classifies the concatenation
+\[\mathbf{f}=[\mathbf{h}_{\texttt{[CLS]}};\,\mathbf{h}_{\texttt{[E1]}};\,\mathbf{h}_{\texttt{[E2]}}]\in\mathbb{R}^{2304}\]
+into \lab{NONE}, \lab{ASSIGNED\_TO}, \lab{DUE\_ON} or \lab{SCHEDULED\_ON}, following the typed-marker design of \citet{zhong2021pure}.
+
+
+\begin{figure}[htbp]
+\centering
+\diagram{relation_model}
+\caption{Relation extraction with typed markers and marker pooling, followed by the score and deadline-cue checks applied to its output (right: the label set on a schematic example).}
+\label{fig:relmodel}
+\end{figure}
+
+\textbf{Objective and optimisation.} Both minimise weighted cross-entropy $\mathcal{L}=\sum_i w_{y_i}(-\log p(y_i\mid\mathbf{x}))/\sum_i w_{y_i}$. Against the 91\% \lab{O} imbalance the optional weights are dampened inverse frequencies, $w_c=\sqrt{N_{\lab{O}}/N_c}$ for entities and $w_c=\sqrt{N/(K n_c)}$ for relations (0.707, 0.994, 4.163, 1.037 for the four relation classes). Optimisation uses AdamW \citep{loshchilov2019adamw} with weight decay 0.01, linear warm-up over 10\% of steps then linear decay, and an effective batch of 16 through gradient accumulation, on the Apple M5 GPU. The best epoch by a fixed validation metric is kept. \Cref{tab:hyper} lists the runs.
+
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.9\linewidth]{training_pipeline}
+\caption{Fine-tuning loop as implemented: accumulated mini-batches, weighted cross-entropy, AdamW with warm-up, end-of-epoch validation and best-checkpoint selection with stored configuration and provenance.}
+\label{fig:training}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Training runs (DistilBERT-base-uncased, weight decay 0.01, effective batch 16, Apple M5 MPS).}
+\label{tab:hyper}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}Lp{22mm}p{9mm}p{10mm}p{12mm}p{12mm}p{13mm}@{}}
+\toprule
+Run & Data & LR & Epochs & Weights & Time (s) & Selected \\
+\midrule
+SILVER-v1, 6 classes & SILVER-v1 & 2e-5 & 3 & none & 79 & last \\
+v2 unweighted & SILVER-v2 & 2e-5 & 3 / 6 & none & 108 / 179 & last \\
+\textbf{v2 sqrt (used by app)} & SILVER-v2 & 2e-5 & 3 & sqrt & 93 & epoch 3 \\
+Phase 2 Run 1 & MailEx-derived & 5e-5 & 10 & none & 1,723 & epoch 8 \\
+Phase 2 Run 2 / Run 3 (req.\ only) & MailEx-derived & 3e-5 / 5e-5 & 10 & none & 1,527 / --* & epoch 10 \\
+\textbf{Relation (used by app)} & SILVER-v1 & 3e-5 & stopped in 5 & sqrt & -- & epoch 3 \\
+\bottomrule
+\end{tabularx}
+\raggedright\scriptsize *Run 3's wall-clock time includes a session interruption; its 1,800 optimiser steps match Runs 1 and 2.
+\end{table}
+
+\textbf{Convergence.} For Phase 2 Run 1 the training loss falls from 2.56 to below 0.1 over ten epochs, while validation loss is lowest at epoch 2 and then rises; span F1 nevertheless improves until epoch 8 (\cref{fig:curves}a), a sign of over-confidence rather than worse ranking. The relation model's macro F1 rises from 0.35 to 0.72 at epoch 3 and falls at epoch 4 (\cref{fig:curves}b); its selection rests on only 10 \lab{DUE\_ON} validation pairs. A 20-example memorisation test reaching F1 1.0 confirmed that the training and decoding path is mechanically correct.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{\linewidth}\centering\chart[0.92\linewidth]{phase2_training_curves}\caption{Entity model, Phase 2 Run 1: loss and validation F1 per epoch (original dev set)}\end{subfigure}\\[2pt]
+\begin{subfigure}[b]{\linewidth}\centering\chart[0.92\linewidth]{relation_training}\caption{Relation model: training loss and validation F1 per epoch}\end{subfigure}
+\caption{Training curves exactly as logged.}
+\label{fig:curves}
+\end{figure}
+
+\section{How the models evolved}
+\Cref{fig:evolution} places the iterations on a timeline. The first six-class SILVER model (noisy labels, six types, no weighting) predicted almost nothing: entity F1 0.008, with a token accuracy of 0.73 that came entirely from the \lab{O} class. Reducing to three types and repairing the labels (SILVER-v2) produced, with square-root weights, the checkpoint the application still uses: good enough for people and dates, poor for task phrases. Switching to MailEx-derived labels with six times more data gave the Phase 2 models, the best entity models of the project, which are not yet wired into the application. The relation model and the deterministic layers followed, and the application exposed span fragmentation on short chat, which led to the hybrid refinement of \cref{ch:rules}.
+
+\begin{figure}[htbp]
+\centering
+\diagram{model_evolution}
+\caption{Chronology of the implemented iterations with each headline number on its own reference set.}
+\label{fig:evolution}
+\end{figure}

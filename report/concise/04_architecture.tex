@@ -1,0 +1,57 @@
+\chapter{System Architecture and Pipeline}
+\label{ch:architecture}
+
+\Cref{fig:architecture} shows the system. Four layers run in one local process: a React interface; a FastAPI service with a model registry, review authorisation and a scenario runner; a per-message analysis pipeline; and a task-state layer of reconciler, graph editor and an SQLite store with append-only history. A fifth, offline layer (data preparation, training, evaluation) produces checkpoints and saved results that the running system only reads. Four principles recur: \emph{review mode} (nothing changes until a person accepts), \emph{provenance} (every span, field and history event names the component that produced it), \emph{fail safe} (unresolved stays unresolved, ambiguity becomes a question, cycles are held, an unavailable model is reported, never replaced by scripted output), and \emph{one source of truth} (the graph is rebuilt from the store on each request).
+
+\begin{figure}[htbp]
+\centering
+\diagram{system_architecture}
+\caption{Overall architecture. Blue: neural; teal: deterministic; ochre: user-facing; grey: data. Dashed arrows are read-only.}
+\label{fig:architecture}
+\end{figure}
+
+\section{From message to proposal}
+A posted message is stored first and analysed second. The entity model produces BIO spans; refinement rules repair and complete them (keeping the raw spans); the relation model classifies each task--person and task--date pair; the temporal normaliser and owner resolution build a \emph{task candidate}; and the reconciler compares candidates and intent cues with the existing task list to emit \emph{proposed operations}, each with flags and the list of people allowed to review it. Proposals are stored as pending and shown to the right person.
+
+
+\Cref{fig:sequence} shows the calls involved. Three settings change the path. In \emph{scripted} mode (demo stories) spans and links come from the fixture and are labelled \code{scripted}; in \emph{live} mode the models run. If a model failed to load, the message is stored as failed with a retry button; scripted output is never substituted, and a rule fallback exists but is off by default. The refinement \emph{preset} selects which rule stages surround the models (\cref{ch:rules}). Accepting a proposal applies it under version checks, appends history events (operation, before and after values, actor, source message and source kind) and recomputes the graph; editing first records the edited fields as \emph{human}; dismissing changes nothing but the suggestion.
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.92\linewidth]{sequence_diagram}
+\caption{Sequence of calls for one live message and its review. Accepting is refused with HTTP 403 unless the reviewer is the person the suggestion affects.}
+\label{fig:sequence}
+\end{figure}
+
+\section{Worked example}
+\label{sec:walkthrough}
+Captured from the application running the real checkpoints: Riya sends \emph{``Bianca please prepare the quarterly report by Friday.''} to both colleagues on Wednesday 11 November 2026, 10:00 (\cref{fig:exlive}).
+\begin{itemize}
+  \item The entity model fragments the action into \emph{please prepare the} and \emph{report} (confidence $\approx0.4$), misses \emph{quarterly}, and finds no PERSON because \emph{Bianca} has no comma.
+  \item Grammar recovery recognises \emph{prepare} at a clause start and joins the fragments into one refined span.
+  \item The relation model labels \emph{by Friday} as \lab{SCHEDULED\_ON} (0.969); the deadline cue \emph{by} turns it into a due date and raises \lab{DATE\_RELATION\_CONFLICT}, shown on the card as a question.
+  \item The normaliser resolves \emph{by Friday} to 2026-11-13; owner resolution assigns Bianca as the named addressee of a request.
+  \item The reconciler proposes \code{CREATE\_TASK}; only Bianca may accept it, while Riya, its author, may dismiss it.
+\end{itemize}
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.95\linewidth]{ex_live_refinement}
+\caption{The worked example: raw neural spans, refined spans and the rule decisions that produced the task card (analysis took 208\,ms).}
+\label{fig:exlive}
+\end{figure}
+
+\begin{lstlisting}[language=json, basicstyle=\ttfamily\scriptsize, caption={Analysis record of the worked example, captured from the real models (abbreviated).}, label={lst:live}]
+"raw_entities": [{"type": "TASK", "text": "please prepare the", "start": 7, "end": 25, "confidence": 0.40},
+                 {"type": "TASK", "text": "report", "start": 36, "end": 42, "confidence": 0.43},
+                 {"type": "TEMPORAL", "text": "by Friday", "start": 43, "end": 52, "confidence": 0.39}],
+"entities":  [{"type": "TASK", "text": "please prepare the quarterly report", "origin": "refined"},
+              {"type": "TEMPORAL", "text": "by Friday", "origin": "neural"}],
+"relations": [{"label": "SCHEDULED_ON", "score": 0.969, "provenance": "neural"}],
+"candidate": {"title": "prepare the quarterly report",
+              "assignee": {"participant_id": "bianca", "status": "RESOLVED", "basis": "named_addressee"},
+              "due": {"raw": "by Friday", "status": "RESOLVED", "value": "2026-11-13"},
+              "flags": ["DATE_RELATION_CONFLICT"]},
+"proposal":  {"operation": "CREATE_TASK", "status": "pending", "reviewer_ids": ["bianca"]}
+\end{lstlisting}
+

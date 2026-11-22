@@ -1,0 +1,63 @@
+{
+ "scope": "SILVER-validation emails posted as live messages (review mode, one fresh workspace each); counts of proposals only, no task labels, so this measures review load, not accuracy",
+ "results": {
+  "neural_only": {
+   "emails_analysed": 59,
+   "failed": 1,
+   "actionable_proposals": {
+    "CREATE_TASK": 143
+   },
+   "total_actionable": 143,
+   "mean_per_email": 2.42,
+   "max_per_email": 15,
+   "emails_with_zero": 21,
+   "top_flags": {
+    "WEAK_RELATION_SCORE": 65,
+    "AMBIGUOUS_ASSIGNEE": 42,
+    "UNKNOWN_PERSON": 34,
+    "DATE_UNPARSEABLE": 27,
+    "NO_ASSIGNEE": 27,
+    "MULTIPLE_ASSIGNEES": 16
+   }
+  },
+  "refined": {
+   "emails_analysed": 59,
+   "failed": 1,
+   "actionable_proposals": {
+    "CREATE_TASK": 81
+   },
+   "total_actionable": 81,
+   "mean_per_email": 1.37,
+   "max_per_email": 7,
+   "emails_with_zero": 26,
+   "top_flags": {
+    "WEAK_RELATION_SCORE": 39,
+    "AMBIGUOUS_ASSIGNEE": 20,
+    "DATE_UNPARSEABLE": 19,
+    "UNKNOWN_PERSON": 18,
+    "NO_ASSIGNEE": 17,
+    "MULTIPLE_ASSIGNEES": 10
+   }
+  },
+  "hybrid": {
+   "emails_analysed": 59,
+   "failed": 1,
+   "actionable_proposals": {
+    "CREATE_TASK": 96,
+    "ADD_DEPENDENCY": 3
+   },
+   "total_actionable": 99,
+   "mean_per_email": 1.68,
+   "max_per_email": 8,
+   "emails_with_zero": 22,
+   "top_flags": {
+    "WEAK_RELATION_SCORE": 43,
+    "AMBIGUOUS_ASSIGNEE": 25,
+    "NO_ASSIGNEE": 24,
+    "DATE_UNPARSEABLE": 22,
+    "UNKNOWN_PERSON": 21,
+    "COMPETING_DATES": 8
+   }
+  }
+ }
+}

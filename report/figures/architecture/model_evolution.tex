@@ -1,0 +1,16 @@
+% Figure: chronological model and system evolution (dates from saved run metadata)
+\begin{tikzpicture}[x=1mm, y=1mm]
+\draw[line width=1pt, rulegrey] (0,0) -- (150,0);
+\foreach \x/\date/\title/\body/\sty/\num in {
+  4/{Oct 31}/{SILVER-v1}/{6 classes, LLM + auto\\labels; strict F1\\ \textbf{0.008}}/data/a,
+  30/{Nov 2}/{SILVER-v2 repair}/{3 classes; sqrt weights\\ strict \textbf{0.127}, TASK 0.004\\ (app checkpoint)}/nn/b,
+  56/{Nov 3}/{MailEx-derived}/{Phase 2, 2,845 emails\\ lenient \textbf{0.555}, strict 0.390\\ (dedup.\ dev)}/nn/c,
+  82/{Nov 15}/{Relations + rules}/{relation micro F1 \textbf{0.764};\\ temporal, owner,\\ reconciliation, graph}/rule/d,
+  108/{Nov 15}/{App (Phase 7)}/{neural + linker;\\ review mode,\\ scenarios A--E}/ui/e,
+  134/{Nov 15}/{Hybrid (Phase 7.5)}/{8 refinement stages\\ holdout strict pass\\ \textbf{23/30} vs 7/30}/rule/f} {
+  \fill[navy] (\x+8,0) circle (1.2);
+  \node[font=\sffamily\tiny\bfseries, text=teal] at (\x+8,4) {\date};
+  \node[\sty, minimum width=24mm, text width=22mm, anchor=north] (n\num) at (\x+8,-4) {\textbf{\title}\\[1pt] \tiny \body};
+}
+\node[note, anchor=west] at (0,-30) {Dates are those in the saved run metadata (2026). Scores are on different label sets and splits; read each against its own reference, not across columns.};
+\end{tikzpicture}

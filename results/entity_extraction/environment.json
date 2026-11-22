@@ -1,0 +1,14 @@
+{
+  "accelerate": "1.15.0",
+  "architecture": "arm64",
+  "datasets": "4.8.5",
+  "hardware": "Apple M5 MacBook Air, 16 GB",
+  "mps_available_outside_sandbox": true,
+  "mps_built": true,
+  "numpy": "2.5.4",
+  "python": "3.12.13",
+  "seqeval": "1.2.2",
+  "torch": "2.15.0",
+  "transformers": "5.22.1",
+  "virtual_environment": ".venv"
+}

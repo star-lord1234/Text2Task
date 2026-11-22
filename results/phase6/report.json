@@ -1,0 +1,86 @@
+{
+  "provenance": "functional / provisional; no labelled dependency data exists",
+  "scenarios": {
+    "graph_scenarios": 15,
+    "graph_scenarios_passed": 15,
+    "failed": [],
+    "chat_dependency_scenarios": 3,
+    "chat_dependency_scenarios_passed": 3
+  },
+  "oracle_fuzz": {
+    "seeds": 300,
+    "steps_per_seed": 40,
+    "edit_decisions_checked_against_oracle": 12000,
+    "derived_state_comparisons": 72120,
+    "oracle_violations": 0,
+    "violations": [],
+    "accepted_edges_final": 1743,
+    "held_edges_final": 5042,
+    "held_edges_without_reason": 0,
+    "held_reason_codes": {
+      "UNKNOWN_ENDPOINT": 1643,
+      "REMOVED": 1599,
+      "SELF": 965,
+      "CYCLE": 835
+    }
+  },
+  "e5_synthetic": {
+    "instances": 300,
+    "NOTE": "synthetic graphs with injected wrong edges; measures constraint handling, NOT extraction accuracy",
+    "methods": {
+      "accept_all": {
+        "instances": 300,
+        "cyclic_result": 278,
+        "incorrect_candidates": 1147,
+        "correct_candidates": 2437,
+        "incorrect_edges_removed": 0,
+        "correct_edges_lost": 0,
+        "incorrect_edges_kept": 1147,
+        "incorrect_removed_rate": 0.0,
+        "correct_lost_rate": 0.0
+      },
+      "baseline_greedy": {
+        "instances": 300,
+        "cyclic_result": 0,
+        "incorrect_candidates": 1147,
+        "correct_candidates": 2437,
+        "incorrect_edges_removed": 841,
+        "correct_edges_lost": 239,
+        "incorrect_edges_kept": 306,
+        "incorrect_removed_rate": 0.7332,
+        "correct_lost_rate": 0.0981
+      },
+      "e5": {
+        "instances": 300,
+        "cyclic_result": 0,
+        "incorrect_candidates": 1147,
+        "correct_candidates": 2437,
+        "incorrect_edges_removed": 858,
+        "correct_edges_lost": 213,
+        "incorrect_edges_kept": 289,
+        "incorrect_removed_rate": 0.748,
+        "correct_lost_rate": 0.0874
+      }
+    },
+    "e5_total_score_higher_than_greedy_in_instances": 32,
+    "instances_where_e5_used_greedy_fallback": 61,
+    "milp_cross_checked_instances": 232,
+    "milp_check_exact_only": {
+      "instances": 227,
+      "max_abs_gap_to_milp_optimum": 0.0
+    },
+    "milp_check_greedy_fallback": {
+      "instances": 5,
+      "max_gap_to_milp_optimum": 0.13999999999999968,
+      "note": "components above exact_max_candidate_edges use a heuristic and can be suboptimal"
+    }
+  },
+  "real_corpus": {
+    "available": true,
+    "messages_replayed": 510,
+    "ADD_DEPENDENCY_proposals": 0,
+    "DEPENDENCY_ENDPOINT_UNMATCHED_flags": 7,
+    "SELF_DEPENDENCY_flags": 1,
+    "labelled_DEPENDS_ON_examples": "4 train / 0 validation / 3 test, all TASK->EVENT (not producible by the 3-class entity model)"
+  }
+}

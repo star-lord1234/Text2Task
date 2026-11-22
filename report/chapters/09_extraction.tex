@@ -1,0 +1,69 @@
+\chapter{Entity and Relation Extraction}
+\label{ch:extraction}
+
+\section{Implemented categories}
+\Cref{tab:categories} lists the entity and relation categories that the deployed system actually produces, and where each comes from. The relation name used in the original specification, ``scheduled to'', corresponds to \lab{SCHEDULED\_ON} in the implementation.
+
+\begin{table}[h]
+\centering
+\caption{Entity and relation categories produced by the deployed system.}
+\label{tab:categories}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{28mm}p{26mm}L@{}}
+\toprule
+Category & Produced by & Meaning \\
+\midrule
+TASK & entity model + grammar recovery & A requested, committed or planned action (\emph{prepare the quarterly report}) \\
+PERSON & entity model + roster names & A participant mentioned in the message \\
+TEMPORAL & entity model + temporal detection & A date, time or deadline expression \\
+ASSIGNED\_TO & relation model; owner rules & TASK $\to$ PERSON: who should do it \\
+DUE\_ON & relation model; deadline-cue rule & TASK $\to$ TEMPORAL: deadline \\
+SCHEDULED\_ON & relation model & TASK $\to$ TEMPORAL: when it is planned to happen \\
+DEPENDS\_ON & clause and cue rules only & TASK $\to$ TASK: the first waits for the second \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{BIO prediction and span reconstruction}
+\label{sec:decoding}
+At inference, the entity model predicts a label for every WordPiece. When a text spans several windows, each piece keeps the label with the highest confidence among the windows that contain it. Decoding then walks through the pieces in order:
+\begin{itemize}
+  \item \lab{B-T} closes any open span and opens a new span of type T;
+  \item \lab{I-T} extends an open span of type T; if no span of type T is open (after \lab{O} or after a span of another type), it opens a new one rather than discarding the token;
+  \item \lab{O} closes the open span.
+\end{itemize}
+A span's character range runs from the start of its first piece to the end of its last piece, and its confidence is the mean of the per-piece maximum probabilities. An audit of the deployed checkpoint confirmed that this decoder is faithful: tokenizer offsets were exact on all 60 validation emails (0 mismatches), no gold span starts or ends inside a word, and the decoded spans reproduce the model's per-piece labels exactly. The fragmentation visible in the output is therefore the model's own labelling, not an alignment error. On 458 predicted email spans, 8 (1.75\%) start or end mid-word, 57 (12.5\%) consist only of function words (against 1.5\% of gold spans) and 131 \lab{I-} tags follow \lab{O}. These figures motivated the refinement stages of \cref{ch:rules}.
+
+\section{Relation candidate generation and classification}
+Every pair of a TASK span with a PERSON or TEMPORAL span in the same message is a candidate. The relation model scores each pair independently. A pair is linked when its arg-max label is not \lab{NONE}; the score is the softmax probability of that label. Two rules then act on the predictions, as shown in \cref{fig:relmodel}:
+\begin{itemize}
+  \item a link whose score is below 0.9 is flagged \lab{WEAK\_RELATION\_SCORE} for review but never dropped. The threshold was chosen on validation data, where it raised precision from 0.759 to 0.945 at the cost of recall (0.769 to 0.650; \cref{tab:threshold});
+  \item a \lab{SCHEDULED\_ON} link whose temporal expression carries a deadline cue (such as \emph{by} or \emph{before}) is stored as a due date and flagged \lab{DATE\_RELATION\_CONFLICT}, with the model's original label kept in the provenance.
+\end{itemize}
+In the hybrid preset, owner links are also scoped to their clause: a person named in one clause is not linked to a task in another clause, even when the model scores the pair highly.
+
+\section{Directed entity--relation graphs}
+The result of extraction for one message is a small directed graph whose nodes are spans and whose edges are typed relations. \Cref{fig:egraph} shows the graph for message 3 of the demonstration scenario F. The ASSIGNED\_TO and DUE\_ON edges come from relation extraction (pre-written in the scripted scenario; produced by the models in live mode), while the DEPENDS\_ON edge to an \emph{existing} task comes from the clause rule: the reconciler matches the text after \emph{once} against open task titles. Across messages these per-message graphs are merged by the reconciler into the persistent task graph of \cref{ch:rules}.
+
+\begin{figure}[t]
+\centering
+\diagram[0.86\linewidth]{ex_entity_graph}
+\caption[Entity--relation graph for one message]{Directed entity--relation graph for message 3 of Scenario F. The dependency edge points from the new task to the existing task it waits for.}
+\label{fig:egraph}
+\end{figure}
+
+\section{Difficulties}
+\subsection{Implicit tasks}
+Many requests contain no imperative verb at the start of the sentence (\emph{``Would you be able to take a look?''}, \emph{``It would be good to have the numbers before the call''}). MailEx itself leaves about one email in eight with a clear request unannotated, so the model is partly trained to ignore such phrasings. In the other direction, the commitment rule teaches some statements of availability or prediction as tasks (\emph{``Shelley will only be available tomorrow''}).
+
+\subsection{Span boundaries}
+TASK spans are long, and annotators disagree on their extent: whether \emph{Please} belongs in the span, whether a trailing object or adverbial is included. On the MailEx-derived development set only 76 of 298 predicted TASK spans match a reference exactly, but 136 overlap one with IoU of at least 0.5, and a further 51 overlap partially. Predicted spans more often start too late (28 cases) than too early (13) and end too early (18) than too late (7) (\cref{fig:erroranatomy}).
+
+\subsection{Multiple entities}
+A message may contain several tasks, people and dates. Pairwise classification considers each pair independently, so two tasks can both be linked to the same date, or a person named in a subordinate clause can be linked to the main task. In \emph{``Bianca, please train the model once Anushree finishes the dataset''} both names are candidates for the owner of \emph{train the model}; the clause-scoping rule removes Anushree. When several different owners remain, owner resolution returns \lab{AMBIGUOUS} with basis \code{multiple\_assignees} rather than choosing one.
+
+\subsection{Competing dates}
+A sentence may contain more than one temporal expression, or the model may split one expression into pieces (\emph{by} and \emph{Friday}). The temporal-merge stage joins adjacent date, time and deadline-cue pieces; when distinct dates remain, the candidate is flagged \lab{COMPETING\_DATES}. The deadline/scheduled distinction is itself unreliable in the training labels: 60\% of the \lab{SCHEDULED\_ON} training positives are flagged as ambiguous, which explains why the relation model labels \emph{``by Friday''} as \lab{SCHEDULED\_ON} in the worked example of \cref{sec:walkthrough}.
+
+\subsection{Context and reference}
+Messages often refer to earlier ones (\emph{``Sure, I'll take care of it''}, \emph{``The dataset is cleaned''}). Span extraction alone cannot interpret them: the first contains a TASK-like phrase that must \emph{not} create a new task, and the second contains no TASK span at all. These cases are handled by the reconciler and the context-lifecycle stage, which use the existing task list as context (\cref{ch:rules}).

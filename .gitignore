@@ -1,0 +1,40 @@
+# Local environments and caches
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.DS_Store
+
+# Frontend build/install products
+frontend/node_modules/
+frontend/dist/
+frontend/test-results/
+frontend/tsconfig.tsbuildinfo
+
+# Runtime state and secrets
+.env
+*.db
+*.db-shm
+*.db-wal
+
+# Dataset content and derived records; retain only small audit reports.
+data/*
+!data/reports/
+!data/reports/**
+
+# Model weights/checkpoints never enter Git. The ignored Docker bundle is
+# generated locally by scripts/prepare_docker_models.py before publishing.
+models/
+docker/model_bundle/
+
+# Training/runtime noise
+*.log
+report/main.aux
+report/main.bbl
+report/main.blg
+report/main.fdb_latexmk
+report/main.fls
+report/main.log
+report/main.out
+report/main.synctex.gz

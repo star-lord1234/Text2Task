@@ -1,0 +1,19 @@
+% Figure: relation extraction with typed entity markers
+\begin{tikzpicture}[node distance=4mm and 5mm, every node/.append style={minimum height=8mm}]
+\node[data, minimum width=36mm] (ents) {Entity spans\\ \tiny TASK, PERSON, TEMPORAL};
+\node[rule, minimum width=38mm, right=of ents] (pairs) {Candidate pairs\\ \tiny TASK$\to$PERSON, TASK$\to$TEMPORAL\\ \tiny (type-valid pairs only)};
+\node[rule, minimum width=58mm, right=of pairs] (mark) {Typed marker insertion\\ \tiny \code{[E1\_TASK]} prepare the report \code{[/E1\_TASK]} by\\ \tiny \code{[E2\_TEMPORAL]} Friday \code{[/E2\_TEMPORAL]}};
+\node[nn, minimum width=58mm, below=7mm of mark] (enc) {DistilBERT encoder\\ \tiny marker tokens added to the vocabulary};
+\node[nn, minimum width=38mm, left=of enc] (pool) {Pooling (\code{markers})\\ \tiny $[\mathbf{h}_{\text{CLS}};\mathbf{h}_{\text{E1}};\mathbf{h}_{\text{E2}}]\in\mathbb{R}^{2304}$};
+\node[nn, minimum width=36mm, left=of pool] (cls) {Linear $2304\times4$\\ \tiny NONE, ASSIGNED\_TO,\\ \tiny DUE\_ON, SCHEDULED\_ON};
+\node[rule, minimum width=36mm, below=7mm of cls] (thr) {Score check\\ \tiny below 0.9: WEAK\_RELATION\_SCORE flag\\ \tiny (flag only, never dropped)};
+\node[rule, minimum width=38mm, right=of thr] (deadline) {Deadline-cue check\\ \tiny SCHEDULED\_ON + ``by'' $\Rightarrow$ due,\\ \tiny DATE\_RELATION\_CONFLICT};
+% output graph
+\node[nn, minimum width=22mm, right=12mm of deadline] (t) {TASK\\ \tiny prepare the report};
+\node[data, minimum width=16mm, above right=1mm and 9mm of t] (p) {PERSON\\ \tiny Bianca};
+\node[data, minimum width=16mm, below right=1mm and 9mm of t] (d) {TEMPORAL\\ \tiny by Friday};
+\draw[flow] (t) -- node[note, above, sloped]{ASSIGNED\_TO} (p);
+\draw[flow] (t) -- node[note, below, sloped]{DUE\_ON} (d);
+\draw[flow] (ents) -- (pairs); \draw[flow] (pairs) -- (mark); \draw[flow] (mark) -- (enc); \draw[flow] (enc) -- (pool); \draw[flow] (pool) -- (cls);
+\draw[flow] (cls) -- (thr); \draw[flow] (thr) -- (deadline); \draw[flow] (deadline) -- (t);
+\end{tikzpicture}

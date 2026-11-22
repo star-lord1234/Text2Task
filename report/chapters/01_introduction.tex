@@ -1,0 +1,47 @@
+\chapter{Introduction and Problem Statement}
+\label{ch:intro}
+
+\section{The problem}
+A large share of coordination work in organisations happens in free text. A manager writes \emph{``Anushree, please prepare the cleaned dataset by Thursday''}, a colleague replies \emph{``Sure, I'll take care of it''}, and three days later someone writes \emph{``The cleaned dataset is ready.''} Each of these sentences changes the state of a piece of work: the first creates a task with an owner and a deadline, the second acknowledges it, and the third completes it. Task-management tools, however, only know about work that someone has typed into them as a structured item. The gap between conversation and tracker is bridged manually, and what is not copied across is easily lost.
+
+Text2Task addresses this gap. Given a message, together with the sender, recipients and time at which it was sent, the system proposes structured operations on a shared task list: create a task, assign or reassign an owner, propose or confirm a new due date, mark a task in progress, complete or cancel it, or record that one task must wait for another. The proposals are shown to people for review rather than applied automatically.
+
+\section{Why the problem is hard}
+Extracting tasks from conversational text combines several sub-problems that are each difficult on their own.
+
+\subsubsection{Implicit and indirect requests}
+Requests are often phrased as questions or suggestions (\emph{``Could you forward the article?''}, \emph{``It would be appreciated if you would let me know the status''}). A purely lexical detector misses many of them, while a permissive one turns every question into a task. Conversely, many sentences that look like actions are reports about the past (\emph{``We shipped it yesterday''}) or descriptions of a state (\emph{``The request was rejected''}) and should produce nothing.
+
+\subsubsection{Commitments}
+A task can be created by the person who will do it (\emph{``I'll send the slides tonight''}). Such commitments look grammatically similar to predictions (\emph{``Customers are going to get very cranky''}), which are not tasks at all.
+
+\subsubsection{Temporal expressions}
+Deadlines are usually relative (\emph{``by Friday''}, \emph{``tomorrow morning''}, \emph{``next week''}). Resolving them requires the time at which the message was written and the writer's time zone, and some expressions are inherently ambiguous: \emph{``by Wednesday''} written on a Wednesday may mean today or a week later. Others are not dates at all but events (\emph{``once the build is ready''}). The distinction between a deadline (\emph{``by Friday''}) and a scheduled time (\emph{``on Friday''}) matters for what the system should store.
+
+\subsubsection{Assignees}
+The owner of a task may be named (\emph{``Bianca, please \ldots''}), addressed implicitly through the recipient list (\emph{``Can you \ldots''} sent to one person), implied by a first-person commitment, or deliberately left open (\emph{``Can someone \ldots''}). A message sent to a whole team that names nobody has no owner, and a correct system must not invent one.
+
+\subsubsection{References to existing work}
+Most messages in a conversation do not create new work; they refer to existing tasks. \emph{``The dataset is cleaned''} must be matched to the right open task, and when two tasks are similar (\emph{``review the slides''} and \emph{``review the slides for the client deck''}) the system has to recognise that it cannot decide.
+
+\subsubsection{Relationships between tasks}
+Dependencies are expressed through subordinate clauses (\emph{``train the model once Anushree finishes the dataset''}) or explicit statements (\emph{``The dashboard is waiting on the demo server''}). They can contradict earlier statements and form cycles, which a task tracker must not accept.
+
+\section{Why existing tools fall short}
+Conventional task managers assume that the user enters structured items. Some email clients offer reminders or detect a small set of patterns, but they typically act on one message at a time, do not maintain a consistent model of tasks across a thread, and do not explain where a suggestion came from. Research systems for action-item detection (\cref{ch:literature}) classify whether a message or sentence contains a request, or generate a to-do sentence, but stop short of maintaining a task list with owners, dates, lifecycle and dependencies.
+
+Two further requirements shaped this project. First, mistakes are costly: silently assigning work to the wrong person, overwriting a deadline or closing a task that is not done damages trust in the tool. Second, the available training data are limited and noisy (\cref{ch:dataset}), so the system cannot rely on a model being right. Both requirements point to a design in which machine learning proposes and people decide, every change is attributable, and the deterministic parts of the system guard against unsafe or inconsistent state changes.
+
+\section{Contributions}
+The work reported here comprises:
+\begin{itemize}
+  \item a reproducible data pipeline that converts the MailEx corpus \citep{srivastava2023mailex} into a unified format, cleans it conservatively, and derives three label sets (SILVER-v1, SILVER-v2 and MailEx-derived) with explicit provenance;
+  \item a DistilBERT token-classification model for TASK, PERSON and TEMPORAL spans and a DistilBERT relation classifier with typed entity markers, evaluated with strict, overlap-based and bootstrap-backed metrics;
+  \item a deterministic layer for temporal normalisation, owner resolution, uncertainty flagging, task reconciliation and dependency-graph validation, each covered by developer-written functional tests and fuzzing;
+  \item a hybrid refinement pipeline that repairs and complements neural spans, with configurable presets that make neural-only, rule-only and hybrid behaviour directly comparable;
+  \item a local web application in which every suggestion is reviewable, explained, and acceptable only by the person it affects;
+  \item an honest account of what the evaluation can and cannot show, including a leakage problem discovered during evaluation and the absence of any human-verified test set.
+\end{itemize}
+
+\section{Organisation of the report}
+\Cref{ch:literature} reviews related work. \Cref{ch:objectives} sets out objectives and scope. \Cref{ch:dataset,ch:preprocessing} describe the data and its preparation. \Cref{ch:architecture,ch:methodology} present the architecture and the end-to-end pipeline, followed by the models (\cref{ch:models}), entity and relation extraction (\cref{ch:extraction}) and the rule-based engine (\cref{ch:rules}). \Cref{ch:evolution} traces the development history and the hybrid design. \Cref{ch:application} describes the application. \Cref{ch:evalsetup,ch:results,ch:errors} cover evaluation methodology, results and error analysis. \Cref{ch:future,ch:conclusion} discuss future work and conclude.

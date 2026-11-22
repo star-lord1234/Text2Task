@@ -1,0 +1,90 @@
+{
+  "bio_labels": [
+    "O",
+    "B-ARTIFACT",
+    "I-ARTIFACT",
+    "B-EVENT",
+    "I-EVENT",
+    "B-GROUP",
+    "I-GROUP",
+    "B-PERSON",
+    "I-PERSON",
+    "B-TASK",
+    "I-TASK",
+    "B-TEMPORAL",
+    "I-TEMPORAL"
+  ],
+  "blockers": [
+    "validation_is_not_fully_human_reviewed_gold"
+  ],
+  "config_path": "configs/entity_training.yaml",
+  "cross_split_thread_overlaps": [],
+  "errors": [],
+  "full_structural_audit_passed": true,
+  "ignore_index": -100,
+  "label_to_id": {
+    "B-ARTIFACT": 1,
+    "B-EVENT": 3,
+    "B-GROUP": 5,
+    "B-PERSON": 7,
+    "B-TASK": 9,
+    "B-TEMPORAL": 11,
+    "I-ARTIFACT": 2,
+    "I-EVENT": 4,
+    "I-GROUP": 6,
+    "I-PERSON": 8,
+    "I-TASK": 10,
+    "I-TEMPORAL": 12,
+    "O": 0
+  },
+  "model_name": "distilbert/distilbert-base-uncased",
+  "passed": false,
+  "requested_action": "distilbert_fine_tuning",
+  "schema_entity_labels": [
+    "TASK",
+    "PERSON",
+    "GROUP",
+    "TEMPORAL",
+    "EVENT",
+    "ARTIFACT"
+  ],
+  "splits": {
+    "test": {
+      "email_tiers": {
+        "SILVER": 90
+      },
+      "emails": 90,
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 140,
+      "row_tiers": {
+        "SILVER": 140
+      },
+      "threads": 70
+    },
+    "train": {
+      "email_tiers": {
+        "SILVER": 450
+      },
+      "emails": 450,
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 704,
+      "row_tiers": {
+        "SILVER": 704
+      },
+      "threads": 364
+    },
+    "validation": {
+      "email_tiers": {
+        "SILVER": 60
+      },
+      "emails": 60,
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 101,
+      "row_tiers": {
+        "SILVER": 101
+      },
+      "threads": 51
+    }
+  },
+  "timestamp": "2026-10-31T22:32:44.387333Z"
+}

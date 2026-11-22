@@ -1,0 +1,837 @@
+{
+ "name": "live_battery_v1",
+ "description": "The inputs of the Phase 7 live battery exactly as first run, with expectations. Used for development of Phase 7.5.",
+ "now": "2026-11-11T09:30:00-06:00 (a Wednesday)",
+ "cases": [
+  {
+   "id": "I1",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the report by Friday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "prepare",
+       "report"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-13"
+     }
+    ]
+   }
+  },
+  {
+   "id": "I2",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, can you clean the dataset by Thursday?",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-12"
+     }
+    ]
+   }
+  },
+  {
+   "id": "I3",
+   "group": "independent",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I'll send the invoice tomorrow.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "send",
+       "invoice"
+      ],
+      "owner": "anushree",
+      "due": "2026-11-12"
+     }
+    ]
+   }
+  },
+  {
+   "id": "I4",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Please review the slides.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "review",
+       "slides"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "I5",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Can someone review the slides?",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "review",
+       "slides"
+      ]
+     }
+    ]
+   }
+  },
+  {
+   "id": "I6",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Anushree will present the results on Monday at 3pm.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "present",
+       "results"
+      ],
+      "owner": "anushree"
+     }
+    ]
+   }
+  },
+  {
+   "id": "I7",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, send me the model report by Thursday and the invoice by Friday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "model",
+       "report"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-12"
+     },
+     {
+      "has": [
+       "invoice"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-13"
+     }
+    ]
+   }
+  },
+  {
+   "id": "I8",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "The server went down yesterday.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "I9",
+   "group": "negative",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Thanks, sounds good.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": []
+   }
+  },
+  {
+   "id": "I10",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please book a meeting room for next Tuesday afternoon.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "book",
+       "meeting room"
+      ],
+      "owner": "bianca"
+     }
+    ]
+   }
+  },
+  {
+   "id": "C1",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please train the model once Anushree finishes the dataset.",
+     "09:35"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree"
+     },
+     {
+      "has": [
+       "train",
+       "model"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "train",
+       "model"
+      ],
+      [
+       "clean",
+       "dataset"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "C2",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, train the model after the dataset is cleaned.",
+     "09:35"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree"
+     },
+     {
+      "has": [
+       "train",
+       "model"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "train",
+       "model"
+      ],
+      [
+       "clean",
+       "dataset"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "C3",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please write the report by Friday.",
+     "09:33"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "The report is waiting on the dataset.",
+     "09:36"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree"
+     },
+     {
+      "has": [
+       "write",
+       "report"
+      ],
+      "owner": "bianca",
+      "due": "2026-11-13"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "write",
+       "report"
+      ],
+      [
+       "clean",
+       "dataset"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "C4",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please write the report, but only after Anushree finishes the analysis.",
+     "09:35"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree"
+     },
+     {
+      "has": [
+       "write",
+       "report"
+      ],
+      "owner": "bianca"
+     }
+    ],
+    "edges": []
+   }
+  },
+  {
+   "id": "S1",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "After you clean the dataset, write a report.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ]
+     },
+     {
+      "has": [
+       "write",
+       "report"
+      ]
+     }
+    ],
+    "edges": [
+     [
+      [
+       "write",
+       "report"
+      ],
+      [
+       "clean",
+       "dataset"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S2",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Anushree, after you clean the dataset, please write a report.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ]
+     },
+     {
+      "has": [
+       "write",
+       "report"
+      ]
+     }
+    ],
+    "edges": [
+     [
+      [
+       "write",
+       "report"
+      ],
+      [
+       "clean",
+       "dataset"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S3",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Before we send the report, someone needs to proofread it.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "send",
+       "report"
+      ]
+     },
+     {
+      "has": [
+       "proofread"
+      ]
+     }
+    ],
+    "edges": [
+     [
+      [
+       "send",
+       "report"
+      ],
+      [
+       "proofread"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "S4",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Bianca, please train the model, then Anushree should evaluate it.",
+     "09:30"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "train",
+       "model"
+      ],
+      "owner": "bianca"
+     },
+     {
+      "has": [
+       "evaluate"
+      ],
+      "owner": "anushree"
+     }
+    ],
+    "edges": [
+     [
+      [
+       "evaluate"
+      ],
+      [
+       "train",
+       "model"
+      ]
+     ]
+    ]
+   }
+  },
+  {
+   "id": "F1",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Sure, I'll take care of it.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree",
+      "status": "open"
+     }
+    ],
+    "max_creates": 1
+   }
+  },
+  {
+   "id": "F2",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "The dataset is cleaned.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree",
+      "status": "completed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "F3",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Done with the dataset.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree",
+      "status": "completed"
+     }
+    ]
+   }
+  },
+  {
+   "id": "F4",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Could we move the deadline to Friday?",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree",
+      "status": "open"
+     }
+    ],
+    "last_ops": [
+     "PROPOSE_DUE_DATE_CHANGE"
+    ]
+   }
+  },
+  {
+   "id": "F5",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Actually, cancel the dataset task.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree",
+      "status": "cancelled"
+     }
+    ]
+   }
+  },
+  {
+   "id": "F6",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I'm working on the dataset now.",
+     "09:50"
+    ]
+   ],
+   "expect": {
+    "tasks": [
+     {
+      "has": [
+       "clean",
+       "dataset"
+      ],
+      "owner": "anushree",
+      "status": "in_progress"
+     }
+    ]
+   }
+  }
+ ]
+}

@@ -1,0 +1,157 @@
+\chapter{Evaluation and Results}
+\label{ch:results}
+
+\section{Metrics}
+For predicted spans $\mathcal{P}$, references $\mathcal{R}$ and $m$ matches, $P=m/|\mathcal{P}|$, $R=m/|\mathcal{R}|$ and $F_1=2PR/(P+R)$. \emph{Strict} matching needs identical type and boundaries (equal to seqeval); \emph{lenient} matching needs the same type and
+\begin{equation}
+\operatorname{IoU}(a,b)=\frac{|a\cap b|}{|a\cup b|}\ \ge\ 0.5,
+\end{equation}
+with greedy one-to-one pairing. Relations report per-label scores, micro and macro F1 over the three positive labels, and the false-link rate on \lab{NONE} pairs. Intervals are 95\% percentile bootstraps \citep{efron1993bootstrap} over 1,000 resamples (threads for relations, rows for entities). End-to-end chat cases are run with a simulated reviewer that accepts every actionable proposal; a case \emph{passes strictly} if every expected task, owner, due day, status and edge is present and nothing else. All references are provisional (SILVER, MailEx-derived or developer-written), each configuration was trained once, and checkpoints were selected on the reported development data.
+
+
+\begin{figure}[htbp]
+\centering
+\diagram[0.82\linewidth]{evaluation_framework}
+\caption{Evaluation framework: references and outputs compared with span, pair and scenario matching; bootstrap intervals; every metric tagged as not final.}
+\label{fig:evalfw}
+\end{figure}
+\section{Entity extraction}
+\Cref{tab:entity} and \cref{fig:iterations} trace the entity models. The first six-class model scored F1 0.008. On SILVER-v2, class weighting was decisive: unweighted models predicted almost only \lab{O}, while the square-root-weighted model (the one in the app) reached strict 0.127 but only 0.004 on TASK spans. Switching to MailEx-derived labels, six times more data and a longer schedule raised lenient F1 to 0.555 on the deduplicated set, against 0.401 for a rule baseline. This jump is not a controlled comparison: labels, data, recipe and validation definition all changed together. Within Phase 2, learning rate ($+0.019$, 95\% CI $[-0.006, +0.045]$) and including commitments ($-0.003$, $[-0.030,+0.026]$) made no measurable difference. Removing the 39 leaked emails lowered every neural score by 0.02--0.04; before correction TASK appeared to meet its 0.50 target (0.508), after it did not (0.482).
+
+\begin{table}[htbp]
+\centering
+\caption{Entity results. Top: SILVER-v1 validation (60 emails). Bottom: deduplicated MailEx-derived development set (349 emails).}
+\label{tab:entity}
+\footnotesize
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Model & Strict F1 & Lenient F1 & TASK len. & PERSON len. & TEMPORAL len. \\
+\midrule
+v2 unweighted, 3 epochs & 0.019 & 0.024 & -- & -- & -- \\
+\textbf{v2 sqrt weights (app)} & 0.127 & 0.226 & 0.068 & 0.396 & 0.440 \\
+\midrule
+Rule baseline & 0.260 & 0.401 & 0.399 & 0.300 & 0.474 \\
+\textbf{Phase 2 Run 1} (lr 5e-5) & \textbf{0.390} & \textbf{0.555} & \textbf{0.482} & \textbf{0.594} & \textbf{0.645} \\
+Phase 2 Run 2 (lr 3e-5) & 0.383 & 0.534 & 0.479 & 0.566 & 0.605 \\
+Phase 2 Run 3 (requests only) & 0.357 & 0.544 & 0.456 & 0.558 & 0.639 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{figure}[htbp]
+\centering
+\chart[0.6\linewidth]{phase2_run_comparison}
+\caption{Overall lenient F1 per epoch for the three Phase 2 runs (original development set). Differences are within noise.}
+\label{fig:runs}
+\end{figure}
+
+\begin{figure}[htbp]
+\centering
+\chart[0.94\linewidth]{model_iterations}
+\caption{Entity-model iterations. The two panels use different references and must not be compared across panels.}
+\label{fig:iterations}
+\end{figure}
+
+\section{Relation extraction}
+With reference spans (922 validation pairs), the neural model reaches micro F1 0.764 [0.70, 0.84] and macro F1 0.719 [0.62, 0.82], against 0.527 and 0.517 for the rule linker (\cref{tab:relation}). Its gain comes from \lab{ASSIGNED\_TO}, where rules rarely fire; on \lab{DUE\_ON} (10 examples) rules are as good. The main neural error is 32 extra person links, several plausibly true but unannotated; three of five missed deadlines are predicted as \lab{SCHEDULED\_ON} (\cref{fig:relconf}). Above a score of 0.9, 94.5\% of links agree with the reference (75.9\% overall), so weaker links are flagged. With spans predicted by the app's entity model, relation F1 collapses to 0.024 (lenient), because the relation references and that model use different span definitions; no end-to-end relation accuracy on email can be claimed.
+
+\begin{table}[htbp]
+\centering
+\caption{Relation extraction on reference spans (validation).}
+\label{tab:relation}
+\footnotesize
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+ & & \multicolumn{3}{c}{Neural} & \multicolumn{3}{c}{Rule linker} \\
+\cmidrule(lr){3-5}\cmidrule(l){6-8}
+Label & n & P & R & F1 & P & R & F1 \\
+\midrule
+ASSIGNED\_TO & 79 & 0.65 & 0.75 & 0.69 & 0.92 & 0.15 & 0.26 \\
+DUE\_ON & 10 & 0.71 & 0.50 & 0.59 & 0.45 & 0.90 & 0.60 \\
+SCHEDULED\_ON & 71 & 0.92 & 0.83 & 0.87 & 0.72 & 0.66 & 0.69 \\
+\midrule
+Micro / macro F1 & & \multicolumn{3}{r}{\textbf{0.764} / \textbf{0.719}} & \multicolumn{3}{r}{0.527 / 0.517} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Effect of a minimum relation score on validation links (the app flags links below 0.9).}
+\label{tab:threshold}
+\footnotesize
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Minimum score & none & 0.7 & 0.8 & \textbf{0.9} & 0.95 & 0.99 \\
+\midrule
+Links kept & 100\% & 82\% & 77\% & \textbf{68\%} & 66\% & 41\% \\
+Precision & 0.759 & 0.842 & 0.872 & \textbf{0.945} & 0.944 & 0.955 \\
+Recall & 0.769 & 0.700 & 0.681 & \textbf{0.650} & 0.631 & 0.400 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\chart[0.82\linewidth]{relation_confusion}
+\caption{Relation confusion matrices on 922 validation pairs (counts; shading normalised per row).}
+\label{fig:relconf}
+\end{figure}
+
+\section{Neural-only versus hybrid}
+\Cref{fig:hybridres} compares the presets on 88 developer-written chat cases (24 used during development, 34 used for debugging, 30 held out: written before the fixes and run only after them). Hybrid passes 23 of 30 held-out cases against 7 for the raw models; task recall rises from 0.09 to 0.91 and false tasks fall from 27 to 3. Dependencies come only from rules: 14 of 20 expected edges for hybrid, none for neural-only, with one false edge. But rules alone pass 22 held-out cases, so on chat the hybrid's score is not evidence of a good neural model; the first run of the debugging set, before stage bugs were fixed, gave hybrid only 14 of 34. On 60 real SILVER emails the order changes: refinement lifts lenient entity F1 from 0.203 to 0.255, mostly through the neural PERSON and TEMPORAL spans, while TASK F1 stays at 0.114, and hybrid lowers the review load from 2.42 to 1.68 proposals per email.
+
+\begin{figure}[htbp]
+\centering
+\begin{subfigure}[b]{0.55\linewidth}\centering\chart{phase75_strict_pass}\caption{Strict pass rate on chat cases}\end{subfigure}\hfill
+\begin{subfigure}[b]{0.43\linewidth}\centering\chart{silver_refinement}\caption{Entity F1 on 60 real emails}\end{subfigure}
+\caption{Preset comparison: chat scenarios (real checkpoints, simulated reviewer) and SILVER email agreement.}
+\label{fig:hybridres}
+\end{figure}
+
+
+\begin{table}[htbp]
+\centering
+\caption{Preset comparison on the 30 held-out chat cases (final code, real checkpoints).}
+\label{tab:presets}
+\footnotesize
+\begin{tabular}{@{}lrrrrrrr@{}}
+\toprule
+Preset & Strict pass & Task recall & Owner & Due & Status & Edges & False tasks \\
+\midrule
+\code{neural\_only} & 7/30 & 0.09 & 1.00 & 1.00 & n/a & 0/6 & 27 \\
+\code{neural\_plus\_linker} & 7/30 & 0.09 & 1.00 & 1.00 & n/a & 0/6 & 27 \\
+\code{refined} & 7/30 & 0.12 & 0.75 & 1.00 & n/a & 0/6 & 20 \\
+\textbf{\code{hybrid}} & \textbf{23/30} & \textbf{0.91} & 1.00 & 1.00 & 0.86 & 2/6 & 3 \\
+\code{rule\_only} & 22/30 & 0.88 & 1.00 & 0.88 & 0.86 & 2/6 & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\chart[0.9\linewidth]{phase75_behaviour}
+\caption{Task recall, false tasks and dependency-edge recall, neural-only versus hybrid, on the three chat case sets.}
+\label{fig:behaviour}
+\end{figure}
+
+\begin{table}[htbp]
+\centering
+\caption{Functional evaluation of the deterministic components.}
+\label{tab:functional}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{32mm}L@{}}
+\toprule
+Component & Result \\
+\midrule
+Temporal normaliser & 102/102 fixtures; 1.3\% of real corpus spans resolve without timestamps \\
+Reconciliation & 91/91 scenarios; 0 duplicates and 0 incorrect overwrites in targeted cases; 12,000 fuzz steps, 0 violations \\
+Dependency graph & 15/15 graph and 3/3 chat scenarios; 12,000 edits and 72,120 state checks vs oracles, 0 disagreements \\
+Demo story (17 messages) & every message yields its expected operations; final graph 6 accepted and 1 held edge \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+A direct comparison with published numbers is not valid: MailEx measures trigger and argument extraction over 76 roles on its test split, Smart To-Do measures generated text. The qualitative pattern agrees with MailEx: non-named arguments (our TASK phrases) are hardest, names and dates easier.

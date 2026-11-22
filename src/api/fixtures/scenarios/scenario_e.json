@@ -1,0 +1,122 @@
+{
+ "id": "E",
+ "title": "Scenario E \u2014 Dependency conflict",
+ "timezone": "America/Chicago",
+ "description": "A dependency in one direction is accepted; the opposite direction would create a cycle, so it is held for review and the accepted graph stays valid.",
+ "messages": [
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree"
+   ],
+   "text": "Anushree, please prepare the dataset by Thursday.",
+   "created_at": "2026-11-11T09:30:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "prepare the dataset"
+     ],
+     "PERSON": [
+      "Anushree"
+     ],
+     "TEMPORAL": [
+      "Thursday"
+     ]
+    },
+    "links": [
+     [
+      "prepare the dataset",
+      "Anushree",
+      "ASSIGNED_TO"
+     ],
+     [
+      "prepare the dataset",
+      "Thursday",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "Task A for Anushree."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Bianca, please train the model by Friday.",
+   "created_at": "2026-11-11T09:33:00-06:00",
+   "scripted": {
+    "spans": {
+     "TASK": [
+      "train the model"
+     ],
+     "PERSON": [
+      "Bianca"
+     ],
+     "TEMPORAL": [
+      "Friday"
+     ]
+    },
+    "links": [
+     [
+      "train the model",
+      "Bianca",
+      "ASSIGNED_TO"
+     ],
+     [
+      "train the model",
+      "Friday",
+      "DUE_ON"
+     ]
+    ]
+   },
+   "expected": {
+    "operations": [
+     "CREATE_TASK"
+    ],
+    "note": "Task B for Bianca."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "bianca"
+   ],
+   "text": "Training is waiting on the dataset.",
+   "created_at": "2026-11-11T09:36:00-06:00",
+   "scripted": {
+    "spans": {},
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "ADD_DEPENDENCY"
+    ],
+    "note": "B depends on A: accepted, A is the prerequisite."
+   }
+  },
+  {
+   "sender": "riya",
+   "recipients": [
+    "anushree"
+   ],
+   "text": "The dataset is waiting on the training.",
+   "created_at": "2026-11-11T09:40:00-06:00",
+   "scripted": {
+    "spans": {},
+    "links": []
+   },
+   "expected": {
+    "operations": [
+     "ADD_DEPENDENCY"
+    ],
+    "note": "The reverse would close a cycle: the edge is HELD for review and the accepted graph stays acyclic."
+   }
+  }
+ ]
+}

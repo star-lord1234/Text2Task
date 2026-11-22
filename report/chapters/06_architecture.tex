@@ -1,0 +1,60 @@
+\chapter{System Architecture}
+\label{ch:architecture}
+
+\section{Overview}
+\Cref{fig:architecture} shows the complete system. It has five layers. Four of them run at inference time inside one local process; the fifth, offline training and evaluation, produces the checkpoints and saved results that the running system reads but never modifies.
+
+\begin{figure}[t]
+\centering
+\diagram{system_architecture}
+\caption[Overall system architecture]{Overall Text2Task architecture. Blue boxes are neural components, teal boxes deterministic components, ochre boxes user-facing views and grey boxes data. Dashed arrows are read-only dependencies: checkpoints are loaded once at start-up and saved evaluation files are only displayed. The offline layer (bottom) never runs inside the application.}
+\label{fig:architecture}
+\end{figure}
+
+\section{Layers and responsibilities}
+\subsection{Presentation layer}
+A single-page React application (\code{frontend/}) provides a Slack-style channel in which the team chats, a tasks panel, a dependency explorer, a timeline, the AI Inspector and a model-results page. It holds no business state of its own: every view is rendered from the API, and every write is followed by a refetch so that all panels stay consistent. The only client-side state is presentational (which person the demo is ``viewed as'', the selected tab).
+
+\subsection{Application service}
+A FastAPI application (\code{src/api/app.py}) exposes the REST endpoints for messages, suggestions, tasks, dependencies, scenarios and settings. It owns three cross-cutting concerns. The \emph{model registry} loads both checkpoints once at start-up and reports their real availability, device and version through \code{/api/system/capabilities}; a model that failed to load is reported as unavailable, never as ready. \emph{Review authorisation} checks that the person accepting a suggestion is the one it affects (\cref{sec:reviewer}). The \emph{scenario runner} replays scripted demonstrations whose extraction is pre-written but whose reconciliation, review and graph behaviour are the real code.
+
+\subsection{Analysis pipeline}
+For each message the pipeline (\code{src/api/services/pipeline.py}) runs, in order: the entity model, the relation model, the refinement stages, temporal normalisation, owner resolution and uncertainty flagging. Its output is a set of task candidates with every field annotated by the component that produced it. \Cref{ch:methodology} describes this pipeline in detail.
+
+\subsection{Task state}
+The reconciler (\code{src/reconciliation/reconciler.py}) compares candidates and intent cues with the existing task list and proposes operations. The graph editor (\code{src/graph/}) validates dependency edges and derives the ready, blocked and needs-review states. Both write to a single SQLite store, which is the only source of truth: tasks, proposals, edges and an append-only history in which every event records the operation, the before and after values, the actor, the message that caused it and the kind of source (neural, rule, scripted or human).
+
+\subsection{Offline training and evaluation}
+Data conversion, cleaning, labelling, training and scoring are scripts under \code{scripts/} and modules under \code{src/annotation}, \code{src/model\_data} and \code{src/model\_training}. They write checkpoints with configuration, data hashes and provenance tags to \code{models/}, and predictions and metrics to \code{results/}. Every metric file carries \code{is\_final\_research\_metric: false}.
+
+\section{Offline versus live components}
+The separation between offline and live components is strict. At inference time nothing is trained, no label file is read except to display saved evaluation numbers, and no evaluation data are modified. The live system uses exactly two learned artefacts, the entity and relation checkpoints; everything else is deterministic code whose behaviour is fixed by configuration files (\code{configs/phase4.json}, \code{phase5.json}, \code{phase6.json}) and the refinement preset.
+
+\section{Technology stack}
+\begin{table}[h]
+\centering
+\caption{Technology actually used.}
+\label{tab:stack}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}p{30mm}L@{}}
+\toprule
+Concern & Technology \\
+\midrule
+Training and inference & Python 3.12, PyTorch 2.15 (Apple MPS backend), Hugging Face Transformers 5.22, Accelerate, Datasets, seqeval \\
+Pre-trained model & \code{distilbert/distilbert-base-uncased} for both models \\
+Rules and graph & Python standard library (regular expressions, dataclasses), NetworkX 3.7, SciPy (optional exact cross-check only) \\
+Service & FastAPI, Pydantic schemas, SQLite, Uvicorn \\
+Frontend & React 19, TypeScript, Vite, Tailwind CSS 4, TanStack Query, React Flow with dagre layout, Radix UI primitives \\
+Testing & Python \code{unittest} (362 tests), Vitest with axe accessibility checks (97 tests), Playwright end-to-end (20 tests, 7 against the real models) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Design principles}
+Four principles recur across the architecture.
+\begin{enumerate}
+  \item \textbf{Review mode.} The reconciler produces proposals; only an accepted proposal changes a task. The code path for automatic application exists in outline but refuses to start.
+  \item \textbf{Provenance everywhere.} Every span, relation, field and history event names the component that produced it. The Inspector shows raw neural output beside refined output.
+  \item \textbf{Fail safe.} An unresolved date stays unresolved, an ambiguous referent produces a chooser, a cycle-forming edge is held with its reason, and an unavailable model is reported as such. Scripted output is never substituted for a failed live analysis.
+  \item \textbf{One source of truth.} The graph is rebuilt from the store on every request instead of being kept as a separate mutable structure, so it cannot drift from the task list.
+\end{enumerate}

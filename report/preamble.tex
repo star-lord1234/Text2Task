@@ -1,0 +1,125 @@
+% Shared preamble of both editions (main.tex: concise, main_full.tex: full)
+
+% ---------------------------------------------------------------- typography
+\usepackage{newpxtext}            % Palatino-style serif body (TeX Gyre Pagella under XeTeX)
+\usepackage{newpxmath}
+\setsansfont{texgyreheros}[Extension=.otf, UprightFont=*-regular, BoldFont=*-bold, ItalicFont=*-italic, BoldItalicFont=*-bolditalic, Scale=0.88]   % complementary sans for headings, captions and diagrams
+\setmonofont{lmmono10}[Extension=.otf, UprightFont=*-regular, ItalicFont=*-italic, BoldFont=lmmonolt10-bold, Scale=0.95]
+\usepackage{microtype}
+\usepackage[a4paper,left=30mm,right=25mm,top=28mm,bottom=28mm,headheight=14pt]{geometry}
+\usepackage{setspace}
+\setstretch{1.12}
+\setlength{\parskip}{0.35em}
+\setlength{\parindent}{1.2em}
+
+% ---------------------------------------------------------------- colour and layout
+\usepackage{xcolor}
+\definecolor{navy}{HTML}{1F3A5F}
+\definecolor{teal}{HTML}{2A7F7F}
+\definecolor{ochre}{HTML}{B07D2B}
+\definecolor{mutedred}{HTML}{A23B3B}
+\definecolor{charcoal}{HTML}{222222}
+\definecolor{rulegrey}{HTML}{9A9A9A}
+\definecolor{paleblue}{HTML}{E8EEF5}
+\definecolor{paleteal}{HTML}{E4F1F0}
+\definecolor{paleochre}{HTML}{F6EEDF}
+\definecolor{palegrey}{HTML}{F1F1F1}
+\definecolor{coverbg}{HTML}{F5F7F9}
+\definecolor{palered}{HTML}{F6E5E5}
+\color{charcoal}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+  {\normalfont\sffamily\color{navy}}
+  {\small\bfseries\color{teal}\MakeUppercase{\chaptertitlename}\ \thechapter}
+  {4pt}
+  {\LARGE\bfseries}[\vspace{4pt}{\color{teal}\titlerule[0.6pt]}]
+\titleformat{name=\chapter,numberless}[display]
+  {\normalfont\sffamily\color{navy}}{}{0pt}{\LARGE\bfseries}[\vspace{4pt}{\color{teal}\titlerule[0.6pt]}]
+\titlespacing*{\chapter}{0pt}{-12pt}{20pt}
+\titleformat{\section}{\normalfont\sffamily\large\bfseries\color{navy}}{\thesection}{0.8em}{}
+\titleformat{\subsection}{\normalfont\sffamily\normalsize\bfseries\color{navy}}{\thesubsection}{0.8em}{}
+\titleformat{\subsubsection}[runin]{\normalfont\sffamily\normalsize\bfseries\color{teal}}{}{0em}{}[.]
+\titlespacing*{\section}{0pt}{1.4em}{0.5em}
+\titlespacing*{\subsection}{0pt}{1.1em}{0.35em}
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\chaptermark}[1]{\markboth{\thechapter.\ #1}{}}
+\fancyhead[L]{\sffamily\footnotesize\color{rulegrey}\nouppercase{\leftmark}}
+\fancyhead[R]{\sffamily\footnotesize\color{rulegrey}Text2Task}
+\fancyfoot[C]{\sffamily\footnotesize\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+\renewcommand{\headrule}{{\color{rulegrey}\hrule width\headwidth height\headrulewidth}}
+\fancypagestyle{plain}{\fancyhf{}\fancyfoot[C]{\sffamily\footnotesize\thepage}\renewcommand{\headrulewidth}{0pt}}
+
+% ---------------------------------------------------------------- floats, tables, maths, code
+\usepackage{graphicx}
+\usepackage{booktabs,tabularx,array,multirow,longtable,makecell}
+\usepackage{amsmath,bm}
+\usepackage{enumitem}
+\setlist{itemsep=0.15em,topsep=0.3em,leftmargin=1.6em}
+\usepackage[font={small,sf},labelfont={bf,color=navy},labelsep=period,justification=justified,singlelinecheck=true]{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{placeins}
+\renewcommand{\arraystretch}{1.15}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+
+\usepackage{listings}
+\lstdefinestyle{t2t}{
+  basicstyle=\ttfamily\footnotesize, keywordstyle=\color{navy}\bfseries, commentstyle=\color{teal}\itshape,
+  stringstyle=\color{ochre}, numberstyle=\tiny\color{rulegrey}, numbers=left, numbersep=6pt, frame=lines,
+  rulecolor=\color{rulegrey}, framesep=4pt, xleftmargin=1.6em, breaklines=true, breakatwhitespace=true,
+  showstringspaces=false, tabsize=2, columns=fullflexible, keepspaces=true, backgroundcolor=\color{palegrey}}
+\lstset{style=t2t}
+\lstdefinelanguage{json}{morestring=[b]", morecomment=[l]{//}, literate={:}{{{\color{navy}:}}}1}
+\lstdefinestyle{terminal}{style=t2t, numbers=none, backgroundcolor=\color{charcoal}, basicstyle=\ttfamily\scriptsize\color{white}, rulecolor=\color{charcoal}}
+
+% ---------------------------------------------------------------- diagrams
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric,shapes.misc,fit,backgrounds,calc,decorations.pathreplacing,matrix,chains}
+\tikzset{
+  >={Stealth[length=2.2mm]},
+  base/.style={rounded corners=2pt, align=center, font=\sffamily\scriptsize, inner sep=3pt, line width=0.5pt},
+  nn/.style={base, draw=navy, fill=paleblue},
+  rule/.style={base, draw=teal, fill=paleteal},
+  data/.style={base, draw=rulegrey, fill=palegrey},
+  ui/.style={base, draw=ochre, fill=paleochre},
+  warn/.style={base, draw=mutedred, fill=palered},
+  store/.style={base, draw=charcoal, fill=white, cylinder, shape border rotate=90, aspect=0.18, minimum height=9mm},
+  decision/.style={base, draw=teal, fill=paleteal, diamond, aspect=2.3, inner sep=1.2pt},
+  layer/.style={draw=rulegrey, dashed, rounded corners=4pt, inner sep=6pt},
+  layerlabel/.style={font=\sffamily\scriptsize\bfseries, text=navy, anchor=south west, inner sep=1pt, yshift=1pt},
+  flow/.style={->, draw=charcoal, line width=0.55pt},
+  dflow/.style={->, draw=rulegrey, dashed, line width=0.55pt},
+  note/.style={font=\sffamily\tiny, text=charcoal!80, align=center},
+  tok/.style={font=\ttfamily\scriptsize, inner sep=2pt, minimum height=5mm, rounded corners=1pt},
+}
+\newcommand{\legendnn}{\tikz[baseline=-0.6ex]\node[nn,minimum width=3mm,minimum height=2.5mm,inner sep=0]{};}
+\newcommand{\legendrule}{\tikz[baseline=-0.6ex]\node[rule,minimum width=3mm,minimum height=2.5mm,inner sep=0]{};}
+
+% ---------------------------------------------------------------- references and links
+\usepackage[numbers,sort&compress]{natbib}
+\setlength{\bibsep}{3pt}
+\usepackage[hidelinks]{hyperref}
+\hypersetup{colorlinks=true, linkcolor=navy, citecolor=teal, urlcolor=teal, pdftitle={Text2Task: Final Project Report},
+  pdfauthor={Text2Task project team}, pdfsubject={Hybrid neural and rule-based task extraction from email and chat}}
+\usepackage[nameinlink,capitalise,noabbrev]{cleveref}
+\crefname{lstlisting}{Listing}{Listings}
+
+% ---------------------------------------------------------------- helpers
+% identifiers may break after an underscore or a slash, so long paths and labels never overflow the margin
+\newcommand{\breakus}{\textunderscore\allowbreak}
+\DeclareRobustCommand{\code}[1]{{\small\ttfamily\let\_\breakus #1}}
+\DeclareRobustCommand{\lab}[1]{\textsf{\small\let\_\breakus #1}}
+\setlength{\emergencystretch}{2.5em}
+\newcommand{\placeholder}[1]{{\color{rulegrey}[#1]}}
+\newcommand{\status}[1]{\textsf{\scriptsize\bfseries\color{teal}\MakeUppercase{#1}}}
+% \diagram[width]{file}: an original TikZ figure from figures/architecture, scaled to fit the text block
+\newcommand{\diagram}[2][\linewidth]{\resizebox{#1}{!}{\input{figures/architecture/#2}}}
+\newcommand{\chart}[2][\linewidth]{\includegraphics[width=#1]{figures/charts/#2.pdf}}
+\newcommand{\shot}[2][\linewidth]{\includegraphics[width=#1]{figures/screenshots/#2.png}}
+

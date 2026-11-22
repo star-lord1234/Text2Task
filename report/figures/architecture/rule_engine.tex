@@ -1,0 +1,21 @@
+% Figure: cue-based reconciliation decision path for one sentence (src/reconciliation/cues.py, reconciler.py)
+\begin{tikzpicture}[x=1mm, y=1mm, every node/.append style={minimum height=7mm}]
+\node[data, minimum width=36mm] (s) at (0,0) {Sentence + extracted\\ \tiny spans, links, dates, owner};
+\node[decision] (cue) at (0,-17) {intent cue\\ matched?};
+\node[rule, minimum width=50mm] (prio) at (56,-17) {Priority order: reopen $\to$ cancel $\to$\\ complete $\to$ reassign $\to$ date change $\to$\\ decline/confirm $\to$ status $\to$ dependency};
+\node[decision] (gate) at (0,-36) {gated?};
+\node[warn, minimum width=34mm] (noact) at (-44,-36) {NO\_ACTION + reason\\ \tiny question, negated, conditional,\\ \tiny historical, tentative};
+\node[decision] (match) at (0,-55) {referent\\ found?};
+\node[rule, minimum width=50mm] (matcher) at (56,-55) {Lexical matcher over open tasks\\ \tiny token overlap, owner, recency, anaphora, explicit\\ \tiny ids: MATCHED / AMBIGUOUS\_REFERENT / NO\_REFERENT};
+\node[warn, minimum width=34mm] (amb) at (-44,-55) {Clarification\\ \tiny referent chooser; nothing\\ \tiny changes until a person picks};
+\node[rule, minimum width=44mm] (prop) at (0,-73) {Proposal + flags\\ \tiny UPDATE / CONFIRM / COMPLETE / DEPENDENCY\ldots};
+\node[decision] (create) at (-90,-17) {request or\\ commitment?};
+\node[rule, minimum width=34mm] (crt) at (-90,-55) {CREATE\_TASK proposal\\ \tiny owner, due, flags;\\ \tiny restatement $\Rightarrow$ NO\_ACTION};
+\node[ui, minimum width=44mm] (rev) at (0,-91) {Review queue\\ \tiny only the affected person may accept};
+\draw[flow] (s) -- (cue); \draw[flow] (cue) -- node[note, right]{yes} (gate); \draw[dflow] (prio) -- (cue);
+\draw[flow] (gate) -- node[note, above]{yes} (noact); \draw[flow] (gate) -- node[note, right]{no} (match);
+\draw[flow] (match) -- node[note, above]{several} (amb); \draw[dflow] (matcher) -- (match); \draw[flow] (match) -- node[note, right]{one} (prop);
+\draw[flow] (cue) -- node[note, above]{no} (create);
+\draw[flow] (create) -- node[note, right]{yes} (crt);
+\draw[flow] (prop) -- (rev); \draw[flow] (crt) |- (rev); \draw[flow] (amb) |- ([yshift=2mm]rev.west);
+\end{tikzpicture}

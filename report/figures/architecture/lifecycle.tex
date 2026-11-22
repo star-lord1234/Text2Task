@@ -1,0 +1,30 @@
+% Figure: proposal and task lifecycle with the safety checks that guard every transition
+\begin{tikzpicture}[node distance=5mm and 9mm, every node/.append style={minimum height=7.5mm}]
+\node[ui, minimum width=24mm] (pend) {Proposal\\ \textbf{pending}};
+\node[decision, right=10mm of pend] (who) {affected\\ person?};
+\node[decision, right=10mm of who] (safe) {safety\\ checks pass?};
+\node[rule, right=10mm of safe, minimum width=24mm] (app) {\textbf{applied}\\ \tiny history event written};
+\node[data, below=10mm of pend, minimum width=24mm] (dis) {\textbf{dismissed}\\ \tiny by reviewer or author};
+\node[data, below=10mm of who, minimum width=24mm] (sup) {\textbf{superseded}\\ \tiny newer date proposal};
+\node[warn, below=10mm of safe, minimum width=30mm] (ref) {refused, nothing written\\ \tiny STALE\_VERSION, PREREQUISITE\_\\ \tiny PENDING, ILLEGAL\_TRANSITION,\\ \tiny UNRESOLVED\_VALUE};
+\node[data, above=6mm of pend, minimum width=24mm] (noa) {\textbf{no\_action}\\ \tiny acknowledgement, history};
+\draw[flow] (pend) -- (who); \draw[flow] (who) -- node[note, above]{yes} (safe); \draw[flow] (safe) -- node[note, above]{yes} (app);
+\draw[flow] (pend) -- (dis); \draw[flow] (pend.south east) -- (sup.north west); \draw[flow] (safe) -- node[note, right]{no} (ref);
+\draw[flow, mutedred] (who.north) -- ++(0,5mm) node[note, above, text=mutedred]{no: 403 NOT\_YOUR\_REVIEW};
+% task states
+\node[rule, below=24mm of dis, minimum width=22mm] (open) {open\\ \tiny (To do)};
+\node[rule, right=10mm of open, minimum width=22mm] (prog) {in\_progress};
+\node[rule, right=10mm of prog, minimum width=22mm] (done) {completed};
+\node[rule, below=6mm of prog, minimum width=22mm] (canc) {cancelled};
+\node[layer, fit=(open)(prog)(done)(canc), inner sep=5pt] (TS) {};
+\node[layerlabel, anchor=north west, yshift=-1pt] at (TS.south west) {Stored lifecycle (ALLOWED\_TRANSITIONS)};
+\draw[flow] (open) -- (prog); \draw[flow] (prog) -- (done); \draw[flow] (open.north) to[bend left=18] (done.north);
+\draw[flow] (open) |- (canc); \draw[flow] (prog) -- (canc);
+\node[nn, right=12mm of done, minimum width=28mm, yshift=6mm] (ready) {ready};
+\node[nn, below=2mm of ready, minimum width=28mm] (blk) {blocked\\ \tiny an open prerequisite};
+\node[nn, below=2mm of blk, minimum width=28mm] (rev) {needs review\\ \tiny only cancelled prerequisites};
+\node[layer, fit=(ready)(rev), inner sep=5pt] (DS) {};
+\node[layerlabel, anchor=north west, yshift=-1pt] at (DS.south west) {Derived state (graph)};
+\draw[dflow] (TS.east) -- (DS.west);
+\draw[dflow] (app.south) -- ++(0,-5mm) -| (TS.north);
+\end{tikzpicture}

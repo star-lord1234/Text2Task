@@ -1,0 +1,16 @@
+{
+ "texts": 100,
+ "starts_mid_word": 8,
+ "ends_mid_word": 8,
+ "mid_word_any": 15,
+ "one_or_two_chars": 16,
+ "stopword_only": 33,
+ "spans": 200,
+ "adjacent_same_type": 21,
+ "orphan_I": 80,
+ "rates": {
+  "mid_word": 0.075,
+  "stopword_only": 0.165,
+  "one_or_two_chars": 0.08
+ }
+}

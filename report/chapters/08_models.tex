@@ -1,0 +1,139 @@
+\chapter{Machine Learning and Model Fine-Tuning}
+\label{ch:models}
+
+Both learned components of Text2Task are fine-tuned from the same pre-trained encoder, \code{distilbert/distilbert-base-uncased} \citep{sanh2019distilbert}. This chapter describes the encoder, the two task heads, the training objective and optimiser, the configurations actually run, and how checkpoints were selected.
+
+\section{Input representation}
+Text is lower-cased and split into WordPiece units from a vocabulary of 30,522 entries. Words outside the vocabulary are split into known pieces (\emph{chatted} $\to$ \code{chat}, \code{\#\#ted}), so no input is ever unknown. A sequence starts with \code{[CLS]} and ends with \code{[SEP]}, and is at most 512 pieces long; longer texts are windowed (\cref{sec:bio}). The tokeniser returns, for every piece, its character range in the original text, which is how predicted labels are mapped back to character spans. For the relation model the vocabulary is extended with the typed marker tokens (\code{[E1\_TASK]}, \code{[/E1\_TASK]}, \code{[E2\_PERSON]}, \code{[E2\_TEMPORAL]} and their closing forms), whose embeddings are learned during fine-tuning.
+
+\section{Contextual embeddings and the encoder}
+Each piece $x_i$ at position $i$ is mapped to an input vector
+\begin{equation}
+\mathbf{e}_i = \operatorname{LayerNorm}\!\left(\mathbf{W}_{\text{tok}}[x_i] + \mathbf{W}_{\text{pos}}[i]\right) \in \mathbb{R}^{768}.
+\end{equation}
+DistilBERT has no segment embeddings. The vectors pass through six transformer layers \citep{vaswani2017attention}. Each layer applies multi-head self-attention, in which every position forms a query, key and value and attends to all positions:
+\begin{equation}
+\operatorname{Attention}(\mathbf{Q},\mathbf{K},\mathbf{V}) = \operatorname{softmax}\!\left(\frac{\mathbf{Q}\mathbf{K}^{\top}}{\sqrt{d_k}}\right)\mathbf{V}, \qquad d_k = 768/12 = 64,
+\end{equation}
+computed in 12 heads whose outputs are concatenated and projected. A residual connection and layer normalisation follow, then a position-wise feed-forward network with a GELU non-linearity and inner dimension 3072, again with residual connection and normalisation. The output $\mathbf{h}_i\in\mathbb{R}^{768}$ of the last layer is a \emph{contextual} representation: the vector for \emph{report} in \emph{``prepare the quarterly report''} differs from its vector in \emph{``the report is attached''}, because attention mixes in the surrounding words. This is what allows a linear head to decide whether a token begins a task. The encoder has about 66 million parameters, small enough to fine-tune on a laptop GPU.
+
+\section{Entity model}
+\Cref{fig:entitymodel} shows the token-classification model. A dropout layer and a linear layer map each final hidden state to scores over the seven BIO labels
+\[
+\mathcal{Y}=\{\lab{O},\lab{B-TASK},\lab{I-TASK},\lab{B-PERSON},\lab{I-PERSON},\lab{B-TEMPORAL},\lab{I-TEMPORAL}\},
+\]
+with the probability
+\begin{equation}
+p(y_i = c \mid \mathbf{x}) = \frac{\exp(\mathbf{w}_c^{\top}\mathbf{h}_i + b_c)}{\sum_{c'\in\mathcal{Y}}\exp(\mathbf{w}_{c'}^{\top}\mathbf{h}_i + b_{c'})}.
+\end{equation}
+Each token is classified independently; there is no CRF layer, so invalid sequences such as \lab{O} followed by \lab{I-TASK} can occur. The decoder handles them deterministically (\cref{sec:decoding}). The six-class SILVER-v1 model used the same architecture with 13 labels.
+
+\begin{figure}[t]
+\centering
+\diagram[0.92\linewidth]{entity_model}
+\caption[Entity extraction model]{Entity extraction model: WordPiece tokenisation with offsets, DistilBERT encoder, per-token linear classification head, and BIO decoding into character spans.}
+\label{fig:entitymodel}
+\end{figure}
+
+\section{Relation model}
+The relation model (\cref{fig:relmodel}) classifies one candidate pair per input. After the typed markers are inserted, the encoder produces $\mathbf{h}$ for every piece, and the \code{markers} pooling concatenates the \code{[CLS]} vector with the vectors at the two opening markers:
+\begin{equation}
+\mathbf{f} = \left[\mathbf{h}_{\texttt{[CLS]}};\, \mathbf{h}_{\texttt{[E1\_TASK]}};\, \mathbf{h}_{\texttt{[E2\_*]}}\right] \in \mathbb{R}^{2304}, \qquad
+p(r \mid \mathbf{x}, e_1, e_2) = \operatorname{softmax}(\mathbf{W}_r\,\operatorname{dropout}(\mathbf{f}) + \mathbf{b}_r),
+\end{equation}
+with $r\in\{\lab{NONE},\lab{ASSIGNED\_TO},\lab{DUE\_ON},\lab{SCHEDULED\_ON}\}$. Because the markers encode entity types, the model knows whether the second argument is a person or a date, following \citet{zhong2021pure}. A \code{cls} pooling alternative is implemented but was not trained, for lack of time (\cref{ch:results}).
+
+\begin{figure}[t]
+\centering
+\diagram{relation_model}
+\caption[Relation extraction architecture]{Relation extraction with typed entity markers and marker pooling, followed by the rule checks applied to its output. The graph on the right illustrates the label set on a schematic example.}
+\label{fig:relmodel}
+\end{figure}
+
+\section{Training objective}
+Both models minimise a class-weighted cross-entropy. For the entity model, with $\mathcal{M}$ the set of non-special token positions in a batch,
+\begin{equation}
+\mathcal{L} = \frac{\sum_{i\in\mathcal{M}} w_{y_i}\,\big(-\log p(y_i\mid\mathbf{x})\big)}{\sum_{i\in\mathcal{M}} w_{y_i}},
+\end{equation}
+which is PyTorch's weighted cross-entropy with mean reduction. With all weights equal to one this is the ordinary average token loss.
+
+\subsection{Class weighting}
+Because 91\% of tokens are \lab{O} (\cref{sec:imbalance}), an unweighted loss can be reduced substantially by predicting \lab{O} everywhere. The optional \code{sqrt\_inverse} weighting raises the weight of rare labels with a dampened inverse frequency:
+\begin{equation}
+w_c^{\text{ent}} = \sqrt{\frac{N_{\lab{O}}}{N_c}},
+\end{equation}
+where $N_c$ is the number of training tokens with label $c$, so $w_{\lab{O}}=1$. For the SILVER-v2 training set this gives weights from 2.87 (\lab{I-TASK}) to 11.59 (\lab{I-PERSON}). The square root is a compromise: full inverse-frequency weights of over 100 would make the model mark almost every token as an entity. The relation model uses
+\begin{equation}
+w_c^{\text{rel}} = \sqrt{\frac{N}{K\,n_c}},
+\end{equation}
+with $N$ training pairs, $K=4$ classes and $n_c$ pairs of class $c$. On the relation training set (1,144 \lab{NONE}, 579 \lab{ASSIGNED\_TO}, 33 \lab{DUE\_ON}, 532 \lab{SCHEDULED\_ON}) this yields 0.707, 0.994, 4.163 and 1.037, the values stored in the checkpoint's configuration.
+
+\section{Optimisation}
+Parameters are updated with AdamW \citep{loshchilov2019adamw}. For gradient $\mathbf{g}_t$ at step $t$,
+\begin{align}
+\mathbf{m}_t &= \beta_1\mathbf{m}_{t-1} + (1-\beta_1)\mathbf{g}_t, \qquad
+\mathbf{v}_t = \beta_2\mathbf{v}_{t-1} + (1-\beta_2)\mathbf{g}_t^{2},\\
+\boldsymbol{\theta}_t &= \boldsymbol{\theta}_{t-1} - \eta_t\left(\frac{\hat{\mathbf{m}}_t}{\sqrt{\hat{\mathbf{v}}_t}+\epsilon} + \lambda\,\boldsymbol{\theta}_{t-1}\right),
+\end{align}
+where $\hat{\mathbf{m}}_t,\hat{\mathbf{v}}_t$ are the bias-corrected moments and $\lambda=0.01$ is the decoupled weight decay. The learning rate follows a linear warm-up over the first $T_w$ optimiser steps and then decays linearly to zero over the remaining steps of a run of length $T$:
+\begin{equation}
+\eta_t = \eta_{\max}\cdot\begin{cases} t/T_w & t < T_w,\\ (T-t)/(T-T_w) & t \ge T_w.\end{cases}
+\end{equation}
+Warm-up protects the pre-trained weights from large early updates while the randomly initialised head is still poor. Gradients are accumulated over several mini-batches, so the effective batch size is the per-step batch times the accumulation factor (16 for both models). All training ran on the Apple M5 GPU through the MPS backend with fixed seeds.
+
+\section{Experimental runs and hyperparameters}
+\Cref{fig:training} summarises the training loop and \cref{tab:hyper} lists every run whose results appear in this report.
+
+\begin{figure}[t]
+\centering
+\diagram[0.95\linewidth]{training_pipeline}
+\caption[Model training and fine-tuning pipeline]{Fine-tuning loop as implemented: mini-batches with gradient accumulation, weighted cross-entropy, AdamW with linear warm-up and decay, end-of-epoch validation, and keeping the best checkpoint together with its configuration, data hashes and provenance.}
+\label{fig:training}
+\end{figure}
+
+\begin{table}[t]
+\centering
+\caption[Training configurations]{Training configurations of all reported runs (from the saved \code{metrics.json}, \code{training\_metrics.json} and \code{relation\_config.json}). All use DistilBERT-base-uncased, weight decay 0.01 and an effective batch size of 16. Times are wall-clock on the Apple M5 (MPS).}
+\label{tab:hyper}
+\footnotesize
+\begin{tabularx}{\linewidth}{@{}Lp{19mm}p{9mm}p{10mm}p{12mm}p{11mm}p{11mm}p{12mm}@{}}
+\toprule
+Run & Data & LR & Epochs & Weights & Steps & Time (s) & Selected \\
+\midrule
+SILVER-v1, 6 classes & SILVER-v1 & 2e-5 & 3 & none & 132 & 79 & step 132 \\
+v2 ep3 unweighted & SILVER-v2 & 2e-5 & 3 & none & 87 & 108 & epoch 3 \\
+v2 ep6 unweighted & SILVER-v2 & 2e-5 & 6 & none & 174 & 179 & epoch 6 \\
+\textbf{v2 ep3 sqrt (app)} & SILVER-v2 & 2e-5 & 3 & sqrt & 87 & 93 & epoch 3 \\
+Phase 2 Run 1 & MailEx-der. & 5e-5 & 10 & none & 1,800 & 1,723 & epoch 8 \\
+Phase 2 Run 2 & MailEx-der. & 3e-5 & 10 & none & 1,800 & 1,527 & epoch 10 \\
+Phase 2 Run 3 (req.\ only) & MailEx-der. & 5e-5 & 10 & none & 1,800 & 11,060* & epoch 10 \\
+\textbf{Relation (app)} & SILVER-v1 rel. & 3e-5 & 5$^{\dagger}$ & sqrt & -- & -- & epoch 3 \\
+\bottomrule
+\end{tabularx}
+
+\raggedright\scriptsize $^{\dagger}$Planned; stopped during epoch 5. *Run 3's wall-clock time includes an interruption of the session; its training steps match Runs 1 and 2. Phase 2 runs used 180 warm-up steps (10\%); the relation run used a 10\% warm-up ratio, per-step batch 8 with accumulation 2, and seed 20261102 (entity runs: 20261101).
+\end{table}
+
+\section{Checkpoint selection and convergence}
+Every run evaluated on the validation split at the end of each epoch and kept the best checkpoint by a fixed metric: the SILVER-v2 runs by entity F1 on the SILVER-v1 validation set, the Phase 2 runs by overall lenient span F1, and the relation run by macro F1 over the three positive labels.
+
+\Cref{fig:phase2curves} shows the training behaviour of Phase 2 Run 1. Training loss falls steadily over ten epochs, from 2.56 to below 0.1, while validation loss reaches its minimum at epoch 2 and then rises. Validation F1 nevertheless keeps improving until epoch 8 (lenient 0.575, before deduplication), because span F1 depends on the arg-max decision while the loss also penalises over-confident probabilities. The divergence is a sign of over-fitting in calibration rather than in ranking, and it matters for any use of the scores as probabilities (\cref{ch:errors}). Selecting the best epoch on the same set that is reported introduces a small optimism: the final-epoch score of Run 1 was 0.568 against 0.575 at epoch 8.
+
+The relation model converged faster (\cref{fig:reltraining}): macro F1 rose from 0.35 to 0.72 by epoch 3 and fell to 0.68 at epoch 4, while the training loss dropped to about 0.09, so the run was stopped during epoch 5 and the epoch-3 checkpoint kept. The macro F1 used for this selection depends on only 10 \lab{DUE\_ON} validation pairs and is therefore noisy.
+
+\begin{figure}[t]
+\centering
+\chart{phase2_training_curves}
+\caption[Training and validation curves, Phase 2 Run 1]{Phase 2 Run 1 (lr $5\times10^{-5}$): (a) training and validation loss per epoch; (b) validation span F1 per epoch on the original development set (before deduplication). The selected epoch is marked. Values as logged by the trainer, without smoothing.}
+\label{fig:phase2curves}
+\end{figure}
+
+\begin{figure}[t]
+\centering
+\chart{relation_training}
+\caption[Relation model training]{Relation model (markers pooling, sqrt weights): (a) training loss; (b) validation macro and micro F1 over positive labels and the false-link rate on \lab{NONE} pairs. Epoch 3 was selected; the run was stopped during epoch 5.}
+\label{fig:reltraining}
+\end{figure}
+
+\section{A mechanical sanity check}
+Before the main runs, a controlled memorisation test trained the entity pipeline on 20 clean examples and reached entity F1 of 1.0 on them, and a corresponding test was run for the relation model. This proves only that tokenisation, label alignment, loss computation and decoding work end to end; it says nothing about generalisation, but it ruled out pipeline bugs as the explanation for the weak early results.

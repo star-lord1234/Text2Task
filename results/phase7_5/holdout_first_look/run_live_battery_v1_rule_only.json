@@ -1,0 +1,1664 @@
+{
+ "fixture": "live_battery_v1",
+ "preset": "rule_only",
+ "cases": [
+  {
+   "id": "I1",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please prepare the report by Friday.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cprepare the report\u201d \u2014 Bianca, due 2026-11-13",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "prepare the report",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": "2026-11-13"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 1,
+    "due_expected": 1,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "I2",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, can you clean the dataset by Thursday?",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": [
+        "TENTATIVE_REQUEST"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 1,
+    "due_expected": 1,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "I3",
+   "group": "independent",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I'll send the invoice tomorrow.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201c'll send the invoice\u201d \u2014 Anushree, due no confirmed date",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "'ll send the invoice",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 1,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "['send', 'invoice']: due none != 2026-11-12"
+    ],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "I4",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Please review the slides.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201creview the slides\u201d \u2014 unassigned, due no confirmed date",
+       "flags": [
+        "AMBIGUOUS_ASSIGNEE"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "review the slides",
+      "owner": null,
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "I5",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Can someone review the slides?",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201creview the slides\u201d \u2014 unassigned, due no confirmed date",
+       "flags": [
+        "NO_ASSIGNEE",
+        "TENTATIVE_REQUEST"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "review the slides",
+      "owner": null,
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "I6",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Anushree will present the results on Monday at 3pm.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cwill present the results\u201d \u2014 Anushree, due no confirmed date",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "will present the results",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "I7",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, send me the model report by Thursday and the invoice by Friday.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201csend me the model report\u201d \u2014 Bianca, due 2026-11-12",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "send me the model report",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 2,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 1,
+    "due_expected": 1,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['invoice']"
+    ],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "I8",
+   "group": "negative",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "The server went down yesterday.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     []
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 0,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "I9",
+   "group": "negative",
+   "messages": [
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Thanks, sounds good.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "NO_ACTION",
+       "summary": "acknowledgement with no pending change",
+       "flags": [
+        "NO_PENDING_PROPOSAL"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [],
+    "edges": []
+   },
+   "score": {
+    "found": 0,
+    "expected": 0,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "I10",
+   "group": "independent",
+   "messages": [
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please book a meeting room for next Tuesday afternoon.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cbook a meeting room\u201d \u2014 Bianca, due no confirmed date",
+       "flags": [
+        "DATE_ASSUMPTION"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "book a meeting room",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "C1",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please train the model once Anushree finishes the dataset.",
+     "09:35"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ctrain the model once Anushree finishes the dataset\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      },
+      {
+       "op": "ADD_DEPENDENCY",
+       "summary": "\u201ctrain the model once Anushree finishes the dataset\u201d depends on \u201cclean the dataset\u201d (prerequisite \u2192 dependent)",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     },
+     {
+      "id": "T-2",
+      "title": "train the model once Anushree finishes the dataset",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": [
+     {
+      "source": "T-1",
+      "target": "T-2",
+      "kind": "accepted"
+     }
+    ]
+   },
+   "score": {
+    "found": 2,
+    "expected": 2,
+    "owner_ok": 2,
+    "owner_expected": 2,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 1,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "C2",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, train the model after the dataset is cleaned.",
+     "09:35"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ctrain the model\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      },
+      {
+       "op": "ADD_DEPENDENCY",
+       "summary": "\u201ctrain the model\u201d depends on \u201cclean the dataset\u201d (prerequisite \u2192 dependent)",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     },
+     {
+      "id": "T-2",
+      "title": "train the model",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": [
+     {
+      "source": "T-1",
+      "target": "T-2",
+      "kind": "accepted"
+     }
+    ]
+   },
+   "score": {
+    "found": 2,
+    "expected": 2,
+    "owner_ok": 2,
+    "owner_expected": 2,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 1,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "C3",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please write the report by Friday.",
+     "09:33"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "The report is waiting on the dataset.",
+     "09:36"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cwrite the report\u201d \u2014 Bianca, due 2026-11-13",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "ADD_DEPENDENCY",
+       "summary": "\u201cwrite the report\u201d depends on \u201cclean the dataset\u201d (prerequisite \u2192 dependent)",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     },
+     {
+      "id": "T-2",
+      "title": "write the report",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": "2026-11-13"
+     }
+    ],
+    "edges": [
+     {
+      "source": "T-1",
+      "target": "T-2",
+      "kind": "accepted"
+     }
+    ]
+   },
+   "score": {
+    "found": 2,
+    "expected": 2,
+    "owner_ok": 2,
+    "owner_expected": 2,
+    "due_ok": 1,
+    "due_expected": 1,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 1,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "C4",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "bianca"
+     ],
+     "Bianca, please write the report, but only after Anushree finishes the analysis.",
+     "09:35"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cwrite the report, but only after Anushree finishes the analysis\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     },
+     {
+      "id": "T-2",
+      "title": "write the report, but only after Anushree finishes the analysis",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 2,
+    "expected": 2,
+    "owner_ok": 2,
+    "owner_expected": 2,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "S1",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "After you clean the dataset, write a report.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 unassigned, due no confirmed date",
+       "flags": [
+        "NO_ASSIGNEE"
+       ]
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cwrite a report\u201d \u2014 unassigned, due no confirmed date",
+       "flags": [
+        "NO_ASSIGNEE"
+       ]
+      },
+      {
+       "op": "ADD_DEPENDENCY",
+       "summary": "\u201cwrite a report\u201d depends on \u201cclean the dataset\u201d (prerequisite \u2192 dependent)",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": null,
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "write a report",
+      "owner": null,
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": [
+     {
+      "source": "T-1",
+      "target": "T-2",
+      "kind": "accepted"
+     }
+    ]
+   },
+   "score": {
+    "found": 2,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 1,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "S2",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Anushree, after you clean the dataset, please write a report.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 unassigned, due no confirmed date",
+       "flags": [
+        "NO_ASSIGNEE"
+       ]
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cwrite a report\u201d \u2014 unassigned, due no confirmed date",
+       "flags": [
+        "AMBIGUOUS_ASSIGNEE"
+       ]
+      },
+      {
+       "op": "ADD_DEPENDENCY",
+       "summary": "\u201cwrite a report\u201d depends on \u201cclean the dataset\u201d (prerequisite \u2192 dependent)",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": null,
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "write a report",
+      "owner": null,
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": [
+     {
+      "source": "T-1",
+      "target": "T-2",
+      "kind": "accepted"
+     }
+    ]
+   },
+   "score": {
+    "found": 2,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 1,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "S3",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Before we send the report, someone needs to proofread it.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201csend the report\u201d \u2014 unassigned, due no confirmed date",
+       "flags": [
+        "NO_ASSIGNEE"
+       ]
+      },
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cproofread it\u201d \u2014 unassigned, due no confirmed date",
+       "flags": [
+        "NO_ASSIGNEE"
+       ]
+      },
+      {
+       "op": "ADD_DEPENDENCY",
+       "summary": "\u201csend the report\u201d depends on \u201cproofread it\u201d (prerequisite \u2192 dependent)",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "send the report",
+      "owner": null,
+      "lifecycle": "open",
+      "due": ""
+     },
+     {
+      "id": "T-2",
+      "title": "proofread it",
+      "owner": null,
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": [
+     {
+      "source": "T-2",
+      "target": "T-1",
+      "kind": "accepted"
+     }
+    ]
+   },
+   "score": {
+    "found": 2,
+    "expected": 2,
+    "owner_ok": 0,
+    "owner_expected": 0,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 1,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "S4",
+   "group": "dependent",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree",
+      "bianca"
+     ],
+     "Bianca, please train the model, then Anushree should evaluate it.",
+     "09:30"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201ctrain the model, then Anushree should evaluate it\u201d \u2014 Bianca, due no confirmed date",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "train the model, then Anushree should evaluate it",
+      "owner": "bianca",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 2,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 0,
+    "status_expected": 0,
+    "failures": [
+     "missing task ['evaluate']",
+     "missing edge ['evaluate'] <- ['train', 'model']"
+    ],
+    "spurious_tasks": [],
+    "edges_expected": 1,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "F1",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Sure, I'll take care of it.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201c'll take care of it\u201d \u2014 Anushree, due no confirmed date",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     },
+     {
+      "id": "T-2",
+      "title": "'ll take care of it",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": ""
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 1,
+    "status_expected": 1,
+    "failures": [
+     "spurious tasks [\"'ll take care of it\"]",
+     "2 CREATE_TASK proposals > 1"
+    ],
+    "spurious_tasks": [
+     "'ll take care of it"
+    ],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": false,
+    "passed_ignoring_spurious": false
+   }
+  },
+  {
+   "id": "F2",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "The dataset is cleaned.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "COMPLETE_TASK",
+       "summary": "Mark \u201cclean the dataset\u201d done",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "completed",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 1,
+    "status_expected": 1,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "F3",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Done with the dataset.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "COMPLETE_TASK",
+       "summary": "Mark \u201cclean the dataset\u201d done",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "completed",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 1,
+    "status_expected": 1,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "F4",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "Could we move the deadline to Friday?",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "PROPOSE_DUE_DATE_CHANGE",
+       "summary": "Propose changing due of \u201cclean the dataset\u201d to 2026-11-13",
+       "flags": [
+        "TENTATIVE_REQUEST"
+       ]
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "open",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 1,
+    "status_expected": 1,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "F5",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Actually, cancel the dataset task.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "CANCEL_TASK",
+       "summary": "Mark \u201cclean the dataset\u201d cancelled",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "cancelled",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 1,
+    "status_expected": 1,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  },
+  {
+   "id": "F6",
+   "group": "lifecycle",
+   "messages": [
+    [
+     "riya",
+     [
+      "anushree"
+     ],
+     "Anushree, please clean the dataset by Thursday.",
+     "09:30"
+    ],
+    [
+     "anushree",
+     [
+      "riya"
+     ],
+     "I'm working on the dataset now.",
+     "09:50"
+    ]
+   ],
+   "record": {
+    "proposals": [
+     [
+      {
+       "op": "CREATE_TASK",
+       "summary": "Create task \u201cclean the dataset\u201d \u2014 Anushree, due 2026-11-12",
+       "flags": []
+      }
+     ],
+     [
+      {
+       "op": "UPDATE_STATUS",
+       "summary": "Mark \u201cclean the dataset\u201d in progress",
+       "flags": []
+      }
+     ]
+    ],
+    "errors": [],
+    "tasks": [
+     {
+      "id": "T-1",
+      "title": "clean the dataset",
+      "owner": "anushree",
+      "lifecycle": "in_progress",
+      "due": "2026-11-12"
+     }
+    ],
+    "edges": []
+   },
+   "score": {
+    "found": 1,
+    "expected": 1,
+    "owner_ok": 1,
+    "owner_expected": 1,
+    "due_ok": 0,
+    "due_expected": 0,
+    "status_ok": 1,
+    "status_expected": 1,
+    "failures": [],
+    "spurious_tasks": [],
+    "edges_expected": 0,
+    "edges_found": 0,
+    "spurious_edges": [],
+    "passed": true,
+    "passed_ignoring_spurious": true
+   }
+  }
+ ],
+ "summary": {
+  "independent": {
+   "cases": 8,
+   "passed_strict": 6,
+   "passed_ignoring_spurious": 6,
+   "task_recall": 0.889,
+   "owner_accuracy": 1.0,
+   "due_accuracy": 0.75,
+   "status_accuracy": null,
+   "edge_recall": null,
+   "expected_edges": 0,
+   "spurious_tasks": 0,
+   "spurious_edges": 0
+  },
+  "ALL": {
+   "cases": 24,
+   "passed_strict": 20,
+   "passed_ignoring_spurious": 20,
+   "task_recall": 0.935,
+   "owner_accuracy": 1.0,
+   "due_accuracy": 0.8,
+   "status_accuracy": 1.0,
+   "edge_recall": 0.857,
+   "expected_edges": 7,
+   "spurious_tasks": 1,
+   "spurious_edges": 0
+  },
+  "negative": {
+   "cases": 2,
+   "passed_strict": 2,
+   "passed_ignoring_spurious": 2,
+   "task_recall": null,
+   "owner_accuracy": null,
+   "due_accuracy": null,
+   "status_accuracy": null,
+   "edge_recall": null,
+   "expected_edges": 0,
+   "spurious_tasks": 0,
+   "spurious_edges": 0
+  },
+  "dependent": {
+   "cases": 8,
+   "passed_strict": 7,
+   "passed_ignoring_spurious": 7,
+   "task_recall": 0.938,
+   "owner_accuracy": 1.0,
+   "due_accuracy": 1.0,
+   "status_accuracy": null,
+   "edge_recall": 0.857,
+   "expected_edges": 7,
+   "spurious_tasks": 0,
+   "spurious_edges": 0
+  },
+  "lifecycle": {
+   "cases": 6,
+   "passed_strict": 5,
+   "passed_ignoring_spurious": 5,
+   "task_recall": 1.0,
+   "owner_accuracy": 1.0,
+   "due_accuracy": null,
+   "status_accuracy": 1.0,
+   "edge_recall": null,
+   "expected_edges": 0,
+   "spurious_tasks": 1,
+   "spurious_edges": 0
+  }
+ }
+}

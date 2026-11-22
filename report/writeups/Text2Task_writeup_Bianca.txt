@@ -1,0 +1,29 @@
+TEXT2TASK - Project Write-up (Bianca Sawant, 241071067)
+
+AIM / PROBLEM STATEMENT
+Work gets assigned in emails and chats ("Anushree, clean the dataset by Thursday") but never reaches a task tracker. Aim: automatically turn such messages into tasks with an owner, a deadline and dependencies, and let people review them before anything changes.
+
+DATASET
+MailEx (EMNLP 2023), built from Enron emails: 3,117 / 414 / 405 emails (train/dev/test) across 1,200 / 150 / 150 threads. We converted its event annotations into our own labels: TASK, PERSON and TEMPORAL entities, plus ASSIGNED_TO, DUE_ON and SCHEDULED_ON relations. No human-verified (gold) labels exist; all labels are derived ("silver").
+
+OBJECTIVES
+1. Extract tasks, people and dates from text.
+2. Link each task to its owner and deadline; convert "by Friday" into a real date.
+3. Detect updates to existing tasks (done, cancelled, reassigned) instead of duplicating them.
+4. Keep a valid dependency graph (no cycles).
+5. Show everything as reviewable suggestions; only the assignee approves their own task.
+
+SOLUTION
+Hybrid pipeline: two DistilBERT models (entity tagger + relation classifier with entity markers), followed by rule modules for dates, owners, task updates and the dependency graph. A FastAPI + React app gives a Slack-style chat with task panel, dependency graph, timeline and review queue.
+
+RESULTS AND METRICS (dev set, after removing leaked emails)
+- Entity extraction F1: 0.555 lenient / 0.390 strict (TASK 0.482, PERSON 0.594, TEMPORAL 0.645); rule baseline 0.401.
+- Relation extraction micro-F1: 0.764 (95% CI 0.70-0.84), macro 0.719; rule baseline 0.527.
+- Chat scenarios passed: hybrid 23/30, rules alone 22/30, neural alone 7/30.
+- Task-update and graph logic: 91/91 scenarios, 0 errors in 12,000 random test steps.
+Note: scores are agreement with silver labels, not human-checked.
+
+REFERENCES
+1. Srivastava et al., "MailEx: Email Event and Argument Extraction", EMNLP 2023.
+2. Mukherjee et al., "Smart To-Do: Automatic Generation of To-Do Items from Emails", ACL 2020.
+3. Zhong & Chen, "A Frustratingly Easy Approach for Entity and Relation Extraction", NAACL 2021.

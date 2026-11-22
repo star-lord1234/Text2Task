@@ -1,0 +1,431 @@
+{
+  "results/entity_extraction/entity_v2_three_class/epoch3/validation_predictions.jsonl": {
+    "iou_threshold": 0.5,
+    "overall": {
+      "lenient": {
+        "f1": 0.023980815347721826,
+        "matched": 5,
+        "precision": 0.5555555555555556,
+        "predicted": 9,
+        "recall": 0.012254901960784314,
+        "support": 408
+      },
+      "overlap_any": {
+        "f1": 0.028776978417266192,
+        "matched": 6,
+        "precision": 0.6666666666666666,
+        "predicted": 9,
+        "recall": 0.014705882352941176,
+        "support": 408
+      },
+      "strict": {
+        "f1": 0.019184652278177457,
+        "matched": 4,
+        "precision": 0.4444444444444444,
+        "predicted": 9,
+        "recall": 0.00980392156862745,
+        "support": 408
+      },
+      "token": {
+        "f1": 0.010941774130519735,
+        "matched": 14,
+        "precision": 0.8235294117647058,
+        "predicted": 17,
+        "recall": 0.0055074744295830055,
+        "support": 2542
+      }
+    },
+    "per_type": {
+      "PERSON": {
+        "lenient": {
+          "f1": 0.0,
+          "matched": 0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 63
+        },
+        "overlap_any": {
+          "f1": 0.0,
+          "matched": 0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 63
+        },
+        "strict": {
+          "f1": 0.0,
+          "matched": 0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 63
+        },
+        "token": {
+          "f1": 0.0,
+          "matched": 0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 116
+        }
+      },
+      "TASK": {
+        "lenient": {
+          "f1": 0.0,
+          "matched": 0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 272
+        },
+        "overlap_any": {
+          "f1": 0.0,
+          "matched": 0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 272
+        },
+        "strict": {
+          "f1": 0.0,
+          "matched": 0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 272
+        },
+        "token": {
+          "f1": 0.0,
+          "matched": 0,
+          "precision": 0.0,
+          "predicted": 0,
+          "recall": 0.0,
+          "support": 2158
+        }
+      },
+      "TEMPORAL": {
+        "lenient": {
+          "f1": 0.1219512195121951,
+          "matched": 5,
+          "precision": 0.5555555555555556,
+          "predicted": 9,
+          "recall": 0.0684931506849315,
+          "support": 73
+        },
+        "overlap_any": {
+          "f1": 0.14634146341463414,
+          "matched": 6,
+          "precision": 0.6666666666666666,
+          "predicted": 9,
+          "recall": 0.0821917808219178,
+          "support": 73
+        },
+        "strict": {
+          "f1": 0.0975609756097561,
+          "matched": 4,
+          "precision": 0.4444444444444444,
+          "predicted": 9,
+          "recall": 0.0547945205479452,
+          "support": 73
+        },
+        "token": {
+          "f1": 0.09824561403508772,
+          "matched": 14,
+          "precision": 0.8235294117647058,
+          "predicted": 17,
+          "recall": 0.05223880597014925,
+          "support": 268
+        }
+      }
+    },
+    "rows": 60,
+    "source": "results/entity_extraction/entity_v2_three_class/epoch3/validation_predictions.jsonl"
+  },
+  "results/entity_extraction/entity_v2_three_class/epoch3_sqrt_weighted/validation_predictions.jsonl": {
+    "iou_threshold": 0.5,
+    "overall": {
+      "lenient": {
+        "f1": 0.2263279445727483,
+        "matched": 98,
+        "precision": 0.21397379912663755,
+        "predicted": 458,
+        "recall": 0.24019607843137256,
+        "support": 408
+      },
+      "overlap_any": {
+        "f1": 0.41108545034642036,
+        "matched": 178,
+        "precision": 0.388646288209607,
+        "predicted": 458,
+        "recall": 0.4362745098039216,
+        "support": 408
+      },
+      "strict": {
+        "f1": 0.12702078521939955,
+        "matched": 55,
+        "precision": 0.12008733624454149,
+        "predicted": 458,
+        "recall": 0.13480392156862744,
+        "support": 408
+      },
+      "token": {
+        "f1": 0.2202562538133008,
+        "matched": 361,
+        "precision": 0.4904891304347826,
+        "predicted": 736,
+        "recall": 0.14201416207710466,
+        "support": 2542
+      }
+    },
+    "per_type": {
+      "PERSON": {
+        "lenient": {
+          "f1": 0.39583333333333337,
+          "matched": 38,
+          "precision": 0.29457364341085274,
+          "predicted": 129,
+          "recall": 0.6031746031746031,
+          "support": 63
+        },
+        "overlap_any": {
+          "f1": 0.45833333333333337,
+          "matched": 44,
+          "precision": 0.34108527131782945,
+          "predicted": 129,
+          "recall": 0.6984126984126984,
+          "support": 63
+        },
+        "strict": {
+          "f1": 0.33333333333333337,
+          "matched": 32,
+          "precision": 0.24806201550387597,
+          "predicted": 129,
+          "recall": 0.5079365079365079,
+          "support": 63
+        },
+        "token": {
+          "f1": 0.3918367346938776,
+          "matched": 48,
+          "precision": 0.37209302325581395,
+          "predicted": 129,
+          "recall": 0.41379310344827586,
+          "support": 116
+        }
+      },
+      "TASK": {
+        "lenient": {
+          "f1": 0.06751054852320676,
+          "matched": 16,
+          "precision": 0.07920792079207921,
+          "predicted": 202,
+          "recall": 0.058823529411764705,
+          "support": 272
+        },
+        "overlap_any": {
+          "f1": 0.32489451476793246,
+          "matched": 77,
+          "precision": 0.3811881188118812,
+          "predicted": 202,
+          "recall": 0.28308823529411764,
+          "support": 272
+        },
+        "strict": {
+          "f1": 0.0042194092827004225,
+          "matched": 1,
+          "precision": 0.0049504950495049506,
+          "predicted": 202,
+          "recall": 0.003676470588235294,
+          "support": 272
+        },
+        "token": {
+          "f1": 0.13114754098360654,
+          "matched": 160,
+          "precision": 0.5673758865248227,
+          "predicted": 282,
+          "recall": 0.07414272474513438,
+          "support": 2158
+        }
+      },
+      "TEMPORAL": {
+        "lenient": {
+          "f1": 0.44,
+          "matched": 44,
+          "precision": 0.3464566929133858,
+          "predicted": 127,
+          "recall": 0.6027397260273972,
+          "support": 73
+        },
+        "overlap_any": {
+          "f1": 0.57,
+          "matched": 57,
+          "precision": 0.44881889763779526,
+          "predicted": 127,
+          "recall": 0.7808219178082192,
+          "support": 73
+        },
+        "strict": {
+          "f1": 0.22,
+          "matched": 22,
+          "precision": 0.1732283464566929,
+          "predicted": 127,
+          "recall": 0.3013698630136986,
+          "support": 73
+        },
+        "token": {
+          "f1": 0.5160202360876898,
+          "matched": 153,
+          "precision": 0.4707692307692308,
+          "predicted": 325,
+          "recall": 0.5708955223880597,
+          "support": 268
+        }
+      }
+    },
+    "rows": 60,
+    "source": "results/entity_extraction/entity_v2_three_class/epoch3_sqrt_weighted/validation_predictions.jsonl"
+  },
+  "results/entity_extraction/entity_v2_three_class/epoch6/validation_predictions.jsonl": {
+    "iou_threshold": 0.5,
+    "overall": {
+      "lenient": {
+        "f1": 0.1637010676156584,
+        "matched": 46,
+        "precision": 0.2987012987012987,
+        "predicted": 154,
+        "recall": 0.11274509803921569,
+        "support": 408
+      },
+      "overlap_any": {
+        "f1": 0.2882562277580071,
+        "matched": 81,
+        "precision": 0.525974025974026,
+        "predicted": 154,
+        "recall": 0.19852941176470587,
+        "support": 408
+      },
+      "strict": {
+        "f1": 0.046263345195729534,
+        "matched": 13,
+        "precision": 0.08441558441558442,
+        "predicted": 154,
+        "recall": 0.031862745098039214,
+        "support": 408
+      },
+      "token": {
+        "f1": 0.15081521739130435,
+        "matched": 222,
+        "precision": 0.5522388059701493,
+        "predicted": 402,
+        "recall": 0.08733280881195908,
+        "support": 2542
+      }
+    },
+    "per_type": {
+      "PERSON": {
+        "lenient": {
+          "f1": 0.0909090909090909,
+          "matched": 3,
+          "precision": 1.0,
+          "predicted": 3,
+          "recall": 0.047619047619047616,
+          "support": 63
+        },
+        "overlap_any": {
+          "f1": 0.0909090909090909,
+          "matched": 3,
+          "precision": 1.0,
+          "predicted": 3,
+          "recall": 0.047619047619047616,
+          "support": 63
+        },
+        "strict": {
+          "f1": 0.0909090909090909,
+          "matched": 3,
+          "precision": 1.0,
+          "predicted": 3,
+          "recall": 0.047619047619047616,
+          "support": 63
+        },
+        "token": {
+          "f1": 0.050420168067226885,
+          "matched": 3,
+          "precision": 1.0,
+          "predicted": 3,
+          "recall": 0.02586206896551724,
+          "support": 116
+        }
+      },
+      "TASK": {
+        "lenient": {
+          "f1": 0.08174386920980926,
+          "matched": 15,
+          "precision": 0.15789473684210525,
+          "predicted": 95,
+          "recall": 0.05514705882352941,
+          "support": 272
+        },
+        "overlap_any": {
+          "f1": 0.23978201634877386,
+          "matched": 44,
+          "precision": 0.4631578947368421,
+          "predicted": 95,
+          "recall": 0.16176470588235295,
+          "support": 272
+        },
+        "strict": {
+          "f1": 0.010899182561307902,
+          "matched": 2,
+          "precision": 0.021052631578947368,
+          "predicted": 95,
+          "recall": 0.007352941176470588,
+          "support": 272
+        },
+        "token": {
+          "f1": 0.11846976552858907,
+          "matched": 144,
+          "precision": 0.5274725274725275,
+          "predicted": 273,
+          "recall": 0.06672845227062095,
+          "support": 2158
+        }
+      },
+      "TEMPORAL": {
+        "lenient": {
+          "f1": 0.43410852713178294,
+          "matched": 28,
+          "precision": 0.5,
+          "predicted": 56,
+          "recall": 0.3835616438356164,
+          "support": 73
+        },
+        "overlap_any": {
+          "f1": 0.5271317829457364,
+          "matched": 34,
+          "precision": 0.6071428571428571,
+          "predicted": 56,
+          "recall": 0.4657534246575342,
+          "support": 73
+        },
+        "strict": {
+          "f1": 0.12403100775193798,
+          "matched": 8,
+          "precision": 0.14285714285714285,
+          "predicted": 56,
+          "recall": 0.1095890410958904,
+          "support": 73
+        },
+        "token": {
+          "f1": 0.38071065989847713,
+          "matched": 75,
+          "precision": 0.5952380952380952,
+          "predicted": 126,
+          "recall": 0.2798507462686567,
+          "support": 268
+        }
+      }
+    },
+    "rows": 60,
+    "source": "results/entity_extraction/entity_v2_three_class/epoch6/validation_predictions.jsonl"
+  }
+}

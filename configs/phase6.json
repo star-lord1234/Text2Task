@@ -1,0 +1,14 @@
+{
+  "schema_version": "phase6-v1",
+  "warnings": {
+    "PREREQUISITE_CANCELLED": {"severity": "warn", "message": "A prerequisite was cancelled; cancellation does not satisfy a dependency."},
+    "INCONSISTENT_COMPLETION": {"severity": "warn", "message": "The dependent task is completed while a prerequisite is still open."},
+    "PREREQUISITE_DUE_AFTER_DEPENDENT": {"severity": "warn", "message": "The prerequisite is due after the task that depends on it."},
+    "REDUNDANT_TRANSITIVE": {"severity": "info", "message": "This edge is already implied by a longer chain of prerequisites."}
+  },
+  "e5": {
+    "enabled": false,
+    "exact_max_candidate_edges": 16,
+    "note": "Optional consistency-aware edge selection. Constraint handling only, evaluated on synthetic graphs; no semantic accuracy claim."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "experiment_name": "text2task-relations-v1",
+  "evaluation_provenance": {"annotation_tier": "SILVER", "human_verified": false, "is_final_research_metric": false,
+    "disclaimer": "SILVER/MailEx-derived validation metrics are provisional development signals, not human-grounded results."},
+  "base_model": "distilbert/distilbert-base-uncased",
+  "data_dir": "data/model_ready/relations_v2_three_class",
+  "model_dir": "models/text2task-relations",
+  "results_dir": "results/relation_extraction",
+  "seed": 20261102,
+  "learning_rate": 3e-5,
+  "epochs": 5,
+  "train_batch_size": 8,
+  "grad_accum": 2,
+  "weight_decay": 0.01,
+  "warmup_ratio": 0.1,
+  "class_weight": "sqrt",
+  "pooling": "markers",
+  "train_file": "train.jsonl",
+  "max_length": 512
+}

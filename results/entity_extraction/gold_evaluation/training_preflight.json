@@ -1,0 +1,108 @@
+{
+  "bio_labels": [
+    "O",
+    "B-ARTIFACT",
+    "I-ARTIFACT",
+    "B-EVENT",
+    "I-EVENT",
+    "B-GROUP",
+    "I-GROUP",
+    "B-PERSON",
+    "I-PERSON",
+    "B-TASK",
+    "I-TASK",
+    "B-TEMPORAL",
+    "I-TEMPORAL"
+  ],
+  "blockers": [
+    "validation_is_not_fully_human_reviewed_gold",
+    "gold_evaluation_validation_contains_non_gold_tiers"
+  ],
+  "config_path": "configs/entity_training.yaml",
+  "cross_split_thread_overlaps": [],
+  "data_fingerprints": {
+    "final/test.jsonl": "516cd5fac02f318679dc114635c8a6f7aa339f2f61324f3345a8577046a6c85b",
+    "final/train.jsonl": "8c2f07104be856b7a0e711ac45d8982e93ed621906dbfa906e7d90eef58aca53",
+    "final/validation.jsonl": "184bd076c7b91a143bae7a2a4f168bc8d67b59efee6cde9101cb60618cdc2b2c",
+    "model_ready/test.jsonl": "bb5ca65f736b320af8ec04aa1f8610e7e18ba4eab39fbfc76757addf5c97d8bf",
+    "model_ready/train.jsonl": "cae92b4faf4d80e95d063b099f63f68b26f6a49354cbe5adbb1317fd10028856",
+    "model_ready/validation.jsonl": "a5166b2a0c14b01c9f6dc678976a1ed6f71e14c387862f1ce95c3e7b00503416",
+    "schema": "e05c677ee4b8efa5e416486fed366c3fb4968fa41be4ed4ffc56bc7ae1264cd9"
+  },
+  "errors": [],
+  "experiment_mode": "gold_evaluation",
+  "full_structural_audit_passed": true,
+  "ignore_index": -100,
+  "label_to_id": {
+    "B-ARTIFACT": 1,
+    "B-EVENT": 3,
+    "B-GROUP": 5,
+    "B-PERSON": 7,
+    "B-TASK": 9,
+    "B-TEMPORAL": 11,
+    "I-ARTIFACT": 2,
+    "I-EVENT": 4,
+    "I-GROUP": 6,
+    "I-PERSON": 8,
+    "I-TASK": 10,
+    "I-TEMPORAL": 12,
+    "O": 0
+  },
+  "metric_context": {
+    "annotation_tier": "GOLD",
+    "disclaimer": "Metrics use independently human-reviewed GOLD annotations.",
+    "is_final_research_metric": true,
+    "metric_prefix": "gold",
+    "mode": "gold_evaluation"
+  },
+  "model_name": "distilbert/distilbert-base-uncased",
+  "passed": false,
+  "requested_action": "distilbert_fine_tuning",
+  "schema_entity_labels": [
+    "TASK",
+    "PERSON",
+    "GROUP",
+    "TEMPORAL",
+    "EVENT",
+    "ARTIFACT"
+  ],
+  "splits": {
+    "test": {
+      "email_tiers": {
+        "SILVER": 90
+      },
+      "emails": 90,
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 140,
+      "row_tiers": {
+        "SILVER": 140
+      },
+      "threads": 70
+    },
+    "train": {
+      "email_tiers": {
+        "SILVER": 450
+      },
+      "emails": 450,
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 704,
+      "row_tiers": {
+        "SILVER": 704
+      },
+      "threads": 364
+    },
+    "validation": {
+      "email_tiers": {
+        "SILVER": 60
+      },
+      "emails": 60,
+      "human_reviewed_gold_emails": 0,
+      "model_rows": 101,
+      "row_tiers": {
+        "SILVER": 101
+      },
+      "threads": 51
+    }
+  },
+  "timestamp": "2026-10-31T22:40:59.444289Z"
+}

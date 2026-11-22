@@ -1,0 +1,46 @@
+% Text2Task: Final Project Report, full edition (94 pages)
+% Build:  tectonic main_full.tex
+\documentclass[11pt,a4paper,oneside]{report}
+\input{preamble}
+\begin{document}
+
+% ================================================================ cover
+\input{cover}
+
+\pagenumbering{roman}
+\input{chapters/00_abstract}
+\tableofcontents
+\listoffigures
+\listoftables
+\input{chapters/00_abbreviations}
+\cleardoublepage
+\pagenumbering{arabic}
+
+\input{chapters/01_introduction}
+\input{chapters/02_literature}
+\input{chapters/03_objectives}
+\input{chapters/04_dataset}
+\input{chapters/05_preprocessing}
+\input{chapters/06_architecture}
+\input{chapters/07_methodology}
+\input{chapters/08_models}
+\input{chapters/09_extraction}
+\input{chapters/10_rules}
+\input{chapters/11_evolution}
+\input{chapters/12_application}
+\input{chapters/13_evaluation_setup}
+\input{chapters/14_results}
+\input{chapters/15_error_analysis}
+\input{chapters/16_future}
+\input{chapters/17_conclusion}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{References}
+\renewcommand{\bibname}{References}
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\appendix
+\input{chapters/A_appendices}
+\end{document}

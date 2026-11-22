@@ -1,0 +1,10 @@
+digraph workflow {
+  rankdir=LR;
+  node [shape=box, fontname="Helvetica"];
+  "T-1" [label="T-1 draft the report | bianca | done"];
+  "T-2" [label="T-2 review the draft | dev | ready"];
+  "T-3" [label="T-3 send to the client | riya | blocked"];
+  "T-1" -> "T-2" [style=solid];
+  "T-2" -> "T-3" [style=solid];
+  "T-3" -> "T-1" [style=dotted, color=red, label="CYCLE"];
+}

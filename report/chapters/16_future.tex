@@ -1,0 +1,34 @@
+\chapter{Future Scope}
+\label{ch:future}
+
+Everything in this chapter is \status{proposed}: none of it has been implemented or evaluated. The items are ordered by the expected value of their contribution, based on the analysis of \cref{ch:errors}.
+
+\section{A human-verified evaluation set}
+The single most important improvement is a GOLD development and test set: 100 to 150 emails and a comparable number of chat messages, annotated by people following the existing guidelines (\code{docs/annotation\_guidelines\_v2.md}), with a second annotator on a subset to measure agreement. The code already supports it: the GOLD evaluation mode, provenance tiers and review workflow exist and currently refuse to run only because no GOLD records exist. This would turn every number in this report from agreement into accuracy, show the true level of precision hidden by incomplete references, and make the target-based decisions of the project plan meaningful.
+
+\section{Cleaner training data}
+\begin{itemize}
+  \item \textbf{Deduplicate and retrain.} Rebuild the MailEx-derived splits with cross-split exact and near-duplicate removal, retrain Run 1, and report final-epoch as well as best-epoch scores. Each run takes about 30 minutes on the existing hardware.
+  \item \textbf{Recover missing labels.} A targeted second pass over emails that contain request cues but no TASK span, done by a person or by a model and reviewed by a person, would address the largest known gap in the references.
+  \item \textbf{Header-based participants.} Using sender and recipient names from headers as PERSON hints would address PERSON recall.
+\end{itemize}
+
+\section{Stronger extraction models}
+\begin{itemize}
+  \item \textbf{Deploy the better checkpoint.} The application loads the SILVER-v2 entity model; the MailEx-derived Run 1 checkpoint is markedly stronger on every type. Integrating it requires re-checking the relation model on its spans, since the two lineages use different span definitions.
+  \item \textbf{Cased encoders.} All development names are capitalised, and the uncased tokeniser discards this cue. RoBERTa \citep{liu2019roberta} or DeBERTa \citep{he2021deberta} would test whether capitalisation and better pre-training improve PERSON recall and TASK boundaries.
+  \item \textbf{Structured decoding.} A CRF layer, or a span-based head, would remove invalid BIO sequences and may improve boundary consistency.
+  \item \textbf{Repeated seeds and the missing ablations.} Three seeds per configuration, plus the \code{[CLS]}-pooling and unweighted relation ablations, would turn the current single-run observations into evidence.
+\end{itemize}
+
+\section{Contextual and cross-message reasoning}
+The current reconciler matches references lexically, one sentence at a time, and assigns one primary intent per sentence. Learned referent ranking (the matcher already has an off-by-default embedding hook), support for compound sentences (\emph{``done, and I'll send it Monday''}) and use of thread history, which MailEx identifies as important, would extend the system from single messages to conversations. Dependencies stated across messages (\emph{``that should wait until the server is up''} several turns later) are the natural next step for the dependency graph, which already supports cross-thread edges.
+
+\section{Uncertainty calibration}
+Model scores are uncalibrated: validation loss rose while F1 improved, and the 0.9 relation threshold was chosen on the same validation data it is reported on. Temperature scaling \citep{guo2017calibration} on a held-out set, followed by thresholds expressed as probabilities, would make the review flags more meaningful. A calibrated system could also offer selective automation, applying only very high-confidence, low-risk proposals automatically. The reconciler was written with such a mode in mind but currently refuses to start in it.
+
+\section{Better hybrid decisions}
+The hybrid currently combines components by fixed precedence. Two directions are possible: learning when to trust a rule or the model from accepted and dismissed suggestions (the history already records every decision), and the optional consistency-aware edge selection (E5) that chooses the highest-scoring acyclic set of edges. E5 is implemented but off by default, and showed only a small improvement on synthetic graphs.
+
+\section{Product directions}
+An email-client or chat-platform integration, multiple users with authentication, notifications to the person a suggestion waits for, and group assignees (\emph{``the data team''}) are outside the scope of this project but would be needed for real use.

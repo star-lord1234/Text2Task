@@ -1,0 +1,61 @@
+\chapter{Error Analysis and Limitations}
+\label{ch:errors}
+
+The results of \cref{ch:results} are modest: the best entity model agrees with its references on about half of the spans, the deployed checkpoint barely finds exact task spans, and the end-to-end system works on chat largely because of its rules. This chapter examines why, using actual failed predictions where possible.
+
+\section{Annotation quality is the main ceiling}
+Every reference used in this project is either automatically produced or derived from labels made for a different task. Three successive inspections show how much this matters. Major errors were found in 22 of 30 SILVER-v1 records (73\%), 10 of 30 SILVER-v2 records (33\%) and about 9\% of MailEx-derived records. The models trained on these sets follow the same order (\cref{fig:iterations}), and the largest single improvement in the project coincided with the switch to cleaner labels. That change was confounded with six times more data and a better recipe, so its share cannot be isolated, but no change to the model alone produced a comparable gain.
+
+Even the cleanest set is incomplete. MailEx annotates names and dates only when they are arguments of an event, and about one email in eight contains a clear request without any annotation (\emph{``Give me a call''}, \emph{``Can you please change the meeting room info \ldots''}). In a random sample of 12 ``false positive'' predictions per type from Phase 2 Run 1, many were real entities missing from the references: \emph{check this out}, \emph{advise me regarding your availability}, the names \emph{david} and \emph{john}, the dates \emph{today} and \emph{a couple of weeks}. Measured precision is therefore a lower bound, and recall is measured against an incomplete set. The other kind of false positive was genuine model error: junk fragments such as \emph{the}, an apostrophe, \emph{chance to}, \emph{9}. These made up a quarter or more of each sample.
+
+Reference noise also appears in the relation data. One validation reference marks \emph{returned from a meeting}, a report about the past, as a TASK linked to a person; another marks the passive statement \emph{request was submitted} as a TASK with a deadline. A model that declines such links is penalised for being right.
+
+\section{Limited data and class imbalance}
+The SILVER sets contain 449--450 training emails and the MailEx-derived set 2,845, small for a three-type sequence labeller with long, variable spans. Tokens labelled \lab{O} make up 91\% of the data. The unweighted SILVER-v2 model responded to this imbalance by predicting no entity start at all. Square-root class weights recovered PERSON and TEMPORAL but over-produced short TASK fragments. Relations show the same effect more sharply: with 33 training pairs, \lab{DUE\_ON} is learned unstably, and the validation macro F1 used to select the checkpoint rests on 10 pairs.
+
+\section{Span boundary errors}
+TASK extraction fails mainly at the boundaries rather than at detection. \Cref{fig:erroranatomy} classifies the predicted spans of Phase 2 Run 1 by their best match. Only 76 of 298 predicted TASK spans are exact, but another 60 overlap a reference with IoU of at least 0.5 and 51 partially; 111 do not overlap any reference, many of them unannotated true tasks or fragments. Near matches start too late more often than too early (28 against 13) and end too early more often than too late (18 against 7), consistent with the model omitting initial words such as \emph{Please} and trailing complements. PERSON spans are the opposite case: when a name is found its boundaries are almost always exact (98 of 104 overlapping predictions), but 39\% of reference names are never found. The uncased tokeniser removes capitalisation, the strongest cue for names, and all 169 development names are capitalised.
+
+\begin{figure}[t]
+\centering
+\chart[0.82\linewidth]{error_anatomy}
+\caption[Error anatomy of predicted spans]{Predicted spans of Phase 2 Run 1 on the original development set, by their best match against references (\code{docs/results\_report.md}, section 2.3).}
+\label{fig:erroranatomy}
+\end{figure}
+
+For the deployed SILVER-v2 checkpoint, an audit of 458 predicted email spans found 12.5\% consisting only of function words (gold: 1.5\%), 5.7\% of one or two characters, and 57 adjacent same-type pairs separated only by whitespace. On short chat messages, mid-word truncation was four times as frequent as on email. These are the fragments that the refinement stages repair, as in the worked example where \emph{please prepare the} and \emph{report} were joined into one action phrase.
+
+\section{Implicit requests and commitments}
+Requests without an imperative or modal cue are underrepresented in the labels, and the grammar recovery only recognises listed verbs in recognised positions. Unusual verbs are missed: in one Phase 7.5 fixture the hyphenated verb in \emph{``Before we publish the article, someone must fact-check it''} was not recognised, so neither the task nor its dependency was created. In the other direction, the commitment rule admits predictions and availability statements as tasks (\emph{``Customers are going to get very cranky''}, \emph{``Shelley will only be available tomorrow''}).
+
+\section{Relation extraction failures}
+The relation model's errors fall into three groups.
+\begin{itemize}
+  \item \textbf{Extra person links (32 cases).} In \emph{``Hi Eric, \ldots{} We can either order in or I would love to cook \ldots''} the model links \emph{order in} to \emph{Eric}, the addressee. Some such links are plausible readings that the reference lacks; others ignore that the subject (\emph{we}) is not the addressee.
+  \item \textbf{Missed person links (20 cases).} In \emph{``Hi Fran, \ldots{} if you could track down an answer for me \ldots''} the link from \emph{track down an answer} to \emph{Fran} is missed: the addressee is separated from the request by a long apology and a conditional.
+  \item \textbf{Deadline versus schedule.} \emph{``Please RSVP by Friday''} is classified \lab{SCHEDULED\_ON} instead of \lab{DUE\_ON}, as is \emph{``by Friday''} in the live worked example. The training labels themselves blur the two (60\% of \lab{SCHEDULED\_ON} training positives are marked ambiguous), and the deadline-cue rule exists precisely to correct this.
+\end{itemize}
+End-to-end, relation quality cannot be measured on email because the deployed entity model and the relation references use different span definitions (\cref{tab:modeb}).
+
+\section{Ambiguous assignees}
+Owner resolution refuses to guess, so its failures are mostly abstentions. On SILVER validation emails, 141 of 249 task candidates were unassigned, mostly because the sentence contained no evidence of an owner (119), 19 were ambiguous between several people, and 25 named someone not in the participant registry parsed from noisy email headers. In the application, a different failure surfaced during testing. A message addressed to the whole team that named one person without a comma (\emph{``Bianca please train the model''}) came out unassigned, because the entity model did not recognise the name and the fallback only handled single-recipient messages. The named-addressee rule of \cref{ch:rules} was added in response, with tests ensuring that two names, a shared first name or the sender's own name still resolve to nobody.
+
+\section{Competing and unresolvable temporal expressions}
+On the corpus, almost no date can be resolved because messages have no timestamps; 52\% of temporal spans need an anchor or a year. Among the rest, 27\% are unparseable, largely annotation noise (\emph{the}, \emph{process}, \emph{proposals}), durations, past references and holidays. In live use, where timestamps exist, the remaining hard cases are same-weekday ambiguity (\emph{by Wednesday} on a Wednesday), event conditions, and the policy question of whether \emph{tomorrow} or \emph{on Thursday} is a deadline or a planned time. Two Phase 7.5 fixtures expected a due date where the system stored a scheduled one; they count as misses although the behaviour follows a deliberate policy.
+
+\section{Dependency extraction}
+No dependency can be learned or evaluated against corpus labels: there are 4 training and 3 test \lab{DEPENDS\_ON} annotations, all to EVENT entities, and replaying 510 emails through the pipeline produced no dependency proposals. Dependencies come entirely from rules, and their known failures are characteristic of lexical matching. \emph{``Deployment can't start until the test server is set up''} produced no edge because \emph{deployment} does not match a task titled \emph{deploy \ldots}. \emph{``Bianca, call me after the meeting''} produced a false dependency because \emph{after} is read as a prerequisite cue and \emph{the meeting} as a task (\cref{fig:shotsources}). Direction follows the wording, not world knowledge, and similar titles can attract a clause to the wrong existing task. Graph validity, on the other hand, is well tested: cycles are always refused and recorded.
+
+\section{Evaluation limitations}
+\begin{itemize}
+  \item No human-verified GOLD data exist; every score is agreement with provisional labels.
+  \item 39 development emails were copies of training emails. Scores are reported on the cleaned set, but the models were trained and selected with the duplicates present.
+  \item Each configuration was trained with one seed; differences under about 0.03 F1 are noise.
+  \item Checkpoints were selected on the reported validation set (Run 1: 0.575 at the selected epoch against 0.568 at the last).
+  \item No test-set result exists for any model.
+  \item The chat fixtures were written by the developer, in the developer's phrasing, and two of the three sets were used during development.
+  \item Model scores are uncalibrated; validation loss rose after epoch 2 while F1 kept rising, a sign of over-confidence.
+\end{itemize}
+
+\section{What can reasonably be concluded}
+Despite these limitations, several conclusions are well supported. Label quality and data volume dominated model changes (RQ2): the largest gain came with cleaner and larger data, while learning rate and the commitment rule made no measurable difference. A compact encoder trained on MailEx-derived labels extracts names and dates moderately and task phrases weakly, with boundaries as the main error (RQ1). Relation classification with typed markers is clearly better than proximity rules when spans are given. In the end-to-end system (RQ3), rules contribute most on short chat, the neural models contribute most on longer email for people and dates, and the hybrid is never worse than neural-only on any case. Finally, the system's safety properties (no silent changes, no invented owners, no cycles, attributable history, correct reviewer) hold under extensive functional testing. These properties are what make imperfect extraction usable in practice.

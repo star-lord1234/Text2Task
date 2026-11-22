@@ -1,0 +1,37 @@
+{
+  "report_version": "1.0.0",
+  "runs": [
+    {
+      "completed_at": "2026-11-01T13:35:19.577898Z",
+      "dry_run": true,
+      "empty_task_predictions": 0,
+      "input_path": "data/candidates/train.jsonl",
+      "invalid_json_attempts": 0,
+      "invalid_json_count": 0,
+      "invalid_span_count": 0,
+      "model": "none",
+      "other_validation_failures": 0,
+      "prompt_version": "text2task-annotation-v2.0.0",
+      "prompts_generated": 2,
+      "provider": "dry-run",
+      "provider_failures": 0,
+      "records_considered": 2,
+      "records_requiring_review": 0,
+      "records_skipped_failed": 0,
+      "records_skipped_success": 0,
+      "relation_validation_failures": 0,
+      "retries": 0,
+      "run_id": "325e91ead746cc35",
+      "started_at": "2026-11-01T13:35:19.575645Z",
+      "successful_annotations": 0,
+      "usage": {
+        "cost_source": null,
+        "cost_usd": null,
+        "input_tokens": null,
+        "output_tokens": null,
+        "total_tokens": null
+      }
+    }
+  ],
+  "updated_at": "2026-11-01T13:35:19.577932Z"
+}

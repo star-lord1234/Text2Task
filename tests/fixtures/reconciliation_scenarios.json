@@ -1,0 +1,5245 @@
+{
+ "description": "Developer-authored functional scenarios for Phase 5 reconciliation (extractor output is SCRIPTED). Not an independent benchmark. Reference time: Wed 2026-11-11 09:30 America/Chicago.",
+ "scenarios": [
+  {
+   "name": "01_lifecycle_example_table",
+   "description": "create -> propose move -> confirm -> complete -> history statement; one stable task id",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-13",
+        "pending_due": "2026-11-16",
+        "version": 2
+       }
+      }
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "Monday works.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CONFIRM_DUE_DATE_CHANGE"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-16",
+        "pending_due": null,
+        "version": 3,
+        "history_len": 4
+       }
+      }
+     }
+    },
+    {
+     "id": "m4",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "status": "completed",
+        "version": 4
+       }
+      }
+     }
+    },
+    {
+     "id": "m5",
+     "sender": "bianca",
+     "text": "The API failed yesterday.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "failed"
+      ],
+      "TEMPORAL": [
+       "yesterday"
+      ]
+     },
+     "links": [
+      [
+       "failed",
+       "yesterday",
+       "SCHEDULED_ON"
+      ]
+     ],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "task_count": 1
+     }
+    }
+   ]
+  },
+  {
+   "name": "02_replayed_message_is_idempotent",
+   "description": "processing the same message twice returns the same proposals and writes nothing new",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     },
+     "replay": true
+    }
+   ]
+  },
+  {
+   "name": "03_restated_request_no_duplicate",
+   "description": "the same request again does not create a second task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, please prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "RESTATED_EXISTING_TASK"
+      ],
+      "pending": 0,
+      "task_count": 1
+     }
+    }
+   ]
+  },
+  {
+   "name": "04_restated_with_different_date",
+   "description": "a restated request with another deadline becomes a date-change proposal, not a new task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Monday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Monday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "flags": [
+       "RESTATED_WITH_DIFFERENT_DATE"
+      ],
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-13",
+        "pending_due": "2026-11-16"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "05_restated_for_other_owner_is_flagged_new_task",
+   "description": "same wording for a different owner is created but flagged as a possible duplicate",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Dev, prepare the report by Friday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "flags": [
+       "POSSIBLE_DUPLICATE"
+      ],
+      "task_count": 2,
+      "tasks": {
+       "T-2": {
+        "owner_id": "dev"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "06_ambiguous_referent_changes_nothing_until_chosen",
+   "description": "two tasks about 'the report': no guess; reviewer must choose",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Dev, review the report by Thursday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "review the report"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "review the report",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "review the report",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "no_flags": [
+       "POSSIBLE_DUPLICATE"
+      ],
+      "task_count": 2
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all",
+       "expect_error": "REFERENT_REQUIRED"
+      },
+      {
+       "accept": "all",
+       "edits": {
+        "task_id": "T-1"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ],
+      "flags": [
+       "AMBIGUOUS_REFERENT"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "completed"
+       },
+       "T-2": {
+        "status": "open"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "07_no_referent_for_completion",
+   "description": "completion of something that is not tracked leaves every task unchanged",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I've sent the invoice.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "NO_REFERENT"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "08_anaphora_with_two_recent_tasks_is_ambiguous",
+   "description": "'it' with two recently touched tasks is not resolved",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Dev, book the room by Thursday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "book the room"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "book the room",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "book the room",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 2
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "flags": [
+       "AMBIGUOUS_REFERENT"
+      ],
+      "tasks": {
+       "T-1": {
+        "pending_due": null,
+        "version": 1
+       },
+       "T-2": {
+        "pending_due": null,
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "09_dismissed_proposal_changes_nothing",
+   "description": "a dismissed date proposal leaves the task untouched",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "dismiss": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-13",
+        "pending_due": null,
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "10_counter_proposal_then_confirm",
+   "description": "a different date from another person supersedes the pending one; creator confirms",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ]
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "Tuesday is better.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Tuesday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "flags": [
+       "CONFLICTING_PROPOSAL"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-13",
+        "pending_due": "2026-11-17"
+       }
+      }
+     }
+    },
+    {
+     "id": "m4",
+     "sender": "riya",
+     "text": "Tuesday works.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Tuesday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CONFIRM_DUE_DATE_CHANGE"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-17",
+        "pending_due": null,
+        "version": 4
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "11_decline_clears_pending_only_on_review",
+   "description": "a decline reply flags the pending change; the reviewer clears it; the deadline never moved",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {}
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "Monday doesn't work.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": 0
+      },
+      {
+       "reject_pending": {
+        "task": "T-1",
+        "field": "due"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "PROPOSAL_DECLINED"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-13",
+        "pending_due": null
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "12_acknowledgement_without_pending_change",
+   "description": "'sounds good' with nothing pending does nothing",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "Sounds good.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "NO_PENDING_PROPOSAL"
+      ],
+      "pending": 0,
+      "tasks": {
+       "T-1": {
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "13_proposer_cannot_confirm_own_change",
+   "description": "self-confirmation is refused",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {}
+    },
+    {
+     "id": "m3",
+     "sender": "riya",
+     "text": "Monday works.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "UNAUTHORIZED_CONFIRMER"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-13",
+        "pending_due": "2026-11-16"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "14_confirmation_by_outsider_is_flagged",
+   "description": "a participant who is neither creator nor owner confirms: proposal is flagged",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {}
+    },
+    {
+     "id": "m3",
+     "sender": "dev",
+     "text": "Monday works.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "CONFIRM_DUE_DATE_CHANGE"
+      ],
+      "flags": [
+       "UNAUTHORIZED_CONFIRMER"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "15_direct_deadline_change_by_creator",
+   "description": "a declarative change by the creator applies directly on accept",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "The deadline is now Monday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-16",
+        "pending_due": null,
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "16_declarative_change_by_non_owner_needs_confirmation",
+   "description": "same sentence from a non-creator/non-owner stays pending",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "dev",
+     "text": "The deadline is now Monday.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-13",
+        "pending_due": "2026-11-16"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "17_reassignment_named_person",
+   "description": "explicit reassignment changes only the owner",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Dev will handle it instead.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "PERSON": [
+       "Dev"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_ASSIGNEE"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": "dev",
+        "due": "2026-11-13",
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "18_reassignment_to_single_addressee",
+   "description": "'can you take this over?' resolves to the only addressee",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Can you take this over?",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_ASSIGNEE"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": "dev"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "19_reassignment_with_two_addressees_is_unresolved",
+   "description": "two possible new owners: review must supply one",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Can you take this over?",
+     "recipients": [
+      "dev",
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all",
+       "expect_error": "UNRESOLVED_VALUE"
+      },
+      {
+       "accept": "all",
+       "edits": {
+        "owner_id": "dev"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_ASSIGNEE"
+      ],
+      "flags": [
+       "UNRESOLVED_NEW_OWNER"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": "dev"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "20_cancellation",
+   "description": "cancel with a clear referent",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Please cancel the report.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CANCEL_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "cancelled",
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "21_completing_a_cancelled_task_is_illegal",
+   "description": "no state change; flagged",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Please cancel the report.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {}
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "ILLEGAL_TRANSITION"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "cancelled",
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "22_second_done_is_not_a_second_completion",
+   "description": "completing a completed task is a no-op",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "Done.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "ALREADY_IN_STATE"
+      ],
+      "pending": 0,
+      "tasks": {
+       "T-1": {
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "23_third_party_completion_is_flagged",
+   "description": "someone other than the owner reports completion",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "dev",
+     "text": "The report is done.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ],
+      "flags": [
+       "THIRD_PARTY_COMPLETION"
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "24_completion_question_is_not_completion",
+   "description": "a question never completes anything",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Did you finish the report?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "pending": 0,
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "25_negated_completion_is_not_completion",
+   "description": "'haven't finished' does not complete the task",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I haven't finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [],
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "26_in_progress_then_complete",
+   "description": "status moves open -> in_progress -> completed",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I'm working on it.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_STATUS"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "in_progress",
+        "version": 2
+       }
+      }
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "completed",
+        "version": 3
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "27_stale_proposal_is_rejected_without_writing",
+   "description": "a proposal made against version 1 cannot apply after the task moved to version 2",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "COMPLETE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "riya",
+     "text": "Dev will handle it instead.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "PERSON": [
+       "Dev"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "UPDATE_ASSIGNEE"
+      ],
+      "tasks": {
+       "T-1": {
+        "version": 2
+       }
+      }
+     }
+    },
+    {
+     "id": "m4",
+     "sender": "riya",
+     "text": "ok",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": {
+        "op": "COMPLETE_TASK",
+        "message": "m2"
+       },
+       "expect_error": "STALE_VERSION"
+      }
+     ],
+     "expect": {
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "owner_id": "dev",
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "28_accept_is_idempotent",
+   "description": "accepting twice with the same key applies once",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all",
+       "key": "k1",
+       "then_accept_again": true
+      }
+     ],
+     "expect": {
+      "task_count": 1,
+      "tasks": {
+       "T-1": {
+        "history_len": 1
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "29_dismissed_proposal_cannot_be_accepted",
+   "description": "terminal proposals stay terminal",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "dismiss": "all"
+      },
+      {
+       "accept": "all",
+       "expect_error": "ALREADY_RESOLVED"
+      }
+     ],
+     "expect": {
+      "task_count": 0
+     }
+    }
+   ]
+  },
+  {
+   "name": "30_unresolved_date_never_overwrites_a_resolved_one",
+   "description": "no timestamp: the new date is unresolved, so accepting is refused until a resolved value is supplied",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "The deadline is now Monday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": null,
+     "tz": null,
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all",
+       "expect_error": "UNRESOLVED_VALUE"
+      },
+      {
+       "accept": "all",
+       "edits": {
+        "after_raw": "2026-11-16"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "flags": [
+       "UNRESOLVED_NEW_DATE"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-16",
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "31_manual_edit_is_version_checked",
+   "description": "human edits use the same version check and history",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      },
+      {
+       "manual_edit": {
+        "task": "T-1",
+        "changes": {
+         "title": "prepare the Q4 report"
+        },
+        "key": "e1"
+       }
+      }
+     ],
+     "expect": {
+      "tasks": {
+       "T-1": {
+        "title": "prepare the Q4 report",
+        "version": 2
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "ok thanks",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "manual_edit": {
+        "task": "T-1",
+        "changes": {
+         "title": "stale edit"
+        },
+        "expected_version": 1
+       },
+       "expect_error": "STALE_VERSION"
+      }
+     ],
+     "expect": {
+      "tasks": {
+       "T-1": {
+        "title": "prepare the Q4 report",
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "32_explicit_dependency_between_existing_tasks",
+   "description": "'X is waiting on Y' links two matched tasks",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, send the notes by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "send the notes"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "send the notes",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "send the notes",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Dev, approve the draft by Thursday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "approve the draft"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "approve the draft",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "approve the draft",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ]
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "riya",
+     "text": "The notes are waiting on the draft.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "ADD_DEPENDENCY"
+      ],
+      "dependencies": [
+       [
+        "T-1",
+        "T-2",
+        "accepted"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "33_self_dependency_is_refused",
+   "description": "a task cannot depend on itself",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "The report is waiting on the report.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "SELF_DEPENDENCY"
+      ],
+      "dependencies": []
+     }
+    }
+   ]
+  },
+  {
+   "name": "34_phase4_rule_dependency_needs_both_tasks_created_first",
+   "description": "dependency proposed with two new tasks cannot be accepted before they exist",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Please publish the notes after approve the draft.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "publish the notes",
+       "approve the draft"
+      ]
+     },
+     "links": [
+      [
+       "publish the notes",
+       "approve the draft",
+       "DEPENDS_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": {
+        "op": "ADD_DEPENDENCY"
+       },
+       "expect_error": "PREREQUISITE_PENDING"
+      },
+      {
+       "accept": {
+        "op": "CREATE_TASK"
+       }
+      },
+      {
+       "accept": 1
+      },
+      {
+       "accept": {
+        "op": "ADD_DEPENDENCY"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK",
+       "CREATE_TASK",
+       "ADD_DEPENDENCY"
+      ],
+      "task_count": 2,
+      "dependencies": [
+       [
+        "T-1",
+        "T-2",
+        "accepted"
+       ]
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "name": "35_reopen_is_flagged_not_applied",
+   "description": "a completed task described as not done is flagged; status stays completed",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {}
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "Actually the report is not done yet.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "REOPEN_REQUESTED"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "completed",
+        "version": 2
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "36_referent_awaiting_review_is_reported",
+   "description": "update that refers to a task whose creation is still pending",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "task_count": 0
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "REFERENT_PENDING_REVIEW"
+      ],
+      "task_count": 0
+     }
+    }
+   ]
+  },
+  {
+   "name": "37_message_id_reuse_with_different_text_is_refused",
+   "description": "a message id cannot be reused for different text",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Totally different text.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {},
+     "expect_error": "MESSAGE_ID_REUSED"
+    }
+   ]
+  },
+  {
+   "name": "38_threads_are_isolated",
+   "description": "the same wording in another thread does not match",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "I've finished the report.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "NO_ACTION"
+      ],
+      "flags": [
+       "NO_REFERENT"
+      ],
+      "tasks": {
+       "T-1": {
+        "status": "open",
+        "version": 1
+       }
+      }
+     },
+     "thread": "th2"
+    }
+   ]
+  },
+  {
+   "name": "39_two_tasks_in_one_message",
+   "description": "two requests produce two tasks with their own owners and dates",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday. Dev, book the room by Thursday.",
+     "recipients": [
+      "bianca",
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report",
+       "book the room"
+      ],
+      "PERSON": [
+       "Bianca",
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Friday",
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ],
+      [
+       "book the room",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "book the room",
+       "Thursday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK",
+       "CREATE_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13"
+       },
+       "T-2": {
+        "owner_id": "dev",
+        "due": "2026-11-12"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "40_scheduled_time_change_uses_scheduled_field",
+   "description": "moving a demo changes `scheduled`, not `due`",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Dev, run the demo on Thursday.",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "run the demo"
+      ],
+      "PERSON": [
+       "Dev"
+      ],
+      "TEMPORAL": [
+       "Thursday"
+      ]
+     },
+     "links": [
+      [
+       "run the demo",
+       "Dev",
+       "ASSIGNED_TO"
+      ],
+      [
+       "run the demo",
+       "Thursday",
+       "SCHEDULED_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "tasks": {
+       "T-1": {
+        "scheduled": "2026-11-12",
+        "due": null
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move the demo to Friday?",
+     "recipients": [
+      "dev"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "tasks": {
+       "T-1": {
+        "scheduled": "2026-11-12",
+        "pending_scheduled": "2026-11-13",
+        "due": null
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "41_reply_with_other_date_is_counter_proposal_not_confirmation",
+   "description": "'Tuesday works' against a pending Monday proposal does not confirm Monday",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {}
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "Tuesday works.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Tuesday"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ],
+      "flags": [
+       "CONFLICTING_PROPOSAL"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-13",
+        "pending_due": "2026-11-16"
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "42_confirm_requires_the_proposal_to_be_reviewed_first",
+   "description": "a confirmation of a still-unreviewed proposal cannot apply before it",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "riya",
+     "text": "Could we move it to Monday?",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [
+       "PROPOSE_DUE_DATE_CHANGE"
+      ]
+     }
+    },
+    {
+     "id": "m3",
+     "sender": "bianca",
+     "text": "Monday works.",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TEMPORAL": [
+       "Monday"
+      ]
+     },
+     "links": [],
+     "review": [
+      {
+       "accept": {
+        "op": "CONFIRM_DUE_DATE_CHANGE"
+       },
+       "expect_error": "PREREQUISITE_PENDING"
+      },
+      {
+       "accept": {
+        "op": "PROPOSE_DUE_DATE_CHANGE",
+        "message": "m2"
+       }
+      },
+      {
+       "accept": {
+        "op": "CONFIRM_DUE_DATE_CHANGE"
+       }
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CONFIRM_DUE_DATE_CHANGE"
+      ],
+      "tasks": {
+       "T-1": {
+        "due": "2026-11-16",
+        "pending_due": null
+       }
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "43_chatter_is_ignored",
+   "description": "no actionable content produces no operations",
+   "participants": [
+    {
+     "id": "riya",
+     "display_name": "Riya Sharma",
+     "aliases": [
+      "Riya"
+     ]
+    },
+    {
+     "id": "bianca",
+     "display_name": "Bianca Sawant",
+     "aliases": [
+      "Bianca"
+     ]
+    },
+    {
+     "id": "dev",
+     "display_name": "Dev Patel",
+     "aliases": [
+      "Dev"
+     ]
+    }
+   ],
+   "messages": [
+    {
+     "id": "m1",
+     "sender": "riya",
+     "text": "Bianca, prepare the report by Friday.",
+     "recipients": [
+      "bianca"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {
+      "TASK": [
+       "prepare the report"
+      ],
+      "PERSON": [
+       "Bianca"
+      ],
+      "TEMPORAL": [
+       "Friday"
+      ]
+     },
+     "links": [
+      [
+       "prepare the report",
+       "Bianca",
+       "ASSIGNED_TO"
+      ],
+      [
+       "prepare the report",
+       "Friday",
+       "DUE_ON"
+      ]
+     ],
+     "review": [
+      {
+       "accept": "all"
+      }
+     ],
+     "expect": {
+      "ops": [
+       "CREATE_TASK"
+      ],
+      "pending": 1,
+      "tasks": {
+       "T-1": {
+        "owner_id": "bianca",
+        "due": "2026-11-13",
+        "status": "open",
+        "version": 1,
+        "history_len": 1
+       }
+      }
+     }
+    },
+    {
+     "id": "m2",
+     "sender": "bianca",
+     "text": "Thanks, have a great weekend!",
+     "recipients": [
+      "riya"
+     ],
+     "ts": "2026-11-11T09:30:00",
+     "tz": "America/Chicago",
+     "spans": {},
+     "links": [],
+     "review": [],
+     "expect": {
+      "ops": [],
+      "pending": 0,
+      "tasks": {
+       "T-1": {
+        "version": 1
+       }
+      }
+     }
+    }
+   ]
+  }
+ ]
+}

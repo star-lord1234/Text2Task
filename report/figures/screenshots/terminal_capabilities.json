@@ -1,0 +1,23 @@
+{
+ "entity_model": {
+  "name": "entity extractor",
+  "status": "loaded",
+  "device": "mps",
+  "provisional": true,
+  "provenance": "SILVER (MailEx-derived), not human-verified"
+ },
+ "relation_model": {
+  "name": "relation classifier",
+  "status": "loaded",
+  "device": "mps",
+  "version": "relations-markers_sqrt",
+  "provisional": true
+ },
+ "pipeline_preset": "hybrid",
+ "rule_fallback_enabled": false,
+ "modes": {
+  "scripted": true,
+  "live": true,
+  "live_reason": null
+ }
+}

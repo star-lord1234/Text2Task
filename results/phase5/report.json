@@ -1,0 +1,94 @@
+{
+  "provenance": "functional / provisional: scripted scenarios, fuzzing, and corpus replay; no labelled reconciliation data",
+  "scenarios": {
+    "scenarios": 43,
+    "passed": 43,
+    "failed": [],
+    "message_operation_checks": 88,
+    "message_operation_mismatches": 0,
+    "operation_accuracy": 1.0,
+    "duplicate_attempt_scenarios": 4,
+    "extra_tasks_created_by_duplicate_attempts": 0,
+    "incorrect_overwrite_count": 0,
+    "resolved_dates_overwritten_by_unresolved": 0,
+    "ambiguous_referent_proposals_raised": 2,
+    "invariant_failures": 0,
+    "proposal_operation_counts": {
+      "CREATE_TASK": 49,
+      "PROPOSE_DUE_DATE_CHANGE": 16,
+      "NO_ACTION": 15,
+      "COMPLETE_TASK": 7,
+      "CONFIRM_DUE_DATE_CHANGE": 4,
+      "UPDATE_ASSIGNEE": 4,
+      "CANCEL_TASK": 2,
+      "ADD_DEPENDENCY": 2,
+      "UPDATE_STATUS": 1
+    }
+  },
+  "fuzz": {
+    "seeds": 200,
+    "steps_per_seed": 60,
+    "steps_executed": 12000,
+    "invariant_violations": 0,
+    "violations": [],
+    "review_actions_rejected_by_safety_checks": 689,
+    "tasks_created": 1148,
+    "tasks_updated_after_creation": 538
+  },
+  "corpus_replay": {
+    "threads": 415,
+    "multi_turn_threads": 89,
+    "messages": 510,
+    "ops": {
+      "NO_ACTION": 959,
+      "CREATE_TASK": 939,
+      "PROPOSE_DUE_DATE_CHANGE": 4,
+      "COMPLETE_TASK": 3,
+      "UPDATE_STATUS": 1,
+      "CANCEL_TASK": 1
+    },
+    "ops_multi_turn": {
+      "CREATE_TASK": 353,
+      "NO_ACTION": 343,
+      "PROPOSE_DUE_DATE_CHANGE": 4,
+      "COMPLETE_TASK": 3,
+      "UPDATE_STATUS": 1,
+      "CANCEL_TASK": 1
+    },
+    "flags": {
+      "NO_ASSIGNEE": 279,
+      "WEAK_RELATION_SCORE": 191,
+      "DATE_UNRESOLVED_NO_ANCHOR": 83,
+      "UNKNOWN_PERSON": 82,
+      "DATE_EVENT_CONDITION": 79,
+      "AMBIGUOUS_ASSIGNEE": 78,
+      "DATE_UNPARSEABLE": 65,
+      "TENTATIVE_REQUEST": 54,
+      "DATE_PARTIAL": 50,
+      "COMPETING_DATES": 49,
+      "MULTIPLE_ASSIGNEES": 48,
+      "DATE_RELATION_CONFLICT": 45,
+      "ASSIGNEE_BY_NAME_MATCH": 39,
+      "NO_REFERENT": 28,
+      "NO_PENDING_PROPOSAL": 20,
+      "POSSIBLE_DUPLICATE": 9,
+      "UNSUPPORTED_GROUP": 9,
+      "DEPENDENCY_ENDPOINT_UNMATCHED": 7,
+      "AMBIGUOUS_REFERENT": 5,
+      "DATE_VAGUE": 4,
+      "UNRESOLVED_NEW_DATE": 4,
+      "THIRD_PARTY_COMPLETION": 2,
+      "RESTATED_EXISTING_TASK": 1,
+      "SELF_DEPENDENCY": 1,
+      "ACKNOWLEDGES_EXISTING_TASK": 1
+    },
+    "referent_outcomes": {
+      "AMBIGUOUS_REFERENT": 5,
+      "MATCHED": 4
+    },
+    "tasks_created": 939,
+    "restatements": 1,
+    "possible_duplicates": 9,
+    "errors": {}
+  }
+}
